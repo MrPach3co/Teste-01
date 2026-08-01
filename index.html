@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kaza IA — Busca de imóveis por inteligência artificial</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Cabeçalho fixo no topo -->
+  <header class="topo">
+    <div class="topo-logo">
+      <span class="topo-logo-icone">🏠</span>
+      <span class="topo-logo-texto">Kaza IA</span>
+    </div>
+    <span class="topo-subtitulo">Busca de imóveis por IA</span>
+  </header>
+
+  <!-- Área da conversa: aqui entram as mensagens do usuário e da IA -->
+  <main id="chat" class="chat"></main>
+
+  <!-- Barra de digitação fixa no rodapé -->
+  <footer class="rodape">
+    <form id="form-busca" class="form-busca" autocomplete="off">
+      <input
+        id="campo-busca"
+        type="text"
+        placeholder="Ex: casa moderna perto do mar, até 2 milhões, 4 quartos"
+        maxlength="200"
+      />
+      <button type="submit" aria-label="Enviar busca">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </form>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

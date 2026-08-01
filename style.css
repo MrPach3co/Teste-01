@@ -1,0 +1,293 @@
+/* ===== Configurações gerais ===== */
+/* box-sizing: border-box faz o padding não "estourar" a largura dos elementos */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --verde-escuro: #0f766e;
+  --verde-medio: #14b8a6;
+  --verde-claro: #ccfbf1;
+  --fundo: #f4faf9;
+  --branco: #ffffff;
+  --texto: #1f2937;
+  --texto-suave: #6b7280;
+  --borda: #e2e8e7;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--fundo);
+  color: var(--texto);
+  /* Layout em coluna: cabeçalho, conversa (cresce) e rodapé */
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* ===== Cabeçalho ===== */
+.topo {
+  background: var(--branco);
+  border-bottom: 1px solid var(--borda);
+  padding: 14px 16px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.topo-logo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--verde-escuro);
+}
+
+.topo-logo-icone {
+  font-size: 20px;
+}
+
+.topo-subtitulo {
+  font-size: 13px;
+  color: var(--texto-suave);
+}
+
+/* ===== Área da conversa ===== */
+.chat {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 12px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Balão de mensagem: do usuário (direita) ou da IA (esquerda) */
+.mensagem {
+  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 14.5px;
+  line-height: 1.4;
+}
+
+.mensagem-usuario {
+  align-self: flex-end;
+  background: var(--verde-escuro);
+  color: var(--branco);
+  border-bottom-right-radius: 4px;
+}
+
+.mensagem-ia {
+  align-self: flex-start;
+  background: var(--branco);
+  border: 1px solid var(--borda);
+  border-bottom-left-radius: 4px;
+}
+
+/* "Digitando..." enquanto a IA "pensa" */
+.digitando {
+  align-self: flex-start;
+  display: flex;
+  gap: 4px;
+  background: var(--branco);
+  border: 1px solid var(--borda);
+  padding: 12px 16px;
+  border-radius: 14px;
+  border-bottom-left-radius: 4px;
+}
+
+.digitando span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--verde-medio);
+  animation: pulsar 1.2s infinite ease-in-out;
+}
+
+.digitando span:nth-child(2) { animation-delay: 0.2s; }
+.digitando span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes pulsar {
+  0%, 80%, 100% { opacity: 0.25; }
+  40% { opacity: 1; }
+}
+
+/* Sugestões rápidas (chips) na primeira mensagem */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.chip {
+  background: var(--verde-claro);
+  color: var(--verde-escuro);
+  border: none;
+  border-radius: 20px;
+  padding: 7px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.chip:active {
+  background: #a7f3ea;
+}
+
+/* ===== Lista de imóveis recomendados ===== */
+.resultados {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.cartao-imovel {
+  background: var(--branco);
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+}
+
+.cartao-foto {
+  width: 96px;
+  min-width: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cartao-corpo {
+  padding: 10px 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.cartao-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.cartao-nome {
+  font-weight: 600;
+  font-size: 14.5px;
+}
+
+.cartao-bairro {
+  font-size: 12.5px;
+  color: var(--texto-suave);
+  margin-top: 1px;
+}
+
+.cartao-match {
+  flex-shrink: 0;
+  background: var(--verde-claro);
+  color: var(--verde-escuro);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.cartao-specs {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--texto);
+}
+
+.cartao-preco {
+  font-weight: 700;
+  color: var(--verde-escuro);
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+.cartao-motivo {
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--texto-suave);
+  font-style: italic;
+  border-top: 1px dashed var(--borda);
+  padding-top: 6px;
+}
+
+.cartao-motivo::before {
+  content: "✓ ";
+  color: var(--verde-medio);
+  font-style: normal;
+}
+
+/* ===== Rodapé / campo de busca ===== */
+.rodape {
+  flex-shrink: 0;
+  background: var(--branco);
+  border-top: 1px solid var(--borda);
+  padding: 10px 12px;
+  padding-bottom: max(10px, env(safe-area-inset-bottom));
+}
+
+.form-busca {
+  display: flex;
+  gap: 8px;
+}
+
+#campo-busca {
+  flex: 1;
+  border: 1px solid var(--borda);
+  border-radius: 24px;
+  padding: 11px 16px;
+  font-size: 15px;
+  outline: none;
+  background: var(--fundo);
+}
+
+#campo-busca:focus {
+  border-color: var(--verde-medio);
+}
+
+.form-busca button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--verde-escuro);
+  color: var(--branco);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.form-busca button:active {
+  background: var(--verde-medio);
+}
+
+/* ===== Telas maiores (tablet/desktop): centraliza o app como se fosse um celular ===== */
+@media (min-width: 560px) {
+  body {
+    max-width: 480px;
+    margin: 0 auto;
+    border-left: 1px solid var(--borda);
+    border-right: 1px solid var(--borda);
+  }
+}
