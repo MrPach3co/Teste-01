@@ -8,13 +8,21 @@
 </head>
 <body>
 
-  <!-- Cabeçalho fixo no topo -->
+  <!-- Cabeçalho fixo no topo: marca + acesso ao "Sobre" -->
   <header class="topo">
-    <div class="topo-logo">
-      <span class="topo-logo-icone">🏠</span>
-      <span class="topo-logo-texto">Kaza IA</span>
+    <div class="topo-marca">
+      <svg class="topo-logo" viewBox="0 0 32 32" aria-hidden="true">
+        <rect x="1" y="1" width="30" height="30" rx="9" fill="var(--copa)" />
+        <path d="M9 17.5 16 11l7 6.5" fill="none" stroke="var(--superficie)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M11.5 16v6.5h9V16" fill="none" stroke="var(--superficie)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="23.5" cy="9.5" r="2.4" fill="var(--menta)" />
+      </svg>
+      <div class="topo-texto">
+        <span class="topo-wordmark">Kaza IA</span>
+        <span class="topo-tagline">Encontre seu próximo endereço com IA</span>
+      </div>
     </div>
-    <span class="topo-subtitulo">Busca de imóveis por IA</span>
+    <button type="button" id="botao-sobre" class="topo-sobre">Sobre</button>
   </header>
 
   <!-- Área da conversa: aqui entram as mensagens do usuário e da IA -->
@@ -37,6 +45,41 @@
       </button>
     </form>
   </footer>
+
+  <!-- Folha "Sobre": identidade institucional do produto -->
+  <dialog id="folha-sobre" class="folha-sobre">
+    <div class="folha-cabecalho">
+      <svg class="folha-logo" viewBox="0 0 32 32" aria-hidden="true">
+        <rect x="1" y="1" width="30" height="30" rx="9" fill="var(--copa)" />
+        <path d="M9 17.5 16 11l7 6.5" fill="none" stroke="var(--superficie)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M11.5 16v6.5h9V16" fill="none" stroke="var(--superficie)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="23.5" cy="9.5" r="2.4" fill="var(--menta)" />
+      </svg>
+      <button type="button" id="botao-fechar-sobre" class="folha-fechar" aria-label="Fechar">✕</button>
+    </div>
+
+    <h2 class="folha-titulo">Kaza IA</h2>
+    <p class="folha-paragrafo">
+      Um jeito mais rápido de procurar imóvel: em vez de filtrar dezenas de campos,
+      você descreve o que quer com suas próprias palavras e recebe uma lista curta,
+      já ordenada pelo que mais combina com o seu pedido.
+    </p>
+
+    <h3 class="folha-subtitulo">Como funciona</h3>
+    <ol class="folha-passos">
+      <li><span class="folha-passo-numero">1</span> Você descreve o imóvel: bairro, preço, quartos, estilo.</li>
+      <li><span class="folha-passo-numero">2</span> A IA cruza seu pedido com o histórico e o perfil de cada imóvel.</li>
+      <li><span class="folha-passo-numero">3</span> Você recebe as melhores opções, com o motivo de cada recomendação.</li>
+    </ol>
+
+    <p class="folha-aviso">
+      Este é um protótipo visual. Os imóveis, preços e o cálculo de match são
+      fictícios e servem apenas para demonstrar a experiência — nenhum dado
+      real é consultado.
+    </p>
+
+    <p class="folha-rodape">© 2026 Kaza IA · Feito para o mercado imobiliário brasileiro</p>
+  </dialog>
 
   <script src="app.js"></script>
 </body>

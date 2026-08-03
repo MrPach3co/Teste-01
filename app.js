@@ -9,6 +9,8 @@ const IMOVEIS = [
   {
     nome: "Casa em condomínio na Barra",
     bairro: "Barra da Tijuca, Rio de Janeiro",
+    tipo: "Casa",
+    codigo: "KZ-1042",
     preco: 1850000,
     quartos: 4,
     area: 320,
@@ -20,6 +22,8 @@ const IMOVEIS = [
   {
     nome: "Casa nova frente ao mar",
     bairro: "Recreio dos Bandeirantes, Rio de Janeiro",
+    tipo: "Casa",
+    codigo: "KZ-2087",
     preco: 2450000,
     quartos: 4,
     area: 380,
@@ -31,6 +35,8 @@ const IMOVEIS = [
   {
     nome: "Apartamento reformado com vista mar",
     bairro: "Ipanema, Rio de Janeiro",
+    tipo: "Apartamento",
+    codigo: "KZ-3311",
     preco: 3200000,
     quartos: 3,
     area: 140,
@@ -42,6 +48,8 @@ const IMOVEIS = [
   {
     nome: "Apartamento compacto reformado",
     bairro: "Botafogo, Rio de Janeiro",
+    tipo: "Apartamento",
+    codigo: "KZ-4456",
     preco: 890000,
     quartos: 2,
     area: 78,
@@ -53,6 +61,8 @@ const IMOVEIS = [
   {
     nome: "Cobertura duplex com piscina",
     bairro: "Leblon, Rio de Janeiro",
+    tipo: "Cobertura",
+    codigo: "KZ-5590",
     preco: 5800000,
     quartos: 4,
     area: 310,
@@ -96,7 +106,10 @@ const DICIONARIO_TAGS = {
 const referenciasDom = {
   chat: document.getElementById("chat"),
   form: document.getElementById("form-busca"),
-  campo: document.getElementById("campo-busca")
+  campo: document.getElementById("campo-busca"),
+  botaoSobre: document.getElementById("botao-sobre"),
+  botaoFecharSobre: document.getElementById("botao-fechar-sobre"),
+  folhaSobre: document.getElementById("folha-sobre")
 };
 
 /* ---- 3. Extrai orçamento e número de quartos do texto digitado ---- */
@@ -190,23 +203,41 @@ function removerDigitando() {
   if (el) el.remove();
 }
 
-function criarCartaoImovel(imovel, match) {
+/* Anel do match: um círculo SVG cujo traço mostra a % preenchida,
+   além do número — assim a informação aparece tanto em forma quanto em texto. */
+const RAIO_ANEL = 18;
+const CIRCUNFERENCIA_ANEL = 2 * Math.PI * RAIO_ANEL;
+
+function criarCartaoImovel(imovel, match, destaque) {
   const cartao = document.createElement("div");
-  cartao.className = "cartao-imovel";
+  cartao.className = destaque ? "cartao-imovel cartao-destaque" : "cartao-imovel";
+
+  const preenchido = (match / 100) * CIRCUNFERENCIA_ANEL;
+
   cartao.innerHTML = `
+    ${destaque ? '<span class="cartao-fita">Melhor combinação</span>' : ""}
     <div class="cartao-foto" style="background:${imovel.cor}">${imovel.icone}</div>
     <div class="cartao-corpo">
       <div class="cartao-topo">
-        <div>
+        <div class="cartao-titulo">
+          <div class="cartao-tipo">${imovel.tipo}</div>
           <div class="cartao-nome">${imovel.nome}</div>
           <div class="cartao-bairro">${imovel.bairro}</div>
         </div>
-        <span class="cartao-match">${match}% match</span>
+        <div class="cartao-match">
+          <svg viewBox="0 0 44 44">
+            <circle class="trilha" cx="22" cy="22" r="${RAIO_ANEL}"></circle>
+            <circle class="progresso" cx="22" cy="22" r="${RAIO_ANEL}"
+              stroke-dasharray="${preenchido} ${CIRCUNFERENCIA_ANEL}"></circle>
+          </svg>
+          <span class="cartao-match-numero">${match}%</span>
+        </div>
       </div>
       <div class="cartao-specs">
         <span>🛏️ ${imovel.quartos} quartos</span>
         <span>📐 ${imovel.area} m²</span>
       </div>
+      <div class="cartao-codigo">Ref. ${imovel.codigo}</div>
       <div class="cartao-preco">${formatarPreco(imovel.preco)}</div>
       <div class="cartao-motivo">${imovel.motivo}</div>
     </div>
@@ -222,8 +253,8 @@ function adicionarRespostaIA(textoIntro, imoveisOrdenados) {
 
   const listaResultados = document.createElement("div");
   listaResultados.className = "resultados";
-  imoveisOrdenados.forEach(({ imovel, match }) => {
-    listaResultados.appendChild(criarCartaoImovel(imovel, match));
+  imoveisOrdenados.forEach(({ imovel, match }, indice) => {
+    listaResultados.appendChild(criarCartaoImovel(imovel, match, indice === 0));
   });
   referenciasDom.chat.appendChild(listaResultados);
   rolarParaFinal();
@@ -287,5 +318,21 @@ referenciasDom.form.addEventListener("submit", (evento) => {
   setTimeout(() => processarBusca(texto), 700);
 });
 
-/* ---- 10. Inicialização ---- */
+/* ---- 10. Folha "Sobre": abre como uma janela nativa <dialog> ---- */
+referenciasDom.botaoSobre.addEventListener("click", () => {
+  referenciasDom.folhaSobre.showModal();
+});
+
+referenciasDom.botaoFecharSobre.addEventListener("click", () => {
+  referenciasDom.folhaSobre.close();
+});
+
+// Clicar fora do conteúdo (no fundo escurecido) também fecha a folha
+referenciasDom.folhaSobre.addEventListener("click", (evento) => {
+  if (evento.target === referenciasDom.folhaSobre) {
+    referenciasDom.folhaSobre.close();
+  }
+});
+
+/* ---- 11. Inicialização ---- */
 mostrarBoasVindas();

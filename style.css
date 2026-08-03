@@ -6,15 +6,66 @@
   padding: 0;
 }
 
+/* ---- Tokens de marca (cores, tipografia) ----
+   Definidos como variáveis para que o tema escuro só precise
+   redefinir os valores, sem duplicar as regras visuais. */
 :root {
-  --verde-escuro: #0f766e;
-  --verde-medio: #14b8a6;
-  --verde-claro: #ccfbf1;
-  --fundo: #f4faf9;
-  --branco: #ffffff;
-  --texto: #1f2937;
-  --texto-suave: #6b7280;
-  --borda: #e2e8e7;
+  --tinta: #16231f;
+  --copa: #0b5d52;
+  --menta: #1fae90;
+  --pedra: #f2f0e9;
+  --superficie: #fbfaf6;
+  --borda: #e2ded2;
+  --texto-suave: #6f6a5c;
+  --usuario-bg: #0b5d52;
+  --usuario-texto: #fbfaf6;
+  --chip-ativo: #cdeae2;
+  --sombra: 0 1px 2px rgba(22, 35, 31, 0.06);
+
+  --fonte-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --fonte-corpo: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --tinta: #eef1ee;
+    --copa: #35d6b7;
+    --menta: #4be3c8;
+    --pedra: #0e1815;
+    --superficie: #16241f;
+    --borda: #263933;
+    --texto-suave: #8fa39b;
+    --usuario-bg: #1c6a5c;
+    --usuario-texto: #fbfaf6;
+    --chip-ativo: #1c4a41;
+    --sombra: 0 1px 2px rgba(0, 0, 0, 0.35);
+  }
+}
+:root[data-theme="dark"] {
+  --tinta: #eef1ee;
+  --copa: #35d6b7;
+  --menta: #4be3c8;
+  --pedra: #0e1815;
+  --superficie: #16241f;
+  --borda: #263933;
+  --texto-suave: #8fa39b;
+  --usuario-bg: #1c6a5c;
+  --usuario-texto: #fbfaf6;
+  --chip-ativo: #1c4a41;
+  --sombra: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+:root[data-theme="light"] {
+  --tinta: #16231f;
+  --copa: #0b5d52;
+  --menta: #1fae90;
+  --pedra: #f2f0e9;
+  --superficie: #fbfaf6;
+  --borda: #e2ded2;
+  --texto-suave: #6f6a5c;
+  --usuario-bg: #0b5d52;
+  --usuario-texto: #fbfaf6;
+  --chip-ativo: #cdeae2;
+  --sombra: 0 1px 2px rgba(22, 35, 31, 0.06);
 }
 
 html, body {
@@ -22,9 +73,9 @@ html, body {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-  background: var(--fundo);
-  color: var(--texto);
+  font-family: var(--fonte-corpo);
+  background: var(--pedra);
+  color: var(--tinta);
   /* Layout em coluna: cabeçalho, conversa (cresce) e rodapé */
   display: flex;
   flex-direction: column;
@@ -33,31 +84,67 @@ body {
 
 /* ===== Cabeçalho ===== */
 .topo {
-  background: var(--branco);
+  background: var(--superficie);
   border-bottom: 1px solid var(--borda);
-  padding: 14px 16px;
+  padding: 12px 14px;
   display: flex;
-  align-items: baseline;
+  align-items: center;
+  justify-content: space-between;
   gap: 10px;
   flex-shrink: 0;
 }
 
-.topo-logo {
+.topo-marca {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
+  min-width: 0;
+}
+
+.topo-logo {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+}
+
+.topo-texto {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.topo-wordmark {
+  font-family: var(--fonte-display);
   font-weight: 700;
-  font-size: 20px;
-  color: var(--verde-escuro);
+  font-size: 19px;
+  color: var(--copa);
+  letter-spacing: 0.2px;
+  line-height: 1.15;
 }
 
-.topo-logo-icone {
-  font-size: 20px;
-}
-
-.topo-subtitulo {
-  font-size: 13px;
+.topo-tagline {
+  font-size: 12px;
   color: var(--texto-suave);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topo-sobre {
+  flex-shrink: 0;
+  background: none;
+  border: 1px solid var(--borda);
+  color: var(--copa);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 13px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.topo-sobre:hover {
+  background: var(--pedra);
 }
 
 /* ===== Área da conversa ===== */
@@ -76,21 +163,22 @@ body {
   padding: 10px 14px;
   border-radius: 14px;
   font-size: 14.5px;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 .mensagem-usuario {
   align-self: flex-end;
-  background: var(--verde-escuro);
-  color: var(--branco);
+  background: var(--usuario-bg);
+  color: var(--usuario-texto);
   border-bottom-right-radius: 4px;
 }
 
 .mensagem-ia {
   align-self: flex-start;
-  background: var(--branco);
+  background: var(--superficie);
   border: 1px solid var(--borda);
   border-bottom-left-radius: 4px;
+  box-shadow: var(--sombra);
 }
 
 /* "Digitando..." enquanto a IA "pensa" */
@@ -98,7 +186,7 @@ body {
   align-self: flex-start;
   display: flex;
   gap: 4px;
-  background: var(--branco);
+  background: var(--superficie);
   border: 1px solid var(--borda);
   padding: 12px 16px;
   border-radius: 14px;
@@ -109,7 +197,7 @@ body {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--verde-medio);
+  background: var(--menta);
   animation: pulsar 1.2s infinite ease-in-out;
 }
 
@@ -121,6 +209,10 @@ body {
   40% { opacity: 1; }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .digitando span { animation: none; opacity: 0.7; }
+}
+
 /* Sugestões rápidas (chips) na primeira mensagem */
 .chips {
   display: flex;
@@ -130,18 +222,28 @@ body {
 }
 
 .chip {
-  background: var(--verde-claro);
-  color: var(--verde-escuro);
+  background: var(--chip-ativo);
+  color: var(--copa);
   border: none;
   border-radius: 20px;
   padding: 7px 12px;
   font-size: 13px;
+  font-family: inherit;
   cursor: pointer;
   text-align: left;
 }
 
 .chip:active {
-  background: #a7f3ea;
+  filter: brightness(0.95);
+}
+
+.chip:focus-visible,
+.form-busca button:focus-visible,
+#campo-busca:focus-visible,
+.topo-sobre:focus-visible,
+.folha-fechar:focus-visible {
+  outline: 2px solid var(--menta);
+  outline-offset: 2px;
 }
 
 /* ===== Lista de imóveis recomendados ===== */
@@ -154,20 +256,40 @@ body {
 }
 
 .cartao-imovel {
-  background: var(--branco);
+  position: relative;
+  background: var(--superficie);
   border: 1px solid var(--borda);
   border-radius: 12px;
   overflow: hidden;
   display: flex;
+  box-shadow: var(--sombra);
+}
+
+.cartao-imovel.cartao-destaque {
+  border-color: var(--menta);
+}
+
+.cartao-fita {
+  position: absolute;
+  top: 8px;
+  left: -1px;
+  background: var(--menta);
+  color: var(--tinta);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  padding: 2px 8px 2px 10px;
+  border-radius: 0 6px 6px 0;
 }
 
 .cartao-foto {
-  width: 96px;
-  min-width: 96px;
+  width: 92px;
+  min-width: 92px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
+  font-size: 26px;
   color: rgba(255, 255, 255, 0.9);
 }
 
@@ -184,9 +306,23 @@ body {
   gap: 8px;
 }
 
-.cartao-nome {
+.cartao-titulo {
+  min-width: 0;
+}
+
+.cartao-tipo {
+  font-size: 11px;
   font-weight: 600;
-  font-size: 14.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--texto-suave);
+}
+
+.cartao-nome {
+  font-family: var(--fonte-display);
+  font-weight: 700;
+  font-size: 15.5px;
+  line-height: 1.25;
 }
 
 .cartao-bairro {
@@ -195,15 +331,43 @@ body {
   margin-top: 1px;
 }
 
+/* Anel de match: SVG com stroke-dasharray calculado em JS,
+   para mostrar a % de forma visual além do número. */
 .cartao-match {
   flex-shrink: 0;
-  background: var(--verde-claro);
-  color: var(--verde-escuro);
-  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 44px;
+  height: 44px;
+}
+
+.cartao-match svg {
+  width: 44px;
+  height: 44px;
+  transform: rotate(-90deg);
+}
+
+.cartao-match circle.trilha {
+  fill: none;
+  stroke: var(--borda);
+  stroke-width: 3;
+}
+
+.cartao-match circle.progresso {
+  fill: none;
+  stroke: var(--menta);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.cartao-match-numero {
+  position: absolute;
+  font-size: 11px;
   font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 20px;
-  white-space: nowrap;
+  color: var(--copa);
+  font-variant-numeric: tabular-nums;
 }
 
 .cartao-specs {
@@ -211,14 +375,22 @@ body {
   gap: 10px;
   margin-top: 6px;
   font-size: 12.5px;
-  color: var(--texto);
+  color: var(--tinta);
+}
+
+.cartao-codigo {
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--texto-suave);
+  font-variant-numeric: tabular-nums;
 }
 
 .cartao-preco {
   font-weight: 700;
-  color: var(--verde-escuro);
-  font-size: 14px;
+  color: var(--copa);
+  font-size: 14.5px;
   margin-top: 6px;
+  font-variant-numeric: tabular-nums;
 }
 
 .cartao-motivo {
@@ -232,14 +404,14 @@ body {
 
 .cartao-motivo::before {
   content: "✓ ";
-  color: var(--verde-medio);
+  color: var(--menta);
   font-style: normal;
 }
 
 /* ===== Rodapé / campo de busca ===== */
 .rodape {
   flex-shrink: 0;
-  background: var(--branco);
+  background: var(--superficie);
   border-top: 1px solid var(--borda);
   padding: 10px 12px;
   padding-bottom: max(10px, env(safe-area-inset-bottom));
@@ -257,11 +429,13 @@ body {
   padding: 11px 16px;
   font-size: 15px;
   outline: none;
-  background: var(--fundo);
+  background: var(--pedra);
+  color: var(--tinta);
+  font-family: inherit;
 }
 
 #campo-busca:focus {
-  border-color: var(--verde-medio);
+  border-color: var(--menta);
 }
 
 .form-busca button {
@@ -269,8 +443,8 @@ body {
   height: 44px;
   border-radius: 50%;
   border: none;
-  background: var(--verde-escuro);
-  color: var(--branco);
+  background: var(--copa);
+  color: var(--usuario-texto);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -279,7 +453,111 @@ body {
 }
 
 .form-busca button:active {
-  background: var(--verde-medio);
+  background: var(--menta);
+}
+
+/* ===== Folha "Sobre" (identidade institucional) ===== */
+.folha-sobre {
+  border: none;
+  border-radius: 18px 18px 0 0;
+  padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
+  width: 100%;
+  max-width: 480px;
+  background: var(--superficie);
+  color: var(--tinta);
+  margin: auto auto 0;
+}
+
+.folha-sobre::backdrop {
+  background: rgba(14, 24, 21, 0.5);
+}
+
+.folha-cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.folha-logo {
+  width: 30px;
+  height: 30px;
+}
+
+.folha-fechar {
+  background: var(--pedra);
+  border: 1px solid var(--borda);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 13px;
+  color: var(--tinta);
+  cursor: pointer;
+}
+
+.folha-titulo {
+  font-family: var(--fonte-display);
+  font-size: 22px;
+  margin-top: 14px;
+}
+
+.folha-paragrafo {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--texto-suave);
+  margin-top: 8px;
+}
+
+.folha-subtitulo {
+  font-family: var(--fonte-display);
+  font-size: 15px;
+  margin-top: 18px;
+}
+
+.folha-passos {
+  list-style: none;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.folha-passos li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+  line-height: 1.4;
+}
+
+.folha-passo-numero {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--chip-ativo);
+  color: var(--copa);
+  font-size: 11.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.folha-aviso {
+  margin-top: 18px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--texto-suave);
+  background: var(--pedra);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.folha-rodape {
+  margin-top: 16px;
+  font-size: 11.5px;
+  color: var(--texto-suave);
+  text-align: center;
 }
 
 /* ===== Telas maiores (tablet/desktop): centraliza o app como se fosse um celular ===== */
