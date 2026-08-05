@@ -203,36 +203,28 @@ function removerDigitando() {
   if (el) el.remove();
 }
 
-/* Anel do match: um círculo SVG cujo traço mostra a % preenchida,
-   além do número — assim a informação aparece tanto em forma quanto em texto. */
-const RAIO_ANEL = 18;
-const CIRCUNFERENCIA_ANEL = 2 * Math.PI * RAIO_ANEL;
+/* Classifica o match em faixas (alto/médio/baixo) para que o selo colorido
+   também transmita a informação visualmente, não só o número. */
+function faixaDeMatch(match) {
+  if (match >= 85) return "alto";
+  if (match >= 60) return "medio";
+  return "baixo";
+}
 
 function criarCartaoImovel(imovel, match, destaque) {
   const cartao = document.createElement("div");
-  cartao.className = destaque ? "cartao-imovel cartao-destaque" : "cartao-imovel";
-
-  const preenchido = (match / 100) * CIRCUNFERENCIA_ANEL;
+  cartao.className = "cartao-imovel";
 
   cartao.innerHTML = `
-    ${destaque ? '<span class="cartao-fita">Melhor combinação</span>' : ""}
-    <div class="cartao-foto" style="background:${imovel.cor}">${imovel.icone}</div>
+    <div class="cartao-foto" style="background:${imovel.cor}">
+      ${imovel.icone}
+      <span class="cartao-pill cartao-pill-tipo">${imovel.tipo}</span>
+      <span class="cartao-pill cartao-pill-match ${faixaDeMatch(match)}">${match}% match</span>
+      ${destaque ? '<span class="cartao-fita">Melhor combinação</span>' : ""}
+    </div>
     <div class="cartao-corpo">
-      <div class="cartao-topo">
-        <div class="cartao-titulo">
-          <div class="cartao-tipo">${imovel.tipo}</div>
-          <div class="cartao-nome">${imovel.nome}</div>
-          <div class="cartao-bairro">${imovel.bairro}</div>
-        </div>
-        <div class="cartao-match">
-          <svg viewBox="0 0 44 44">
-            <circle class="trilha" cx="22" cy="22" r="${RAIO_ANEL}"></circle>
-            <circle class="progresso" cx="22" cy="22" r="${RAIO_ANEL}"
-              stroke-dasharray="${preenchido} ${CIRCUNFERENCIA_ANEL}"></circle>
-          </svg>
-          <span class="cartao-match-numero">${match}%</span>
-        </div>
-      </div>
+      <div class="cartao-nome">${imovel.nome}</div>
+      <div class="cartao-bairro">${imovel.bairro}</div>
       <div class="cartao-specs">
         <span>🛏️ ${imovel.quartos} quartos</span>
         <span>📐 ${imovel.area} m²</span>
@@ -260,12 +252,14 @@ function adicionarRespostaIA(textoIntro, imoveisOrdenados) {
   rolarParaFinal();
 }
 
-/* ---- 7. Mensagem inicial de boas-vindas, com sugestões clicáveis ---- */
+/* ---- 7. Mensagem inicial de boas-vindas: o momento de abertura da conversa,
+   tratado como uma pequena "hero" — título grande e sugestões como atalhos ---- */
 function mostrarBoasVindas() {
   const div = document.createElement("div");
-  div.className = "mensagem mensagem-ia";
+  div.className = "boas-vindas";
   div.innerHTML = `
-    Olá! Eu sou a Kaza IA 👋 Me conte o que você procura: bairro, preço, quartos, estilo...
+    <div class="boas-vindas-titulo">Encontre seu próximo endereço.</div>
+    <div class="boas-vindas-subtitulo">Descreva o imóvel com suas palavras — bairro, preço, quartos, estilo — e a Kaza IA recomenda na hora.</div>
     <div class="chips">
       <button class="chip" type="button">Casa moderna perto do mar, até 2 milhões, 4 quartos</button>
       <button class="chip" type="button">Apartamento reformado até 1 milhão com escritório</button>
@@ -318,19 +312,30 @@ referenciasDom.form.addEventListener("submit", (evento) => {
   setTimeout(() => processarBusca(texto), 700);
 });
 
-/* ---- 10. Folha "Sobre": abre como uma janela nativa <dialog> ---- */
-referenciasDom.botaoSobre.addEventListener("click", () => {
-  referenciasDom.folhaSobre.showModal();
-});
+/* ---- 10. Folha "Sobre": abre como uma janela nativa <dialog>, com uma
+   transição suave de entrada/saída controlada pelo atributo data-aberta ---- */
+const preferenciaSemMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const DURACAO_TRANSICAO_FOLHA = preferenciaSemMovimento ? 0 : 280;
 
-referenciasDom.botaoFecharSobre.addEventListener("click", () => {
-  referenciasDom.folhaSobre.close();
-});
+function abrirFolhaSobre() {
+  referenciasDom.folhaSobre.showModal();
+  // Precisa de um quadro de espera para o navegador aplicar o estado
+  // "fechado" antes de mudar para "aberto" — assim a transição acontece.
+  requestAnimationFrame(() => referenciasDom.folhaSobre.setAttribute("data-aberta", ""));
+}
+
+function fecharFolhaSobre() {
+  referenciasDom.folhaSobre.removeAttribute("data-aberta");
+  setTimeout(() => referenciasDom.folhaSobre.close(), DURACAO_TRANSICAO_FOLHA);
+}
+
+referenciasDom.botaoSobre.addEventListener("click", abrirFolhaSobre);
+referenciasDom.botaoFecharSobre.addEventListener("click", fecharFolhaSobre);
 
 // Clicar fora do conteúdo (no fundo escurecido) também fecha a folha
 referenciasDom.folhaSobre.addEventListener("click", (evento) => {
   if (evento.target === referenciasDom.folhaSobre) {
-    referenciasDom.folhaSobre.close();
+    fecharFolhaSobre();
   }
 });
 
