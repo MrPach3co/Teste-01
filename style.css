@@ -7,68 +7,82 @@
 }
 
 /* ---- Tokens de marca ----
-   Paleta enxuta (fundo, superfície, tinta, um único accent) e tipografia
-   do sistema (a mesma família que resolve para SF Pro em dispositivos
-   Apple) — a inspiração é "menos elementos, mais espaço e precisão". */
+   Paleta quente inspirada em concreto/mata/telha (arquitetura e paisagem
+   brasileira) em vez de cinza neutro — mas mantendo a estrutura "tipo Apple"
+   que já tínhamos: vidro fosco, sombra suave, um accent principal (verde,
+   para ação/marca) e um accent secundário (terracota, só para o motivo da
+   recomendação da IA — a "explicação" ganha uma cor só dela). */
 :root {
-  --bg: #f5f5f7;
-  --surface: #ffffff;
-  --glass: rgba(255, 255, 255, 0.72);
-  --ink: #1d1d1f;
-  --ink-suave: #6e6e73;
-  --accent: #0a8f66;
-  --accent-suave: #e1f5ec;
-  --accent-tinta: #ffffff;
-  --divisor: rgba(0, 0, 0, 0.08);
-  --sombra: 0 8px 30px rgba(0, 0, 0, 0.08);
-  --sombra-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --bg: #f1eee7;
+  --bg-alt: #e8e3d8;
+  --surface: #fffdf9;
+  --glass: rgba(241, 238, 231, 0.78);
+  --ink: #1b1a17;
+  --ink-suave: #4a473f;
+  --accent: #1f3b2c;
+  --accent-suave: #e1e9e3;
+  --accent-tinta: #fffdf9;
+  --accent2: #9c4a26;
+  --divisor: #d9d2c2;
+  --sombra: 0 8px 30px rgba(27, 26, 23, 0.1);
+  --sombra-sm: 0 1px 3px rgba(27, 26, 23, 0.08);
 
-  --fonte: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
-    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --fonte-display: "Bricolage Grotesque", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, sans-serif;
+  --fonte: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  --fonte-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas,
+    monospace;
 
   --curva: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #000000;
-    --surface: #1c1c1e;
-    --glass: rgba(28, 28, 30, 0.72);
-    --ink: #f5f5f7;
-    --ink-suave: #98989d;
-    --accent: #34d399;
-    --accent-suave: rgba(52, 211, 153, 0.16);
-    --accent-tinta: #05201a;
-    --divisor: rgba(255, 255, 255, 0.12);
-    --sombra: 0 8px 30px rgba(0, 0, 0, 0.55);
+    --bg: #14130e;
+    --bg-alt: #1c1a13;
+    --surface: #211e16;
+    --glass: rgba(20, 19, 14, 0.78);
+    --ink: #f1eee7;
+    --ink-suave: #a9a28f;
+    --accent: #4c9370;
+    --accent-suave: rgba(76, 147, 112, 0.16);
+    --accent-tinta: #0a1710;
+    --accent2: #d98b57;
+    --divisor: rgba(241, 238, 231, 0.14);
+    --sombra: 0 8px 30px rgba(0, 0, 0, 0.5);
     --sombra-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
   }
 }
 :root[data-theme="dark"] {
-  --bg: #000000;
-  --surface: #1c1c1e;
-  --glass: rgba(28, 28, 30, 0.72);
-  --ink: #f5f5f7;
-  --ink-suave: #98989d;
-  --accent: #34d399;
-  --accent-suave: rgba(52, 211, 153, 0.16);
-  --accent-tinta: #05201a;
-  --divisor: rgba(255, 255, 255, 0.12);
-  --sombra: 0 8px 30px rgba(0, 0, 0, 0.55);
+  --bg: #14130e;
+  --bg-alt: #1c1a13;
+  --surface: #211e16;
+  --glass: rgba(20, 19, 14, 0.78);
+  --ink: #f1eee7;
+  --ink-suave: #a9a28f;
+  --accent: #4c9370;
+  --accent-suave: rgba(76, 147, 112, 0.16);
+  --accent-tinta: #0a1710;
+  --accent2: #d98b57;
+  --divisor: rgba(241, 238, 231, 0.14);
+  --sombra: 0 8px 30px rgba(0, 0, 0, 0.5);
   --sombra-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 :root[data-theme="light"] {
-  --bg: #f5f5f7;
-  --surface: #ffffff;
-  --glass: rgba(255, 255, 255, 0.72);
-  --ink: #1d1d1f;
-  --ink-suave: #6e6e73;
-  --accent: #0a8f66;
-  --accent-suave: #e1f5ec;
-  --accent-tinta: #ffffff;
-  --divisor: rgba(0, 0, 0, 0.08);
-  --sombra: 0 8px 30px rgba(0, 0, 0, 0.08);
-  --sombra-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --bg: #f1eee7;
+  --bg-alt: #e8e3d8;
+  --surface: #fffdf9;
+  --glass: rgba(241, 238, 231, 0.78);
+  --ink: #1b1a17;
+  --ink-suave: #4a473f;
+  --accent: #1f3b2c;
+  --accent-suave: #e1e9e3;
+  --accent-tinta: #fffdf9;
+  --accent2: #9c4a26;
+  --divisor: #d9d2c2;
+  --sombra: 0 8px 30px rgba(27, 26, 23, 0.1);
+  --sombra-sm: 0 1px 3px rgba(27, 26, 23, 0.08);
 }
 
 html, body {
@@ -116,9 +130,10 @@ body {
 }
 
 .topo-wordmark {
+  font-family: var(--fonte-display);
   font-weight: 700;
   font-size: 18px;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   color: var(--ink);
 }
 
@@ -156,9 +171,10 @@ body {
 }
 
 .boas-vindas-titulo {
+  font-family: var(--fonte-display);
   font-size: 28px;
   font-weight: 700;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   line-height: 1.15;
   text-wrap: balance;
 }
@@ -323,10 +339,15 @@ body {
   left: 10px;
   background: rgba(0, 0, 0, 0.32);
   color: #ffffff;
+  font-family: var(--fonte-mono);
+  text-transform: uppercase;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
 }
 
 .cartao-pill-match {
   right: 10px;
+  font-family: var(--fonte-mono);
   font-variant-numeric: tabular-nums;
 }
 
@@ -363,9 +384,10 @@ body {
 }
 
 .cartao-nome {
+  font-family: var(--fonte-display);
   font-weight: 700;
   font-size: 17px;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   line-height: 1.25;
 }
 
@@ -379,29 +401,34 @@ body {
   display: flex;
   gap: 12px;
   margin-top: 10px;
-  font-size: 13.5px;
+  font-family: var(--fonte-mono);
+  font-size: 12.5px;
   color: var(--ink);
 }
 
 .cartao-codigo {
-  margin-top: 3px;
-  font-size: 11.5px;
+  margin-top: 4px;
+  font-family: var(--fonte-mono);
+  font-size: 11px;
   color: var(--ink-suave);
   font-variant-numeric: tabular-nums;
 }
 
 .cartao-preco {
+  font-family: var(--fonte-display);
   font-weight: 700;
   font-size: 17px;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   margin-top: 8px;
   font-variant-numeric: tabular-nums;
 }
 
+/* O "motivo" ganha uma cor só dele (terracota) — é a explicação da IA,
+   uma informação diferente do resto do cartão, então tem uma cor diferente. */
 .cartao-motivo {
   margin-top: 10px;
   font-size: 13px;
-  color: var(--ink-suave);
+  color: var(--accent2);
   border-top: 1px solid var(--divisor);
   padding-top: 10px;
 }
@@ -513,9 +540,10 @@ body {
 }
 
 .folha-titulo {
+  font-family: var(--fonte-display);
   font-size: 26px;
   font-weight: 700;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   margin-top: 16px;
   text-wrap: balance;
 }
@@ -528,10 +556,11 @@ body {
 }
 
 .folha-subtitulo {
-  font-size: 13px;
-  font-weight: 600;
+  font-family: var(--fonte-mono);
+  font-size: 12px;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
   color: var(--ink-suave);
   margin-top: 24px;
 }
@@ -554,10 +583,10 @@ body {
 
 .folha-passo-numero {
   flex-shrink: 0;
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--accent);
+  font-family: var(--fonte-mono);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--accent2);
   width: 20px;
 }
 
