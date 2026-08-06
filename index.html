@@ -1,89 +1,160 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kaza IA — Busca de imóveis por inteligência artificial</title>
-  <!-- Fontes: se a internet não deixar carregar, o CSS já tem uma fonte
-       do sistema como substituta, então o app continua funcionando igual. -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=IBM+Plex+Mono:wght@400;500&display=swap"
-    rel="stylesheet"
-  />
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kaza IA — Descreva. Encontre. Entenda.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Cabeçalho fixo no topo: marca minimalista + acesso ao "Sobre" -->
-  <header class="topo">
-    <div class="topo-marca">
-      <svg class="topo-logo" viewBox="0 0 28 28" aria-hidden="true">
-        <path d="M4 14.5 14 6l10 8.5" fill="none" stroke="var(--ink)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" />
-        <path d="M6.5 13.2v9h15v-9" fill="none" stroke="var(--ink)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" />
-        <circle cx="21.3" cy="7.2" r="2" fill="var(--accent2)" />
-      </svg>
-      <span class="topo-wordmark">Kaza IA</span>
+<nav id="nav">
+  <div class="logo"><span class="dot"></span>Kaza IA</div>
+  <ul class="nav-links">
+    <li><a href="#como-funciona">Como funciona</a></li>
+    <li><a href="#recursos">Recursos</a></li>
+  </ul>
+  <a href="#lista" class="btn">Entrar na lista</a>
+</nav>
+
+<section class="hero">
+  <div class="eyebrow">Busca de imóveis, repensada</div>
+  <h1>Descreva a casa que você quer.<br>A <em>Kaza IA</em> encontra — e explica por quê.</h1>
+  <p class="hero-sub">Sem filtro nenhum. Você conversa, ela cruza dezenas de anúncios e te mostra só os que realmente valem seu tempo.</p>
+  <div class="hero-ctas">
+    <a href="#lista" class="btn btn-solid">Entrar na lista de espera</a>
+    <a href="#demo" class="btn">Testar agora</a>
+  </div>
+
+  <div class="demo" id="demo">
+    <div class="demo-bar">
+      <span></span><span></span><span></span>
+      <span class="label">kaza.ia — busca</span>
     </div>
-    <button type="button" id="botao-sobre" class="topo-sobre">Sobre</button>
-  </header>
+    <div class="demo-body">
+      <!-- Aqui a busca é de verdade: o texto que você digitar roda contra os
+           5 imóveis fictícios do Rio e o cálculo de match real do protótipo. -->
+      <div class="demo-conversa" id="demo-conversa"></div>
+      <div class="cards-row" id="demo-cards"></div>
 
-  <!-- Área da conversa: aqui entram as mensagens do usuário e da IA -->
-  <main id="chat" class="chat"></main>
+      <div class="demo-chips" id="demo-chips">
+        <button type="button" class="demo-chip">Casa moderna perto do mar, até 2 milhões, 4 quartos</button>
+        <button type="button" class="demo-chip">Apartamento reformado até 1 milhão com escritório</button>
+        <button type="button" class="demo-chip">Cobertura com piscina e vista para o mar</button>
+      </div>
 
-  <!-- Barra de digitação fixa no rodapé -->
-  <footer class="rodape">
-    <form id="form-busca" class="form-busca" autocomplete="off">
-      <input
-        id="campo-busca"
-        type="text"
-        placeholder="Ex: casa moderna perto do mar, até 2 milhões, 4 quartos"
-        maxlength="200"
-      />
-      <button type="submit" aria-label="Enviar busca">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="22" y1="2" x2="11" y2="13"></line>
-          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-        </svg>
-      </button>
+      <form id="demo-form" class="demo-form" autocomplete="off">
+        <input id="demo-input" type="text" placeholder="Descreva o imóvel que você procura..." maxlength="200" />
+        <button type="submit" class="btn btn-solid">Testar</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section class="problem">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow reveal">O problema</div>
+      <h2 class="reveal">Procurar imóvel hoje é um trabalho — não deveria ser</h2>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-item reveal">
+        <span class="mark">"</span>
+        <h3>Dezenas de abas abertas</h3>
+        <p>Cada portal com um filtro diferente, nenhum te dando a resposta direta que você queria.</p>
+      </div>
+      <div class="problem-item reveal">
+        <span class="mark">"</span>
+        <h3>Comparação manual e cansativa</h3>
+        <p>Planilha, anotação, print de tela — o trabalho de comparar imóveis ainda é seu, sozinho.</p>
+      </div>
+      <div class="problem-item reveal">
+        <span class="mark">"</span>
+        <h3>Sem explicação nenhuma</h3>
+        <p>Um anúncio te mostra fotos e preço. Nunca te diz por que aquele imóvel é (ou não é) uma boa escolha.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="como-funciona">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow reveal">Como funciona</div>
+      <h2 class="reveal">Três passos, do jeito que deveria ser</h2>
+    </div>
+    <div class="how-list">
+      <div class="how-step reveal">
+        <div class="how-num">01</div>
+        <div>
+          <h3>Você descreve o que procura</h3>
+          <p>Em linguagem natural, como falaria com um corretor de confiança — bairro, orçamento, quartos, o que for importante pra você.</p>
+        </div>
+      </div>
+      <div class="how-step reveal">
+        <div class="how-num">02</div>
+        <div>
+          <h3>A Kaza IA cruza dezenas de fontes</h3>
+          <p>Ela pesquisa em vários portais e imobiliárias ao mesmo tempo, eliminando o que não atende ao que você pediu.</p>
+        </div>
+      </div>
+      <div class="how-step reveal">
+        <div class="how-num">03</div>
+        <div>
+          <h3>Você recebe poucas opções, bem explicadas</h3>
+          <p>Cada imóvel vem com o motivo real da recomendação — valorização, custo-benefício, segurança da região.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="recursos">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow reveal">Por dentro</div>
+      <h2 class="reveal">Feita pra quem decide com calma</h2>
+      <p class="reveal">Sem pressa, sem lead agressivo. Só clareza pra você decidir.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card reveal">
+        <div class="num">Recomendação</div>
+        <h3>Match explicado</h3>
+        <p>Cada imóvel mostra por que foi recomendado — não só uma nota, um motivo de verdade.</p>
+      </div>
+      <div class="feat-card reveal">
+        <div class="num">Cobertura</div>
+        <h3>Vários portais, uma busca</h3>
+        <p>Sem precisar abrir uma aba pra cada site. A busca é uma só, em um só lugar.</p>
+      </div>
+      <div class="feat-card reveal">
+        <div class="num">Contexto</div>
+        <h3>Além do anúncio</h3>
+        <p>Valorização histórica, segurança da região, proximidade do que importa pra sua rotina.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta" id="lista">
+  <div class="cta-box reveal">
+    <h2>Seja um dos primeiros a usar</h2>
+    <p>Estamos construindo o Kaza IA agora. Deixe seu e-mail e avisamos assim que abrir.</p>
+    <form class="cta-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Você está na lista ✓';">
+      <input type="email" placeholder="seu@email.com" required aria-label="Seu e-mail">
+      <button type="submit" class="btn btn-solid" style="border:none; cursor:pointer;">Entrar na lista</button>
     </form>
-  </footer>
+  </div>
+</section>
 
-  <!-- Folha "Sobre": identidade institucional do produto -->
-  <dialog id="folha-sobre" class="folha-sobre">
-    <div class="folha-cabecalho">
-      <svg class="folha-logo" viewBox="0 0 28 28" aria-hidden="true">
-        <path d="M4 14.5 14 6l10 8.5" fill="none" stroke="var(--ink)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" />
-        <path d="M6.5 13.2v9h15v-9" fill="none" stroke="var(--ink)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" />
-        <circle cx="21.3" cy="7.2" r="2" fill="var(--accent2)" />
-      </svg>
-      <button type="button" id="botao-fechar-sobre" class="folha-fechar" aria-label="Fechar">✕</button>
-    </div>
+<footer>
+  <div>Kaza IA — protótipo, 2026</div>
+  <div>Feito no Rio de Janeiro</div>
+</footer>
 
-    <h2 class="folha-titulo">Kaza IA</h2>
-    <p class="folha-paragrafo">
-      Um jeito mais rápido de procurar imóvel: em vez de filtrar dezenas de campos,
-      você descreve o que quer com suas próprias palavras e recebe uma lista curta,
-      já ordenada pelo que mais combina com o seu pedido.
-    </p>
-
-    <h3 class="folha-subtitulo">Como funciona</h3>
-    <ol class="folha-passos">
-      <li><span class="folha-passo-numero">1</span> Você descreve o imóvel: bairro, preço, quartos, estilo.</li>
-      <li><span class="folha-passo-numero">2</span> A IA cruza seu pedido com o histórico e o perfil de cada imóvel.</li>
-      <li><span class="folha-passo-numero">3</span> Você recebe as melhores opções, com o motivo de cada recomendação.</li>
-    </ol>
-
-    <p class="folha-aviso">
-      Este é um protótipo visual. Os imóveis, preços e o cálculo de match são
-      fictícios e servem apenas para demonstrar a experiência — nenhum dado
-      real é consultado.
-    </p>
-
-    <p class="folha-rodape">© 2026 Kaza IA · Feito para o mercado imobiliário brasileiro</p>
-  </dialog>
-
-  <script src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>

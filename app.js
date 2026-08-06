@@ -1,79 +1,86 @@
 /* ==========================================================================
-   Kaza IA — protótipo visual (sem back-end)
-   Tudo aqui é simulado: os imóveis são fixos e o "match" é calculado
-   com regras simples de texto, só para parecer uma busca por IA.
+   Kaza IA — landing page + demo funcional (sem back-end)
+   A landing (nav, hero, seções) é só apresentação. O painel de demo dentro
+   do hero, porém, é real: o texto que você digita roda contra os imóveis
+   fictícios abaixo e o mesmo cálculo de match do protótipo.
    ========================================================================== */
 
-/* ---- 1. Banco de imóveis fictícios (Rio de Janeiro) ---- */
+/* ---- Barra de navegação: ganha uma linha de baixo ao rolar a página ---- */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 8);
+});
+
+/* ---- Seções aparecem suavemente conforme entram na tela ---- */
+const reduzMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const elementosRevelados = document.querySelectorAll('.reveal');
+if (reduzMovimento) {
+  elementosRevelados.forEach((el) => el.classList.add('in'));
+} else {
+  const observadorRevelacao = new IntersectionObserver((entradas) => {
+    entradas.forEach((entrada) => {
+      if (entrada.isIntersecting) entrada.target.classList.add('in');
+    });
+  }, { threshold: 0.15 });
+  elementosRevelados.forEach((el) => observadorRevelacao.observe(el));
+}
+
+/* ==========================================================================
+   Demo real: banco de imóveis fictícios (Rio de Janeiro) e o motor de match
+   ========================================================================== */
 const IMOVEIS = [
   {
     nome: "Casa em condomínio na Barra",
     bairro: "Barra da Tijuca, Rio de Janeiro",
-    tipo: "Casa",
-    codigo: "KZ-1042",
     preco: 1850000,
     quartos: 4,
     area: 320,
-    cor: "#0f766e",
-    icone: "🏡",
+    gradiente: "linear-gradient(135deg, #1F3B2C 0%, #2E5741 100%)",
     tags: ["moderna", "perto-do-mar", "escritorio", "piscina", "condominio-fechado", "pet-friendly"],
     motivo: "Melhor custo-benefício por m² entre as casas da Barra"
   },
   {
     nome: "Casa nova frente ao mar",
     bairro: "Recreio dos Bandeirantes, Rio de Janeiro",
-    tipo: "Casa",
-    codigo: "KZ-2087",
     preco: 2450000,
     quartos: 4,
     area: 380,
-    cor: "#115e59",
-    icone: "🌊",
+    gradiente: "linear-gradient(135deg, #9C4A26 0%, #C06A3F 100%)",
     tags: ["perto-do-mar", "vista-mar", "escritorio", "moderna", "investimento"],
     motivo: "Maior valorização histórica da região nos últimos 5 anos"
   },
   {
     nome: "Apartamento reformado com vista mar",
     bairro: "Ipanema, Rio de Janeiro",
-    tipo: "Apartamento",
-    codigo: "KZ-3311",
     preco: 3200000,
     quartos: 3,
     area: 140,
-    cor: "#134e4a",
-    icone: "🌅",
+    gradiente: "linear-gradient(135deg, #1B1A17 0%, #4A473F 100%)",
     tags: ["vista-mar", "reformado", "perto-do-mar", "investimento"],
     motivo: "Localização mais valorizada do Rio de Janeiro"
   },
   {
     nome: "Apartamento compacto reformado",
     bairro: "Botafogo, Rio de Janeiro",
-    tipo: "Apartamento",
-    codigo: "KZ-4456",
     preco: 890000,
     quartos: 2,
     area: 78,
-    cor: "#0d9488",
-    icone: "🏢",
+    gradiente: "linear-gradient(135deg, #2E5741 0%, #4C7C63 100%)",
     tags: ["reformado", "escritorio", "investimento"],
     motivo: "Melhor custo-benefício para quem busca praticidade"
   },
   {
     nome: "Cobertura duplex com piscina",
     bairro: "Leblon, Rio de Janeiro",
-    tipo: "Cobertura",
-    codigo: "KZ-5590",
     preco: 5800000,
     quartos: 4,
     area: 310,
-    cor: "#047857",
-    icone: "🏙️",
+    gradiente: "linear-gradient(135deg, #1F3B2C 0%, #9C4A26 100%)",
     tags: ["cobertura", "piscina", "vista-mar", "escritorio", "perto-do-mar"],
     motivo: "Padrão de acabamento mais alto entre as opções"
   }
 ];
 
-/* ---- 2. Palavras-chave que a "IA" reconhece no texto do usuário ---- */
 const DICIONARIO_TAGS = {
   "moderna": "moderna",
   "moderno": "moderna",
@@ -103,29 +110,16 @@ const DICIONARIO_TAGS = {
   "valorizacao": "investimento"
 };
 
-const referenciasDom = {
-  chat: document.getElementById("chat"),
-  form: document.getElementById("form-busca"),
-  campo: document.getElementById("campo-busca"),
-  botaoSobre: document.getElementById("botao-sobre"),
-  botaoFecharSobre: document.getElementById("botao-fechar-sobre"),
-  folhaSobre: document.getElementById("folha-sobre")
-};
-
-/* ---- 3. Extrai orçamento e número de quartos do texto digitado ---- */
 function extrairOrcamento(texto) {
   const milhoes = texto.match(/(\d+(?:[.,]\d+)?)\s*milh/);
-  if (milhoes) {
-    return parseFloat(milhoes[1].replace(",", ".")) * 1000000;
-  }
+  if (milhoes) return parseFloat(milhoes[1].replace(",", ".")) * 1000000;
+
   const mil = texto.match(/(\d+(?:[.,]\d+)?)\s*mil\b/);
-  if (mil) {
-    return parseFloat(mil[1].replace(",", ".")) * 1000;
-  }
+  if (mil) return parseFloat(mil[1].replace(",", ".")) * 1000;
+
   const valorDireto = texto.match(/r\$\s*([\d.,]+)/);
-  if (valorDireto) {
-    return parseFloat(valorDireto[1].replace(/\./g, "").replace(",", "."));
-  }
+  if (valorDireto) return parseFloat(valorDireto[1].replace(/\./g, "").replace(",", "."));
+
   return null;
 }
 
@@ -137,14 +131,11 @@ function extrairQuartos(texto) {
 function extrairTags(texto) {
   const encontradas = new Set();
   for (const chave in DICIONARIO_TAGS) {
-    if (texto.includes(chave)) {
-      encontradas.add(DICIONARIO_TAGS[chave]);
-    }
+    if (texto.includes(chave)) encontradas.add(DICIONARIO_TAGS[chave]);
   }
   return encontradas;
 }
 
-/* ---- 4. Calcula a % de "match" de um imóvel com o pedido do usuário ---- */
 function calcularMatch(imovel, tagsPedidas, orcamento, quartosPedidos) {
   let pontos = 45; // toda busca começa com uma base, para nunca ficar em 0%
 
@@ -155,7 +146,6 @@ function calcularMatch(imovel, tagsPedidas, orcamento, quartosPedidos) {
   if (orcamento) {
     if (imovel.preco <= orcamento) {
       pontos += 20;
-      // se ainda sobrar bastante orçamento, ganha um empurrão extra
       if (imovel.preco <= orcamento * 0.85) pontos += 6;
     } else {
       pontos -= 18;
@@ -171,173 +161,96 @@ function calcularMatch(imovel, tagsPedidas, orcamento, quartosPedidos) {
   return Math.max(30, Math.min(99, Math.round(pontos)));
 }
 
-/* ---- 5. Formata número para reais (R$) ---- */
 function formatarPreco(valor) {
   return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
 }
 
-/* ---- 6. Funções que desenham coisas na tela ---- */
-function rolarParaFinal() {
-  referenciasDom.chat.scrollTop = referenciasDom.chat.scrollHeight;
-}
+/* ==========================================================================
+   Ligação com o painel de demo (HTML dentro de #demo)
+   ========================================================================== */
+const demo = {
+  conversa: document.getElementById("demo-conversa"),
+  cards: document.getElementById("demo-cards"),
+  chips: document.getElementById("demo-chips"),
+  form: document.getElementById("demo-form"),
+  input: document.getElementById("demo-input")
+};
 
-function adicionarMensagemUsuario(texto) {
-  const div = document.createElement("div");
-  div.className = "mensagem mensagem-usuario";
-  div.textContent = texto;
-  referenciasDom.chat.appendChild(div);
-  rolarParaFinal();
-}
-
-function mostrarDigitando() {
-  const div = document.createElement("div");
-  div.className = "digitando";
-  div.id = "indicador-digitando";
-  div.innerHTML = "<span></span><span></span><span></span>";
-  referenciasDom.chat.appendChild(div);
-  rolarParaFinal();
-}
-
-function removerDigitando() {
-  const el = document.getElementById("indicador-digitando");
-  if (el) el.remove();
-}
-
-/* Classifica o match em faixas (alto/médio/baixo) para que o selo colorido
-   também transmita a informação visualmente, não só o número. */
-function faixaDeMatch(match) {
-  if (match >= 85) return "alto";
-  if (match >= 60) return "medio";
-  return "baixo";
-}
-
-function criarCartaoImovel(imovel, match, destaque) {
-  const cartao = document.createElement("div");
-  cartao.className = "cartao-imovel";
-
-  cartao.innerHTML = `
-    <div class="cartao-foto" style="background:${imovel.cor}">
-      ${imovel.icone}
-      <span class="cartao-pill cartao-pill-tipo">${imovel.tipo}</span>
-      <span class="cartao-pill cartao-pill-match ${faixaDeMatch(match)}">${match}% match</span>
-      ${destaque ? '<span class="cartao-fita">Melhor combinação</span>' : ""}
-    </div>
-    <div class="cartao-corpo">
-      <div class="cartao-nome">${imovel.nome}</div>
-      <div class="cartao-bairro">${imovel.bairro}</div>
-      <div class="cartao-specs">
-        <span>🛏️ ${imovel.quartos} quartos</span>
-        <span>📐 ${imovel.area} m²</span>
-      </div>
-      <div class="cartao-codigo">Ref. ${imovel.codigo}</div>
-      <div class="cartao-preco">${formatarPreco(imovel.preco)}</div>
-      <div class="cartao-motivo">${imovel.motivo}</div>
-    </div>
-  `;
-  return cartao;
-}
-
-function adicionarRespostaIA(textoIntro, imoveisOrdenados) {
-  const container = document.createElement("div");
-  container.className = "mensagem mensagem-ia";
-  container.textContent = textoIntro;
-  referenciasDom.chat.appendChild(container);
-
-  const listaResultados = document.createElement("div");
-  listaResultados.className = "resultados";
-  imoveisOrdenados.forEach(({ imovel, match }, indice) => {
-    listaResultados.appendChild(criarCartaoImovel(imovel, match, indice === 0));
+function fadeIn(el) {
+  el.style.transition = "opacity .5s ease, transform .5s ease";
+  requestAnimationFrame(() => {
+    el.style.opacity = "1";
+    el.style.transform = "translateY(0)";
   });
-  referenciasDom.chat.appendChild(listaResultados);
-  rolarParaFinal();
 }
 
-/* ---- 7. Mensagem inicial de boas-vindas: o momento de abertura da conversa,
-   tratado como uma pequena "hero" — título grande e sugestões como atalhos ---- */
-function mostrarBoasVindas() {
-  const div = document.createElement("div");
-  div.className = "boas-vindas";
-  div.innerHTML = `
-    <div class="boas-vindas-titulo">Encontre seu próximo endereço.</div>
-    <div class="boas-vindas-subtitulo">Descreva o imóvel com suas palavras — bairro, preço, quartos, estilo — e a Kaza IA recomenda na hora.</div>
-    <div class="chips">
-      <button class="chip" type="button">Casa moderna perto do mar, até 2 milhões, 4 quartos</button>
-      <button class="chip" type="button">Apartamento reformado até 1 milhão com escritório</button>
-      <button class="chip" type="button">Cobertura com piscina e vista para o mar</button>
+function criarCardImovel(imovel, match) {
+  const card = document.createElement("div");
+  card.className = "p-card";
+  card.innerHTML = `
+    <div class="photo" style="background:${imovel.gradiente}">
+      <span class="match">${match}% match</span>
+    </div>
+    <div class="info">
+      <div class="name">${imovel.nome}</div>
+      <div class="meta">${formatarPreco(imovel.preco)} · ${imovel.quartos} quartos · ${imovel.area}m²</div>
+      <div class="why">${imovel.motivo}</div>
     </div>
   `;
-  referenciasDom.chat.appendChild(div);
+  return card;
+}
 
-  div.querySelectorAll(".chip").forEach((botao) => {
-    botao.addEventListener("click", () => {
-      referenciasDom.campo.value = botao.textContent;
-      referenciasDom.form.requestSubmit();
+function rodarBusca(texto) {
+  // Cada busca começa do zero no painel — mantém a demo compacta e legível.
+  demo.conversa.innerHTML = "";
+  demo.cards.innerHTML = "";
+
+  const bolhaUsuario = document.createElement("div");
+  bolhaUsuario.className = "bubble-user";
+  bolhaUsuario.textContent = texto;
+  demo.conversa.appendChild(bolhaUsuario);
+  fadeIn(bolhaUsuario);
+
+  const bolhaIa = document.createElement("div");
+  bolhaIa.className = "bubble-ai";
+  bolhaIa.textContent = "Analisando seu pedido...";
+  demo.conversa.appendChild(bolhaIa);
+
+  setTimeout(() => {
+    fadeIn(bolhaIa);
+
+    const textoBusca = texto.toLowerCase();
+    const tagsPedidas = extrairTags(textoBusca);
+    const orcamento = extrairOrcamento(textoBusca);
+    const quartosPedidos = extrairQuartos(textoBusca);
+
+    const resultado = IMOVEIS
+      .map((imovel) => ({
+        imovel,
+        match: calcularMatch(imovel, tagsPedidas, orcamento, quartosPedidos)
+      }))
+      .sort((a, b) => b.match - a.match)
+      .slice(0, 3);
+
+    const melhor = resultado[0];
+    bolhaIa.textContent = `Encontrei ${resultado.length} boas opções. A que mais combina é "${melhor.imovel.nome}", com ${melhor.match}% de match.`;
+
+    resultado.forEach(({ imovel, match }, indice) => {
+      const card = criarCardImovel(imovel, match);
+      demo.cards.appendChild(card);
+      setTimeout(() => fadeIn(card), 120 * indice);
     });
-  });
+  }, reduzMovimento ? 0 : 550);
 }
 
-/* ---- 8. Processa o pedido do usuário e "responde" como uma IA ---- */
-function processarBusca(textoOriginal) {
-  const texto = textoOriginal.toLowerCase();
-  const tagsPedidas = extrairTags(texto);
-  const orcamento = extrairOrcamento(texto);
-  const quartosPedidos = extrairQuartos(texto);
-
-  const resultado = IMOVEIS
-    .map((imovel) => ({
-      imovel,
-      match: calcularMatch(imovel, tagsPedidas, orcamento, quartosPedidos)
-    }))
-    .sort((a, b) => b.match - a.match)
-    .slice(0, 4);
-
-  const melhor = resultado[0];
-  const textoIntro = `Encontrei ${resultado.length} imóveis que combinam com o que você pediu. O destaque é "${melhor.imovel.nome}", com ${melhor.match}% de match:`;
-
-  removerDigitando();
-  adicionarRespostaIA(textoIntro, resultado);
-}
-
-/* ---- 9. Liga tudo: envio do formulário ---- */
-referenciasDom.form.addEventListener("submit", (evento) => {
+demo.form.addEventListener("submit", (evento) => {
   evento.preventDefault();
-  const texto = referenciasDom.campo.value.trim();
+  const texto = demo.input.value.trim();
   if (!texto) return;
-
-  adicionarMensagemUsuario(texto);
-  referenciasDom.campo.value = "";
-  mostrarDigitando();
-
-  // Pequeno atraso para simular a IA "pensando"
-  setTimeout(() => processarBusca(texto), 700);
+  rodarBusca(texto);
+  demo.input.value = "";
 });
 
-/* ---- 10. Folha "Sobre": abre como uma janela nativa <dialog>, com uma
-   transição suave de entrada/saída controlada pelo atributo data-aberta ---- */
-const preferenciaSemMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const DURACAO_TRANSICAO_FOLHA = preferenciaSemMovimento ? 0 : 280;
-
-function abrirFolhaSobre() {
-  referenciasDom.folhaSobre.showModal();
-  // Precisa de um quadro de espera para o navegador aplicar o estado
-  // "fechado" antes de mudar para "aberto" — assim a transição acontece.
-  requestAnimationFrame(() => referenciasDom.folhaSobre.setAttribute("data-aberta", ""));
-}
-
-function fecharFolhaSobre() {
-  referenciasDom.folhaSobre.removeAttribute("data-aberta");
-  setTimeout(() => referenciasDom.folhaSobre.close(), DURACAO_TRANSICAO_FOLHA);
-}
-
-referenciasDom.botaoSobre.addEventListener("click", abrirFolhaSobre);
-referenciasDom.botaoFecharSobre.addEventListener("click", fecharFolhaSobre);
-
-// Clicar fora do conteúdo (no fundo escurecido) também fecha a folha
-referenciasDom.folhaSobre.addEventListener("click", (evento) => {
-  if (evento.target === referenciasDom.folhaSobre) {
-    fecharFolhaSobre();
-  }
+demo.chips.querySelectorAll(".demo-chip").forEach((botao) => {
+  botao.addEventListener("click", () => rodarBusca(botao.textContent));
 });
-
-/* ---- 11. Inicialização ---- */
-mostrarBoasVindas();
