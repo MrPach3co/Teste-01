@@ -252,6 +252,20 @@ h2{
 .cta-form input:focus{ outline: none; border-color: var(--mata); }
 @media (max-width: 480px){ .cta-form{ flex-direction: column; } }
 
+.cta-consentimento{
+  display: flex; align-items: flex-start; gap: 8px;
+  max-width: 400px; margin: 14px auto 0;
+  font-family: var(--mono); font-size: 11.5px; color: var(--grafite-soft);
+  text-align: left; line-height: 1.5; cursor: pointer;
+}
+.cta-consentimento input{ margin-top: 3px; accent-color: var(--mata); cursor: pointer; }
+
+.cta-status{
+  margin-top: 12px; font-family: var(--mono); font-size: 12.5px;
+  color: var(--mata); min-height: 1em;
+}
+.cta-status.erro{ color: var(--telha); }
+
 /* FOOTER */
 footer{
   padding: 40px 32px; border-top: 1px solid var(--areia-line);

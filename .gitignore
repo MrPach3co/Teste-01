@@ -1,0 +1,19 @@
+# Segredos — nunca commitar
+.env
+backend/.env
+
+# Banco de dados local
+*.db
+*.sqlite3
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Editor / SO
+.DS_Store
+.vscode/

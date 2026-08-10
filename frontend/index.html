@@ -143,10 +143,15 @@
   <div class="cta-box reveal">
     <h2>Seja um dos primeiros a usar</h2>
     <p>Estamos construindo o Kaza IA agora. Deixe seu e-mail e avisamos assim que abrir.</p>
-    <form class="cta-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Você está na lista ✓';">
-      <input type="email" placeholder="seu@email.com" required aria-label="Seu e-mail">
+    <form class="cta-form" id="lista-espera-form">
+      <input type="email" id="lista-espera-email" placeholder="seu@email.com" required aria-label="Seu e-mail">
       <button type="submit" class="btn btn-solid" style="border:none; cursor:pointer;">Entrar na lista</button>
     </form>
+    <label class="cta-consentimento">
+      <input type="checkbox" id="lista-espera-consentimento" required>
+      Concordo em ser contatado(a) neste e-mail sobre o lançamento. Seus dados podem ser exportados ou excluídos a qualquer momento (LGPD).
+    </label>
+    <p class="cta-status" id="lista-espera-status" role="status"></p>
   </div>
 </section>
 
