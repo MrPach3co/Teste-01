@@ -76,18 +76,20 @@ alembic/       migrações de banco
 tests/         pytest
 ```
 
+## Deploy
+
+Veja [`DEPLOY.md`](../DEPLOY.md) na raiz do repositório — passo a passo para
+colocar isso no ar no Railway com um link público, banco Postgres e HTTPS,
+usando o `Dockerfile` que já está pronto no repositório.
+
 ## O que falta para produção
 
-Este backend já é funcional e testado, mas antes de ir ao ar com usuários
-reais:
+Este backend já é funcional, testado e "deployável", mas antes de ir ao ar
+com usuários reais:
 
 1. **Fonte real de imóveis** — hoje o banco só tem os 5 imóveis de exemplo
    semeados por `seed.py`. Isso depende de parceria com portais/imobiliárias
    (fora do escopo deste código).
-2. **Banco de produção** — trocar SQLite por Postgres gerenciado (o código
-   já está pronto para isso, só muda `DATABASE_URL`).
-3. **Hospedagem** — este servidor precisa rodar em algum lugar (Railway,
-   Render, Fly.io, AWS etc.) com HTTPS na frente.
-4. **Revisão jurídica da LGPD** — o código trata consentimento, exportação e
+2. **Revisão jurídica da LGPD** — o código trata consentimento, exportação e
    exclusão de dados, mas o texto legal (`docs/PRIVACIDADE.md`) deve passar
    por um advogado antes de valer como política oficial.
