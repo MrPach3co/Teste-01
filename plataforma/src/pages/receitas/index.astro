@@ -1,0 +1,213 @@
+---
+import Base from "../../layouts/Base.astro";
+import CartaoReceita from "../../components/CartaoReceita.astro";
+import Icone from "../../components/Icone.astro";
+import { receitas, marca } from "../../lib/conteudo";
+import { REFEICOES, OBJETIVOS, FAIXAS_TEMPO } from "../../lib/comum.mjs";
+
+const grupos = [
+  { nome: "refeicao", rotulo: "Refeição", opcoes: Object.entries(REFEICOES).map(([valor, rotulo]) => ({ valor, rotulo })) },
+  { nome: "objetivo", rotulo: "Objetivo", opcoes: Object.entries(OBJETIVOS).map(([valor, rotulo]) => ({ valor, rotulo })) },
+  { nome: "tempo", rotulo: "Tempo de preparo", opcoes: FAIXAS_TEMPO.map(({ valor, rotulo }) => ({ valor, rotulo })) },
+  {
+    nome: "custo", rotulo: "Custo por porção", opcoes: [
+      { valor: "1", rotulo: `$ · até R$ ${marca.custo.economica_ate}` },
+      { valor: "2", rotulo: `$$ · até R$ ${marca.custo.moderada_ate}` },
+      { valor: "3", rotulo: `$$$ · acima de R$ ${marca.custo.moderada_ate}` },
+    ],
+  },
+];
+const temExemplos = receitas.some((r) => r.exemplo);
+---
+<Base titulo="Receitas" descricao={`Biblioteca de receitas saudáveis da ${marca.nome}: filtre por tempo de preparo, custo, objetivo e refeição.`}>
+  <section class="secao biblioteca">
+    <div class="container">
+      <header class="biblioteca__topo" data-revelar>
+        <span class="sobretitulo">Plataforma · Demonstração</span>
+        <h1>Biblioteca de <em>receitas</em></h1>
+        <p class="lead">Encontre a receita certa para o seu dia por tempo, custo, objetivo e refeição.</p>
+        {temExemplos && (
+          <p class="aviso-demo"><span class="selo selo--exemplo">Exemplo</span> Esta é uma versão de demonstração com receitas de exemplo. O acervo completo chega com o e-book.</p>
+        )}
+      </header>
+
+      <form class="filtros" data-filtros role="search" onsubmit="return false">
+        <div class="filtros__busca">
+          <Icone nome="busca" tamanho={20} />
+          <label class="sr-only" for="busca">Buscar receita ou ingrediente</label>
+          <input id="busca" name="q" type="search" placeholder="Buscar receita ou ingrediente…" autocomplete="off" />
+        </div>
+
+        <button type="button" class="filtros__alternar" data-alternar aria-expanded="false" aria-controls="filtros-grupos">
+          <Icone nome="filtro" tamanho={18} /> Filtros <span data-contagem-ativos></span>
+        </button>
+
+        <div class="filtros__grupos" id="filtros-grupos">
+          {grupos.map((g) => (
+            <fieldset class="filtros__grupo">
+              <legend>{g.rotulo}</legend>
+              <div class="chips">
+                <label class="chip"><input type="radio" name={g.nome} value="" checked /><span>Todos</span></label>
+                {g.opcoes.map((o) => (
+                  <label class="chip"><input type="radio" name={g.nome} value={o.valor} /><span>{o.rotulo}</span></label>
+                ))}
+              </div>
+            </fieldset>
+          ))}
+        </div>
+      </form>
+
+      <div class="biblioteca__status">
+        <p aria-live="polite"><strong data-total>{receitas.length}</strong> <span data-palavra>{receitas.length === 1 ? "receita" : "receitas"}</span></p>
+        <button type="button" class="link-botao" data-limpar hidden>Limpar filtros</button>
+      </div>
+
+      <div class="grade grade--3 biblioteca__lista">
+        {receitas.map((r, i) => <CartaoReceita receita={r} indice={i} titulo="h2" />)}
+      </div>
+
+      <div class="biblioteca__vazio" data-vazio hidden>
+        <Icone nome="busca" tamanho={36} />
+        <h2>Nenhuma receita com esses filtros</h2>
+        <p>Tente remover um filtro ou buscar por outro ingrediente.</p>
+        <button type="button" class="btn btn--contorno" data-limpar>Limpar filtros</button>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("[data-filtros]")!;
+  const cartoes = [...document.querySelectorAll<HTMLElement>("[data-receita]")];
+  const total = document.querySelector("[data-total]")!;
+  const palavra = document.querySelector("[data-palavra]")!;
+  const vazio = document.querySelector<HTMLElement>("[data-vazio]")!;
+  const botoesLimpar = document.querySelectorAll<HTMLButtonElement>("[data-limpar]");
+  const contagemAtivos = document.querySelector("[data-contagem-ativos]")!;
+  const alternar = document.querySelector<HTMLButtonElement>("[data-alternar]")!;
+  const CAMPOS = ["refeicao", "objetivo", "tempo", "custo"] as const;
+
+  const semAcento = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+
+  function aplicar(atualizarUrl = true) {
+    const dados = new FormData(form);
+    const f = Object.fromEntries(CAMPOS.map((c) => [c, String(dados.get(c) ?? "")]));
+    const termos = semAcento(String(dados.get("q") ?? "")).split(/\s+/).filter(Boolean);
+    let visiveis = 0;
+
+    for (const c of cartoes) {
+      const d = c.dataset;
+      const ok =
+        (!f.refeicao || d.refeicoes!.split(" ").includes(f.refeicao)) &&
+        (!f.objetivo || d.objetivos!.split(" ").includes(f.objetivo)) &&
+        (!f.tempo || Number(d.tempo) <= Number(f.tempo)) &&
+        (!f.custo || d.custo === f.custo) &&
+        termos.every((t) => d.busca!.includes(t));
+      c.hidden = !ok;
+      c.classList.add("revelado");
+      if (ok) visiveis++;
+    }
+
+    total.textContent = String(visiveis);
+    palavra.textContent = visiveis === 1 ? "receita" : "receitas";
+    vazio.hidden = visiveis > 0;
+    const ativos = CAMPOS.filter((c) => f[c]).length + (termos.length ? 1 : 0);
+    contagemAtivos.textContent = ativos ? `(${ativos})` : "";
+    botoesLimpar.forEach((b) => (b.hidden = ativos === 0 && b.closest("[data-vazio]") === null));
+
+    if (atualizarUrl) {
+      const params = new URLSearchParams();
+      CAMPOS.forEach((c) => f[c] && params.set(c, f[c]));
+      if (termos.length) params.set("q", String(dados.get("q")));
+      const qs = params.toString();
+      history.replaceState(null, "", qs ? `?${qs}` : location.pathname);
+    }
+  }
+
+  // Filtros vindos do endereço (links compartilhados)
+  const params = new URLSearchParams(location.search);
+  for (const c of CAMPOS) {
+    const v = params.get(c);
+    const input = v && form.querySelector<HTMLInputElement>(`input[name="${c}"][value="${CSS.escape(v)}"]`);
+    if (input) input.checked = true;
+  }
+  if (params.get("q")) (form.elements.namedItem("q") as HTMLInputElement).value = params.get("q")!;
+
+  form.addEventListener("input", () => aplicar());
+  botoesLimpar.forEach((b) => b.addEventListener("click", () => { form.reset(); aplicar(); }));
+  alternar.addEventListener("click", () => {
+    const aberto = form.classList.toggle("aberto");
+    alternar.setAttribute("aria-expanded", String(aberto));
+  });
+  aplicar(false);
+</script>
+
+<style>
+  .biblioteca { padding-top: clamp(2rem, 1rem + 4vw, 4rem); }
+  .biblioteca__topo { max-width: 46rem; margin-bottom: var(--e-6); }
+  .aviso-demo { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-3); font-size: var(--t-sm); color: var(--cor-texto-suave); }
+
+  .filtros {
+    position: sticky; top: 4.5rem; z-index: 10;
+    display: grid; gap: var(--e-4);
+    padding: var(--e-4); margin-bottom: var(--e-5);
+    background: color-mix(in srgb, var(--cor-fundo) 94%, transparent);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--cor-linha); border-radius: var(--raio-lg);
+  }
+  .filtros__busca { position: relative; display: flex; align-items: center; }
+  .filtros__busca :global(.icone) { position: absolute; left: 1rem; color: var(--cor-texto-suave); pointer-events: none; }
+  .filtros__busca input {
+    width: 100%; min-height: 3rem; padding: 0.75rem 1rem 0.75rem 3rem;
+    font: inherit; font-size: 16px; color: inherit; background: var(--cor-fundo-alt);
+    border: 1px solid transparent; border-radius: 999px; outline: none; transition: border-color var(--transicao);
+  }
+  .filtros__busca input:focus { border-color: var(--cor-primaria); background: var(--cor-fundo); }
+
+  .filtros__alternar {
+    display: inline-flex; align-items: center; justify-content: center; gap: var(--e-2);
+    min-height: 2.75rem; font: 600 var(--t-sm) var(--fonte-texto); color: var(--cor-texto);
+    background: none; border: 1px solid var(--cor-linha); border-radius: 999px; cursor: pointer;
+  }
+  .filtros__grupos { display: none; gap: var(--e-4); }
+  .filtros.aberto .filtros__grupos { display: grid; }
+
+  @media (min-width: 900px) {
+    .filtros { grid-template-columns: 1fr; padding: var(--e-5); }
+    .filtros__alternar { display: none; }
+    .filtros__grupos { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--e-4) var(--e-6); }
+  }
+  @media (max-width: 899px) {
+    .filtros { position: static; }
+    .filtros:not(.aberto) { grid-template-columns: 1fr auto; align-items: center; }
+    .filtros:not(.aberto) .filtros__alternar { padding-inline: 1rem; }
+  }
+
+  .filtros__grupo { border: 0; margin: 0; padding: 0; min-width: 0; }
+  .filtros__grupo legend {
+    padding: 0; margin-bottom: var(--e-2); font-size: var(--t-xs); font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--cor-texto-suave);
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: var(--e-2); }
+  .chip { position: relative; cursor: pointer; }
+  .chip input { position: absolute; opacity: 0; pointer-events: none; }
+  .chip span {
+    display: inline-flex; align-items: center; min-height: 2.25rem; padding: 0.35rem 0.9rem;
+    font-size: var(--t-sm); border: 1px solid var(--cor-linha); border-radius: 999px; background: var(--cor-fundo);
+    transition: background var(--transicao), color var(--transicao), border-color var(--transicao);
+  }
+  .chip:hover span { border-color: var(--cor-texto-suave); }
+  .chip input:checked + span { background: var(--cor-primaria); border-color: var(--cor-primaria); color: var(--cor-fundo); }
+  .chip input:focus-visible + span { outline: 2px solid var(--cor-acento); outline-offset: 2px; }
+
+  .biblioteca__status { display: flex; align-items: center; gap: var(--e-4); margin-bottom: var(--e-5); color: var(--cor-texto-suave); font-size: var(--t-sm); }
+  .biblioteca__status p { margin: 0; }
+  .biblioteca__status strong { color: var(--cor-texto); }
+  .link-botao { background: none; border: 0; padding: 0; font: inherit; color: var(--cor-primaria); text-decoration: underline; text-underline-offset: 0.2em; cursor: pointer; }
+
+  .biblioteca__lista { row-gap: var(--e-7); }
+  .biblioteca__lista :global(.cartao-receita__titulo) { font-size: var(--t-lg); }
+  .biblioteca__vazio { display: grid; justify-items: center; text-align: center; gap: var(--e-2); padding: var(--e-8) var(--e-4); color: var(--cor-texto-suave); }
+  .biblioteca__vazio[hidden] { display: none; }
+  .biblioteca__vazio h2 { font-size: var(--t-xl); color: var(--cor-texto); margin: var(--e-3) 0 0; }
+</style>

@@ -1,0 +1,56 @@
+# EXEMPLO — receita de demonstração. Substitua pelas receitas reais do chef.
+titulo: "Salmão em crosta de gergelim com purê de abóbora e vagem"
+exemplo: true
+na_amostra: true
+ordem: 5
+resumo: >-
+  Jantar de restaurante em 40 minutos: crosta crocante de gergelim, purê
+  aveludado de abóbora com gengibre e vagem al dente.
+foto: ""
+
+refeicoes: [jantar]
+objetivos: [equilibrio, ganho-de-massa]
+tempo_preparo_min: 40
+tempo_ativo_min: 25
+porcoes: 2
+dificuldade: media
+custo_total_estimado: 41.00
+tags: [ocasiao-especial, rico-em-omega-3, sem-gluten]
+
+ingredientes:
+  - { nome: "salmão (filé com pele)", quantidade: 300, unidade: g, secao: acougue, nota: "2 postas", grupo: "Salmão" }
+  - { nome: "gergelim", quantidade: 3, unidade: colher-sopa, secao: graos, nota: "branco e preto, se tiver", grupo: "Salmão" }
+  - { nome: "shoyu com baixo teor de sódio", quantidade: 1, unidade: colher-sopa, secao: mercearia, grupo: "Salmão" }
+  - { nome: "limão", quantidade: 1, unidade: unidade, secao: hortifruti, grupo: "Salmão" }
+  - { nome: "abóbora cabotiá", quantidade: 500, unidade: g, secao: hortifruti, nota: "descascada, em cubos", grupo: "Purê" }
+  - { nome: "gengibre fresco", quantidade: 1, unidade: colher-cha, secao: hortifruti, nota: "ralado", grupo: "Purê" }
+  - { nome: "alho", quantidade: 1, unidade: dente, secao: hortifruti, grupo: "Purê" }
+  - { nome: "vagem", quantidade: 200, unidade: g, secao: hortifruti, grupo: "Acompanhamento" }
+  - { nome: "azeite de oliva", quantidade: 1, unidade: colher-sopa, secao: mercearia, despensa: true }
+  - { nome: "sal", unidade: a-gosto, secao: temperos, despensa: true }
+
+preparo:
+  - "Cozinhe a abóbora e o alho no vapor (ou em pouca água) por 15 minutos, até ficarem bem macios."
+  - "Enquanto isso, seque o salmão com papel-toalha, pincele o lado sem pele com o shoyu e pressione no gergelim para formar a crosta."
+  - "Amasse a abóbora com o gengibre, metade do azeite e sal até virar um purê liso. Mantenha aquecido."
+  - "Aqueça uma frigideira antiaderente com o restante do azeite em fogo médio. Coloque o salmão com a pele para baixo por 4 minutos, vire e doure a crosta por mais 2 a 3 minutos."
+  - "Na mesma frigideira, salteie a vagem por 3 minutos com uma pitada de sal. Sirva o salmão sobre o purê, com a vagem e gotas de limão."
+
+dicas:
+  - "O salmão está no ponto quando o centro ainda está levemente rosado: ele termina de cozinhar no prato."
+  - "Gergelim queima rápido. Se dourar demais, abaixe o fogo."
+substituicoes:
+  - "Salmão → tilápia ou pescada (reduza 1 minuto de cada lado)."
+  - "Abóbora → mandioquinha."
+conservacao: "Melhor consumido na hora. O purê dura 4 dias na geladeira e pode ser congelado."
+
+nutricao:
+  porcao: "1 prato (cerca de 420 g)"
+  calorias_kcal: 580
+  proteinas_g: 37
+  carboidratos_g: 33
+  gorduras_g: 34
+  fibras_g: 9
+  sodio_mg: 520
+  revisado_por_nutricionista: false
+  data_revisao: ""

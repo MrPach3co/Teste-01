@@ -1,0 +1,23 @@
+# ─────────────────────────────────────────────────────────────
+#  Depoimentos
+#  A seção de depoimentos SÓ aparece no site quando houver pelo
+#  menos um depoimento abaixo. Enquanto a lista estiver vazia, ela
+#  fica escondida.
+#
+#  Regras:
+#   • Só depoimentos REAIS, com autorização por escrito da pessoa.
+#   • Sem promessas de resultado (ex.: "perdi 10 kg").
+#   • O campo autorizado: true é obrigatório; sem ele o site não publica.
+#
+#  Modelo (apague o "#" do começo das linhas para usar):
+#
+#  depoimentos:
+#    - nome: "Maria S."
+#      descricao: "Professora, São Paulo"
+#      texto: "As receitas cabem na minha rotina e a lista de compras me poupa tempo."
+#      foto: ""              # opcional, ex.: "depoimentos/maria.jpg" (dentro de fotos/)
+#      data: "2026-11-10"
+#      autorizado: true
+# ─────────────────────────────────────────────────────────────
+
+depoimentos: []

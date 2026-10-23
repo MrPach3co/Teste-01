@@ -1,24 +1,43 @@
 ---
-// Placeholder honesto: deixa claro que ainda não há foto real do prato.
-// Substitua pela foto verdadeira assim que ela existir.
+// Placeholder honesto: deixa claro que ainda não há foto real.
+// Substitua pela foto verdadeira assim que ela existir (pasta fotos/).
 interface Props {
   rotulo?: string;
   proporcao?: string; // ex.: "4/3", "1/1", "3/4"
   tom?: "verde" | "pimenta" | "acafrao";
+  tipo?: "prato" | "pessoa" | "maos";
+  class?: string;
 }
-const { rotulo = "", proporcao = "4/3", tom = "verde" } = Astro.props;
+const { rotulo = "", proporcao = "4/3", tom = "verde", tipo = "prato", class: classe } = Astro.props;
+const aviso = tipo === "prato" ? "Imagem ilustrativa · foto real em breve" : "Foto em breve";
 ---
-<figure class:list={["placeholder", `placeholder--${tom}`]} style={`aspect-ratio: ${proporcao}`} role="img"
-  aria-label={`Imagem ilustrativa${rotulo ? `: ${rotulo}` : ""}. Foto real em breve.`}>
-  <svg class="placeholder__prato" viewBox="0 0 120 120" aria-hidden="true">
-    <circle cx="60" cy="60" r="44" fill="none" stroke="currentColor" stroke-width="1" />
-    <circle cx="60" cy="60" r="30" fill="none" stroke="currentColor" stroke-width="1" opacity=".55" />
-    <path d="M12 34v22M16 34v22M20 34v22M12 56c0 5 8 5 8 0M16 56v40" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round" transform="translate(-6 0)" />
-    <path d="M110 34c-5 0-6 12-6 22h6v40" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round" transform="translate(4 0)" />
-  </svg>
+<figure class:list={["placeholder", `placeholder--${tom}`, classe]} style={`aspect-ratio: ${proporcao}`} role="img"
+  aria-label={`${rotulo ? `${rotulo}. ` : ""}${aviso}.`}>
+  {tipo === "prato" && (
+    <svg class="placeholder__icone" viewBox="0 0 120 120" aria-hidden="true">
+      <circle cx="60" cy="60" r="44" fill="none" stroke="currentColor" stroke-width="1" />
+      <circle cx="60" cy="60" r="30" fill="none" stroke="currentColor" stroke-width="1" opacity=".55" />
+      <path d="M6 34v22M10 34v22M14 34v22M6 56c0 5 8 5 8 0M10 56v40" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round" />
+      <path d="M114 34c-5 0-6 12-6 22h6v40" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round" />
+    </svg>
+  )}
+  {tipo === "pessoa" && (
+    <svg class="placeholder__icone" viewBox="0 0 120 120" aria-hidden="true">
+      <circle cx="60" cy="44" r="20" fill="none" stroke="currentColor" stroke-width="1" />
+      <path d="M22 108c4-22 20-34 38-34s34 12 38 34" fill="none" stroke="currentColor" stroke-width="1" />
+    </svg>
+  )}
+  {tipo === "maos" && (
+    <svg class="placeholder__icone" viewBox="0 0 120 120" aria-hidden="true">
+      <ellipse cx="60" cy="78" rx="44" ry="14" fill="none" stroke="currentColor" stroke-width="1" />
+      <path d="M30 70c4-10 14-16 30-16s26 6 30 16" fill="none" stroke="currentColor" stroke-width="1" opacity=".55" />
+      <path d="M78 18 58 60M84 22 64 62" stroke="currentColor" stroke-width="1" stroke-linecap="round" />
+      <ellipse cx="81" cy="16" rx="6" ry="9" transform="rotate(25 81 16)" fill="none" stroke="currentColor" stroke-width="1" />
+    </svg>
+  )}
   <figcaption>
     {rotulo && <span class="placeholder__rotulo">{rotulo}</span>}
-    <span class="placeholder__aviso">Imagem ilustrativa · foto real em breve</span>
+    <span class="placeholder__aviso">{aviso}</span>
   </figcaption>
 </figure>
 
@@ -37,10 +56,10 @@ const { rotulo = "", proporcao = "4/3", tom = "verde" } = Astro.props;
   }
   .placeholder--pimenta { --tom: var(--cor-acento); }
   .placeholder--acafrao { --tom: var(--cor-destaque); }
-  .placeholder__prato { width: clamp(64px, 22%, 120px); }
+  .placeholder__icone { width: clamp(56px, 22%, 120px); }
   figcaption { display: grid; gap: var(--e-1); text-align: center; padding-inline: var(--e-4); }
   .placeholder__rotulo {
-    font-family: var(--fonte-titulo); font-size: var(--t-lg); line-height: 1.2;
+    font-family: var(--fonte-titulo); font-size: var(--t-lg); line-height: 1.2; text-wrap: balance;
     color: color-mix(in srgb, var(--tom) 80%, var(--cor-texto));
   }
   .placeholder__aviso {

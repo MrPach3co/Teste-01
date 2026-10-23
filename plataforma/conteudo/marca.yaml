@@ -39,12 +39,18 @@ contato:
 # Produto principal (pré-venda)
 ebook:
   titulo: "50 Receitas Testadas"
+  subtitulo: "Comida saudável e gostosa para a vida real: rápida, econômica e sem monotonia."
+  quantidade_receitas: 50
   preco: "R$ 39,90"
   preco_de: ""            # opcional: preço "de" riscado, ex.: "R$ 59,90"
+  parcelamento: ""        # opcional, ex.: "ou 4x de R$ 10,87"
   # Link de checkout da Hotmart ou Kiwify. Enquanto vazio, o botão mostra
   # "Pré-venda em breve" e fica desativado.
   link_checkout: ""
   garantia_dias: 7
+  # Opcional: quando o e-book será entregue a quem comprou na pré-venda.
+  # Ex.: "15 de dezembro de 2026". Vazio = a informação não aparece.
+  previsao_entrega: ""
 
 # Amostra grátis
 amostra:
@@ -52,12 +58,25 @@ amostra:
   # Endereço (action) do formulário do MailerLite/Brevo. Enquanto vazio, o
   # formulário funciona em modo demonstração e libera o download direto.
   form_action: ""
+  # Nomes dos campos esperados pela ferramenta de e-mail.
+  # Valores abaixo são os do MailerLite; no Brevo, use "NOME" e "EMAIL".
+  campo_nome: "fields[name]"
+  campo_email: "fields[email]"
   # PDF entregue na página de obrigado (gerado pelo script do e-book).
   arquivo_pdf: "/downloads/amostra-gratis.pdf"
+
+# Custo estimado das receitas
+custo:
+  # Aparece junto do custo de cada receita, para deixar claro de onde vem o valor
+  referencia: "Estimativa com preços médios de supermercado em capitais do Sudeste (out/2026)."
+  # Faixas de custo POR PORÇÃO (em reais) usadas nos filtros $, $$ e $$$
+  economica_ate: 8
+  moderada_ate: 16
 
 # Dados do responsável pelo tratamento de dados (LGPD) — exibidos na
 # política de privacidade.
 empresa:
   razao_social: "[RAZÃO SOCIAL]"
   cnpj: "[CNPJ]"
+  cidade: "[CIDADE/UF]"
   email_privacidade: "privacidade@exemplo.com.br"

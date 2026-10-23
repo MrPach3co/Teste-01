@@ -39,11 +39,11 @@ const ano = new Date().getFullYear();
       </nav>
     </div>
 
-    <p class="rodape__aviso">
+    <div class="rodape__aviso"><p>
       O conteúdo deste site é educativo, voltado ao ensino de culinária saudável,
       e não substitui o acompanhamento nutricional individual. Para orientações
       específicas sobre a sua alimentação, consulte um(a) nutricionista.
-    </p>
+    </p></div>
 
     <div class="rodape__base">
       <span>© {ano} {marca.nome}. Todos os direitos reservados.</span>
@@ -79,9 +79,10 @@ const ano = new Date().getFullYear();
     margin: var(--e-7) 0 var(--e-5);
     padding-top: var(--e-5);
     border-top: 1px solid color-mix(in srgb, var(--cor-fundo) 14%, transparent);
-    font-size: var(--t-xs); line-height: 1.6; max-width: 48rem;
+    font-size: var(--t-xs); line-height: 1.6;
     color: color-mix(in srgb, var(--cor-fundo) 58%, transparent);
   }
+  .rodape__aviso p { max-width: 48rem; margin: 0; }
   .rodape__base {
     display: flex; flex-wrap: wrap; gap: var(--e-2) var(--e-5);
     font-size: var(--t-xs); color: color-mix(in srgb, var(--cor-fundo) 50%, transparent);

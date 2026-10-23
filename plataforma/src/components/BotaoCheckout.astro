@@ -1,0 +1,17 @@
+---
+// Botão de compra. Enquanto o link de checkout não estiver configurado em
+// conteudo/marca.yaml, aparece desativado como "Pré-venda em breve".
+import { marca } from "../lib/conteudo";
+interface Props { texto?: string; variante?: "" | "acento" | "claro"; grande?: boolean; class?: string }
+const { texto = `Garantir por ${marca.ebook.preco}`, variante = "", grande = false, class: classe } = Astro.props;
+const link = marca.ebook.link_checkout;
+---
+{link ? (
+  <a href={link} class:list={["btn", variante && `btn--${variante}`, grande && "btn--grande", classe]} rel="noopener" data-checkout>
+    {texto} <span class="seta" aria-hidden="true">→</span>
+  </a>
+) : (
+  <span class:list={["btn", variante && `btn--${variante}`, grande && "btn--grande", classe]} aria-disabled="true" title="O link de compra será liberado em breve">
+    Pré-venda em breve
+  </span>
+)}

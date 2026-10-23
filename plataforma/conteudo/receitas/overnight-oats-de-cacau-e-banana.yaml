@@ -1,0 +1,55 @@
+# EXEMPLO — receita de demonstração. Substitua pelas receitas reais do chef.
+titulo: "Overnight oats de cacau, banana e pasta de amendoim"
+exemplo: true
+na_amostra: true
+ordem: 1
+resumo: >-
+  Café da manhã que se prepara na noite anterior em 10 minutos e fica
+  cremoso sozinho na geladeira. Doce na medida, sem açúcar refinado.
+foto: ""
+
+refeicoes: [cafe-da-manha, lanche]
+objetivos: [equilibrio, ganho-de-massa]
+tempo_preparo_min: 10
+tempo_ativo_min: 10
+porcoes: 2
+dificuldade: facil
+custo_total_estimado: 10.50
+tags: [sem-fogo, prepare-antes, vegetariano]
+
+ingredientes:
+  - { nome: "aveia em flocos", quantidade: 80, unidade: g, secao: graos }
+  - { nome: "iogurte natural integral", quantidade: 200, unidade: g, secao: laticinios-ovos }
+  - { nome: "leite", quantidade: 160, unidade: ml, secao: laticinios-ovos, nota: "ou bebida vegetal" }
+  - { nome: "banana", quantidade: 1, unidade: unidade, secao: hortifruti, nota: "bem madura" }
+  - { nome: "cacau em pó 100%", quantidade: 2, unidade: colher-sopa, secao: mercearia }
+  - { nome: "chia", quantidade: 1, unidade: colher-sopa, secao: graos }
+  - { nome: "pasta de amendoim integral", quantidade: 2, unidade: colher-sopa, secao: mercearia }
+  - { nome: "mel", quantidade: 2, unidade: colher-cha, secao: mercearia, nota: "opcional" }
+  - { nome: "canela em pó", unidade: a-gosto, secao: temperos, despensa: true }
+
+preparo:
+  - "Amasse metade da banana com um garfo até virar um purê. Corte a outra metade em rodelas e reserve na geladeira."
+  - "Em um pote, misture a aveia, a chia, o cacau e a canela."
+  - "Junte o iogurte, o leite, o purê de banana e o mel. Mexa bem até não haver grumos de cacau."
+  - "Divida em dois potes com tampa e leve à geladeira por pelo menos 6 horas (ou de um dia para o outro)."
+  - "Na hora de servir, cubra com as rodelas de banana e a pasta de amendoim."
+
+dicas:
+  - "A aveia absorve o líquido durante a noite: se preferir mais solto, acrescente um pouco de leite pela manhã."
+  - "Deixe os potes prontos no domingo para ter café da manhã garantido até terça."
+substituicoes:
+  - "Pasta de amendoim → pasta de castanha ou 1 colher (sopa) de amendoim picado."
+  - "Iogurte natural → iogurte vegetal sem açúcar."
+conservacao: "Até 3 dias na geladeira, em pote fechado. Acrescente a cobertura só na hora de comer."
+
+nutricao:
+  porcao: "1 pote (cerca de 300 g)"
+  calorias_kcal: 470
+  proteinas_g: 18
+  carboidratos_g: 60
+  gorduras_g: 19
+  fibras_g: 10
+  sodio_mg: 110
+  revisado_por_nutricionista: false
+  data_revisao: ""

@@ -1,0 +1,65 @@
+# ─────────────────────────────────────────────────────────────
+#  MODELO DE RECEITA
+#  1. Copie este arquivo para conteudo/receitas/ com um nome novo,
+#     em minúsculas, sem acento e com hífens. Ex.: torta-de-frango.yaml
+#     (o nome do arquivo vira o endereço: /receitas/torta-de-frango)
+#  2. Preencha os campos. Arquivos que começam com "_" são ignorados.
+#
+#  Valores aceitos:
+#   refeicoes:   cafe-da-manha, almoco, lanche, jantar
+#   objetivos:   equilibrio, controle-de-peso, ganho-de-massa
+#   dificuldade: facil, media, avancada
+#   unidade:     g, kg, ml, l, unidade, colher-sopa, colher-cha, xicara,
+#                dente, maco, fatia, folha, ramo, lata, pitada, a-gosto
+#   secao:       hortifruti, acougue, laticinios-ovos, mercearia, graos,
+#                padaria, congelados, temperos, outros
+# ─────────────────────────────────────────────────────────────
+
+titulo: "Nome da receita"
+exemplo: false            # true = mostra o selo EXEMPLO
+publicada: true           # false = fica fora do site e do e-book
+na_amostra: false         # true = entra no PDF da amostra grátis
+ordem: 100                # menor aparece primeiro
+resumo: >-
+  Uma ou duas frases que dão vontade de cozinhar.
+foto: ""                  # ex.: "receitas/torta-de-frango.jpg" (dentro de fotos/)
+
+refeicoes: [almoco]
+objetivos: [equilibrio]
+tempo_preparo_min: 30     # tempo total
+tempo_ativo_min: 20       # opcional: tempo com a mão na massa
+porcoes: 2
+dificuldade: facil
+custo_total_estimado: 20.00   # em reais, para a receita inteira
+tags: []
+
+ingredientes:
+  - nome: "ingrediente"
+    quantidade: 100
+    unidade: g
+    secao: mercearia
+    nota: ""              # opcional, ex.: "picado"
+    grupo: ""             # opcional, ex.: "Molho"
+  - nome: "sal"
+    unidade: a-gosto
+    secao: temperos
+    despensa: true        # itens que quase todo mundo tem em casa
+
+preparo:
+  - "Primeiro passo."
+  - "Segundo passo."
+
+dicas: []
+substituicoes: []
+conservacao: ""
+
+nutricao:
+  porcao: "1 porção"
+  calorias_kcal: 0
+  proteinas_g: 0
+  carboidratos_g: 0
+  gorduras_g: 0
+  fibras_g: 0
+  sodio_mg: 0
+  revisado_por_nutricionista: false   # só a nutricionista muda para true
+  data_revisao: ""                    # ex.: "2026-11-20"

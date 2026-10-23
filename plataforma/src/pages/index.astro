@@ -1,26 +1,86 @@
 ---
-// Home provisória da Etapa 1 — será substituída pela home completa na Etapa 2.
 import Base from "../layouts/Base.astro";
-import ImagemPlaceholder from "../components/ImagemPlaceholder.astro";
+import Hero from "../components/home/Hero.astro";
+import Problema from "../components/home/Problema.astro";
+import Metodo from "../components/home/Metodo.astro";
+import Plataforma from "../components/home/Plataforma.astro";
+import Equipe from "../components/home/Equipe.astro";
+import ComoFunciona from "../components/home/ComoFunciona.astro";
+import Depoimentos from "../components/home/Depoimentos.astro";
+import Futuro from "../components/home/Futuro.astro";
+import ChamadaFinal from "../components/home/ChamadaFinal.astro";
+import Faq from "../components/Faq.astro";
+import CartaoReceita from "../components/CartaoReceita.astro";
+import { marca, textos, receitas, rico, t } from "../lib/conteudo";
+
+const faq = textos.home.faq;
+const destaque = receitas.slice(0, 3);
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: marca.nome,
+    url: marca.url_site,
+    email: marca.contato.email,
+    description: marca.descricao_seo,
+    ...(marca.logo ? { logo: new URL(marca.logo, marca.url_site).href } : {}),
+    sameAs: [marca.contato.instagram].filter(Boolean),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faq.itens.map((i: any) => ({
+      "@type": "Question",
+      name: t(i.pergunta),
+      acceptedAnswer: { "@type": "Answer", text: t(i.resposta) },
+    })),
+  },
+];
 ---
-<Base>
-  <section class="secao">
-    <div class="container provisoria">
-      <div data-revelar>
-        <span class="sobretitulo">Em construção · Etapa 1</span>
-        <h1>Refeições saudáveis e <em>gostosas</em>, sem complicação.</h1>
-        <p class="lead">A base da plataforma está pronta: identidade, cabeçalho, rodapé e
-          componentes. A home completa chega na próxima etapa.</p>
-        <a href="/estilo" class="btn">Ver o guia de estilo <span class="seta" aria-hidden="true">→</span></a>
+<Base jsonLd={jsonLd}>
+  <Hero />
+  <Problema />
+  <Metodo />
+
+  <section class="secao" id="receitas">
+    <div class="container">
+      <div class="topo-acervo" data-revelar>
+        <div class="cabecalho-secao">
+          <span class="sobretitulo">Do acervo</span>
+          <h2>Receitas com <em>padrão</em> de método.</h2>
+        </div>
+        <a href="/receitas" class="btn btn--contorno">Ver todas as receitas <span class="seta" aria-hidden="true">→</span></a>
       </div>
-      <div data-revelar style="--atraso:150ms">
-        <ImagemPlaceholder rotulo="Prato do dia" proporcao="4/5" />
+      <div class="grade grade--3">
+        {destaque.map((r, i) => <CartaoReceita receita={r} indice={i} />)}
       </div>
     </div>
   </section>
+
+  <Plataforma />
+  <Equipe />
+  <ComoFunciona />
+  <Depoimentos />
+
+  <section class="secao" id="faq">
+    <div class="container faq-grade">
+      <div class="cabecalho-secao" data-revelar>
+        <span class="sobretitulo">{t(faq.sobretitulo)}</span>
+        <h2 set:html={rico(faq.titulo)} />
+        <p class="lead">Não achou sua dúvida? Escreva para <a href={`mailto:${marca.contato.email}`}>{marca.contato.email}</a>.</p>
+      </div>
+      <Faq itens={faq.itens} />
+    </div>
+  </section>
+
+  <Futuro />
+  <ChamadaFinal />
 </Base>
 
 <style>
-  .provisoria { display: grid; gap: var(--e-7); align-items: center; }
-  @media (min-width: 900px) { .provisoria { grid-template-columns: 1.2fr 1fr; } }
+  .topo-acervo { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: var(--e-5); margin-bottom: var(--e-7); }
+  .topo-acervo .cabecalho-secao { margin-bottom: 0; }
+  .faq-grade { display: grid; gap: var(--e-6); }
+  @media (min-width: 1024px) { .faq-grade { grid-template-columns: 1fr 1.5fr; gap: var(--e-8); align-items: start; } }
 </style>

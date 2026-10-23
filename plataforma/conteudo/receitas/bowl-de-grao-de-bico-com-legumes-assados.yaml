@@ -1,0 +1,60 @@
+# EXEMPLO — receita de demonstração. Substitua pelas receitas reais do chef.
+titulo: "Bowl de grão-de-bico com legumes assados e molho de tahine"
+exemplo: true
+na_amostra: true
+ordem: 2
+resumo: >-
+  Abóbora caramelizada, grão-de-bico crocante e um molho cremoso de tahine
+  com limão. Uma assadeira só, e o almoço do dia seguinte já fica pronto.
+foto: ""
+
+refeicoes: [almoco, jantar]
+objetivos: [equilibrio, controle-de-peso]
+tempo_preparo_min: 35
+tempo_ativo_min: 15
+porcoes: 2
+dificuldade: facil
+custo_total_estimado: 21.80
+tags: [vegetariano, uma-assadeira, marmita]
+
+ingredientes:
+  - { nome: "grão-de-bico cozido", quantidade: 240, unidade: g, secao: mercearia, nota: "1 lata escorrida", grupo: "Legumes assados" }
+  - { nome: "abóbora cabotiá", quantidade: 300, unidade: g, secao: hortifruti, nota: "em cubos, com casca", grupo: "Legumes assados" }
+  - { nome: "cebola roxa", quantidade: 1, unidade: unidade, secao: hortifruti, nota: "em gomos", grupo: "Legumes assados" }
+  - { nome: "tomate-cereja", quantidade: 150, unidade: g, secao: hortifruti, grupo: "Legumes assados" }
+  - { nome: "azeite de oliva", quantidade: 2, unidade: colher-sopa, secao: mercearia, despensa: true, grupo: "Legumes assados" }
+  - { nome: "páprica defumada", quantidade: 1, unidade: colher-cha, secao: temperos, despensa: true, grupo: "Legumes assados" }
+  - { nome: "cominho em pó", quantidade: 0.5, unidade: colher-cha, secao: temperos, despensa: true, grupo: "Legumes assados" }
+  - { nome: "espinafre", quantidade: 60, unidade: g, secao: hortifruti, nota: "folhas", grupo: "Para montar" }
+  - { nome: "tahine", quantidade: 2, unidade: colher-sopa, secao: mercearia, grupo: "Molho de tahine" }
+  - { nome: "iogurte natural integral", quantidade: 60, unidade: g, secao: laticinios-ovos, grupo: "Molho de tahine" }
+  - { nome: "limão", quantidade: 1, unidade: unidade, secao: hortifruti, nota: "suco", grupo: "Molho de tahine" }
+  - { nome: "alho", quantidade: 1, unidade: dente, secao: hortifruti, nota: "ralado", grupo: "Molho de tahine" }
+  - { nome: "sal", unidade: a-gosto, secao: temperos, despensa: true }
+  - { nome: "pimenta-do-reino", unidade: a-gosto, secao: temperos, despensa: true }
+
+preparo:
+  - "Preaqueça o forno a 220 °C. Seque bem o grão-de-bico com um pano de prato: é isso que o deixa crocante."
+  - "Em uma assadeira grande, misture o grão-de-bico, a abóbora e a cebola com o azeite, a páprica, o cominho, sal e pimenta. Espalhe sem amontoar."
+  - "Asse por 15 minutos, junte os tomates-cereja, mexa e asse por mais 10 a 12 minutos, até a abóbora dourar nas bordas."
+  - "Enquanto isso, misture o tahine, o iogurte, o suco de limão, o alho e uma pitada de sal. Afine com 2 a 3 colheres de água até ficar cremoso."
+  - "Monte os bowls com o espinafre na base, os legumes assados por cima e o molho regado na hora de servir."
+
+dicas:
+  - "Não lave a casca da abóbora cabotiá fora: assada, ela fica macia e comestível."
+  - "Para marmita, guarde o molho em um potinho separado."
+substituicoes:
+  - "Abóbora → batata-doce ou cenoura."
+  - "Tahine → pasta de amendoim (o molho fica mais adocicado)."
+conservacao: "Legumes assados: até 4 dias na geladeira. Molho: até 5 dias em pote fechado."
+
+nutricao:
+  porcao: "1 bowl (cerca de 400 g)"
+  calorias_kcal: 530
+  proteinas_g: 17
+  carboidratos_g: 57
+  gorduras_g: 26
+  fibras_g: 16
+  sodio_mg: 420
+  revisado_por_nutricionista: false
+  data_revisao: ""

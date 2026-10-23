@@ -1,0 +1,76 @@
+# Textos da página de pré-venda (/pre-venda).
+# Preço, link de checkout e garantia ficam em conteudo/marca.yaml.
+
+hero:
+  sobretitulo: "Pré-venda"
+  titulo: "{receitas_ebook} receitas *testadas* para comer bem todos os dias."
+
+beneficios_titulo: "O que você recebe"
+beneficios:
+  - titulo: "{receitas_ebook} receitas testadas"
+    texto: "Do café da manhã ao jantar, todas criadas e testadas na cozinha pelo chef."
+  - titulo: "Nutrição revisada"
+    texto: "Calorias, proteínas, carboidratos, gorduras, fibras e sódio por porção, revisados pela nutricionista."
+  - titulo: "Custo por porção"
+    texto: "Para planejar a semana sabendo quanto vai gastar no mercado."
+  - titulo: "Organizadas por objetivo"
+    texto: "Equilíbrio, controle de peso e ganho de massa, para escolher com clareza."
+  - titulo: "Tempo real de preparo"
+    texto: "Tempo total e tempo ativo, sem promessas impossíveis de \"pronto em 5 minutos\"."
+  - titulo: "Dicas de chef"
+    texto: "Conservação, substituições e truques de técnica em cada receita."
+
+sumario_titulo: "O que tem dentro"
+sumario:
+  - titulo: "Como usar este e-book"
+    texto: "O Método {metodo}, como ler cada receita e como planejar a semana."
+  - titulo: "Cafés da manhã"
+    texto: "Opções para preparar antes, rápidas e para levar."
+  - titulo: "Almoços"
+    texto: "Pratos completos que viram marmita sem perder a graça."
+  - titulo: "Lanches"
+    texto: "Para a tarde, o pré-treino ou a fome fora de hora."
+  - titulo: "Jantares"
+    texto: "Leves, rápidos e com cara de restaurante."
+  - titulo: "Guia de despensa e substituições"
+    texto: "O que ter em casa e como trocar ingredientes sem perder o resultado."
+  - titulo: "Índice por objetivo, tempo e custo"
+    texto: "Para achar a receita certa em segundos."
+
+para_quem:
+  titulo: "Para quem é (e para quem não é)"
+  e_para:
+    - "Quem quer comer melhor sem passar horas na cozinha"
+    - "Quem cansou de comida saudável sem graça"
+    - "Quem quer controlar o gasto com alimentação"
+    - "Quem cozinha para si ou para a família"
+  nao_e_para:
+    - "Quem procura uma dieta individual ou prescrição nutricional"
+    - "Quem busca promessas de resultado rápido"
+    - "Quem precisa de cardápio para condições de saúde específicas (nesse caso, procure um nutricionista)"
+
+garantia:
+  titulo: "Garantia incondicional de {garantia} dias"
+  texto: >-
+    Se o e-book não for para você, peça o reembolso integral em até
+    {garantia} dias após a compra, direto na plataforma de pagamento. Sem
+    perguntas e sem burocracia.
+
+faq:
+  - pergunta: "Quando recebo o e-book?"
+    resposta: >-
+      Por ser uma pré-venda, o acesso é enviado por e-mail no lançamento.
+      Você recebe a confirmação da compra na hora.
+  - pergunta: "Quais formas de pagamento são aceitas?"
+    resposta: >-
+      As formas disponíveis na plataforma de pagamento, como cartão de
+      crédito, Pix e boleto. Tudo é processado em ambiente seguro, fora deste
+      site.
+  - pergunta: "Posso imprimir?"
+    resposta: "Sim. O PDF foi diagramado para ler na tela e também para imprimir."
+  - pergunta: "O e-book substitui uma consulta com nutricionista?"
+    resposta: >-
+      Não. O conteúdo é educativo e ensina culinária saudável. Para
+      orientações individuais, procure acompanhamento com um(a) nutricionista.
+
+amostra_cta: "Ainda em dúvida? Baixe {receitas_amostra} receitas grátis e veja o padrão."

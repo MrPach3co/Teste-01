@@ -1,0 +1,33 @@
+---
+import { textos, rico, t } from "../../lib/conteudo";
+const c = textos.home.como_funciona;
+---
+<section class="secao" id="como-funciona">
+  <div class="container">
+    <div class="cabecalho-secao cabecalho-secao--centro" data-revelar>
+      <span class="sobretitulo">{t(c.sobretitulo)}</span>
+      <h2 set:html={rico(c.titulo)} />
+    </div>
+    <ol class="passos">
+      {c.passos.map((p: any, i: number) => (
+        <li class="passo" data-revelar style={`--atraso:${i * 100}ms`}>
+          <span class="passo__numero">{String(i + 1).padStart(2, "0")}</span>
+          <h3>{t(p.titulo)}</h3>
+          <p>{t(p.texto)}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .passos { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e-6); }
+  @media (min-width: 720px) { .passos { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1100px) { .passos { grid-template-columns: repeat(4, 1fr); } }
+  .passo { position: relative; padding-top: var(--e-5); }
+  .passo::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--cor-linha); }
+  .passo::after { content: ""; position: absolute; top: -4px; left: 0; width: 9px; height: 9px; border-radius: 50%; background: var(--cor-acento); }
+  .passo__numero { display: block; margin-bottom: var(--e-4); font-family: var(--fonte-titulo); font-size: var(--t-2xl); color: var(--cor-acento); line-height: 1; }
+  .passo h3 { font-size: var(--t-lg); margin-bottom: var(--e-2); }
+  .passo p { color: var(--cor-texto-suave); margin: 0; }
+</style>

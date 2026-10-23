@@ -1,0 +1,105 @@
+---
+import Icone from "../Icone.astro";
+import { textos, receitas, rico, t, receitasResumo } from "../../lib/conteudo";
+import { DIAS_CURTOS, montarListaDeCompras } from "../../lib/comum.mjs";
+
+const p = textos.home.plataforma;
+const icones = ["busca", "calendario", "lista"];
+
+// Prévia ilustrativa montada com as receitas de exemplo
+const almocos = receitas.filter((r) => r.refeicoes.includes("almoco") || r.refeicoes.includes("jantar"));
+const semana = DIAS_CURTOS.slice(0, 5).map((dia, i) => ({ dia, receita: almocos[i % Math.max(almocos.length, 1)] }));
+const lista = montarListaDeCompras(
+  semana.filter((d) => d.receita).map((d) => ({ receita: d.receita.slug, porcoes: d.receita.porcoes })),
+  receitasResumo,
+);
+const itensLista = lista.secoes.flatMap((s) => s.itens).slice(0, 5);
+---
+<section class="secao" id="plataforma">
+  <div class="container plataforma">
+    <div>
+      <div class="cabecalho-secao" data-revelar>
+        <span class="sobretitulo">{t(p.sobretitulo)}</span>
+        <h2 set:html={rico(p.titulo)} />
+        <p class="lead">{t(p.intro)}</p>
+      </div>
+      <ul class="recursos">
+        {p.recursos.map((r: any, i: number) => (
+          <li data-revelar style={`--atraso:${i * 90}ms`}>
+            <a href={r.link} class="recurso">
+              <span class="recurso__icone"><Icone nome={icones[i] ?? "sparkle"} /></span>
+              <span>
+                <strong>{t(r.titulo)}</strong>
+                <span>{t(r.texto)}</span>
+              </span>
+              <Icone nome="seta" class="recurso__seta" tamanho={20} />
+            </a>
+          </li>
+        ))}
+      </ul>
+      <a href="/receitas" class="btn" data-revelar>{t(p.cta)} <span class="seta" aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="tela" data-revelar aria-hidden="true">
+      <div class="tela__barra"><span></span><span></span><span></span><em>Planejador da semana</em></div>
+      <div class="tela__corpo">
+        <ol class="tela__semana">
+          {semana.map((d) => (
+            <li>
+              <span class="tela__dia">{d.dia}</span>
+              <span class="tela__receita">{d.receita?.titulo ?? "—"}</span>
+            </li>
+          ))}
+        </ol>
+        <div class="tela__lista">
+          <span class="tela__rotulo"><Icone nome="lista" tamanho={16} /> Lista de compras</span>
+          <ul>
+            {itensLista.map((item, i) => (
+              <li class:list={[i < 2 && "marcado"]}><span class="tela__caixa"></span>{item.nome}<b>{item.texto}</b></li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .plataforma { display: grid; gap: var(--e-8); align-items: center; }
+  @media (min-width: 1024px) { .plataforma { grid-template-columns: 1fr 1.05fr; } }
+
+  .recursos { list-style: none; padding: 0; margin: 0 0 var(--e-6); border-top: 1px solid var(--cor-linha); }
+  .recurso {
+    display: grid; grid-template-columns: auto 1fr auto; gap: var(--e-4); align-items: center;
+    padding: var(--e-5) 0; border-bottom: 1px solid var(--cor-linha); text-decoration: none; color: inherit;
+  }
+  .recurso strong { display: block; font-family: var(--fonte-titulo); font-weight: 400; font-size: var(--t-lg); }
+  .recurso span span { color: var(--cor-texto-suave); font-size: var(--t-sm); }
+  .recurso__icone { display: grid; place-items: center; width: 3rem; height: 3rem; border-radius: 50%; background: var(--cor-fundo-alt); color: var(--cor-primaria); }
+  .recurso :global(.recurso__seta) { color: var(--cor-texto-suave); transition: transform var(--transicao), color var(--transicao); }
+  .recurso:hover :global(.recurso__seta) { transform: translateX(4px); color: var(--cor-acento); }
+
+  .tela {
+    border-radius: var(--raio-lg); background: var(--cor-fundo); overflow: hidden;
+    border: 1px solid var(--cor-linha);
+    box-shadow: 0 2px 4px rgb(0 0 0 / 0.03), 0 30px 60px -20px rgb(21 33 31 / 0.28);
+    font-size: var(--t-sm);
+  }
+  .tela__barra { display: flex; gap: 6px; align-items: center; padding: 0.8rem 1rem; background: var(--cor-fundo-alt); border-bottom: 1px solid var(--cor-linha); }
+  .tela__barra span { width: 10px; height: 10px; border-radius: 50%; background: var(--cor-linha); }
+  .tela__barra em { margin-left: auto; font-style: normal; font-size: var(--t-xs); color: var(--cor-texto-suave); }
+  .tela__corpo { display: grid; gap: var(--e-4); padding: var(--e-5); }
+  @media (min-width: 560px) { .tela__corpo { grid-template-columns: 1.2fr 1fr; } }
+  .tela__semana { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e-2); }
+  .tela__semana li { display: grid; grid-template-columns: 2.5rem 1fr; gap: var(--e-3); align-items: center; padding: 0.6rem 0.75rem; border-radius: 10px; background: var(--cor-fundo-alt); }
+  .tela__dia { font-weight: 600; font-size: var(--t-xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--cor-acento); }
+  .tela__receita { font-size: var(--t-xs); line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .tela__lista { padding: var(--e-4); border-radius: 12px; background: var(--cor-primaria); color: var(--cor-fundo); }
+  .tela__rotulo { display: inline-flex; align-items: center; gap: 0.4em; font-weight: 600; font-size: var(--t-xs); text-transform: uppercase; letter-spacing: 0.1em; color: var(--cor-destaque); margin-bottom: var(--e-3); }
+  .tela__lista ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e-2); font-size: var(--t-xs); }
+  .tela__lista li { display: grid; grid-template-columns: auto 1fr auto; gap: var(--e-2); align-items: center; }
+  .tela__lista b { font-weight: 500; opacity: 0.75; white-space: nowrap; }
+  .tela__caixa { width: 14px; height: 14px; border-radius: 4px; border: 1.5px solid color-mix(in srgb, var(--cor-fundo) 60%, transparent); }
+  .tela__lista .marcado { opacity: 0.55; text-decoration: line-through; }
+  .tela__lista .marcado .tela__caixa { background: var(--cor-destaque); border-color: var(--cor-destaque); }
+</style>

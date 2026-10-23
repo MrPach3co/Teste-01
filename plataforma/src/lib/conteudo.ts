@@ -1,91 +1,55 @@
-// Lê os arquivos de conteudo/*.yaml e valida o formato no momento do build.
-// Se algum campo estiver faltando ou errado, o build para com uma mensagem
-// dizendo exatamente qual arquivo e qual campo corrigir.
-import fs from "node:fs";
-import path from "node:path";
-import yaml from "js-yaml";
-import { z } from "astro/zod";
+// Ponto único de acesso ao conteúdo dentro do site.
+// A leitura e a validação ficam em dados.mjs (compartilhado com os scripts).
+import {
+  carregarMarca, carregarEquipe, carregarTextos, carregarDepoimentos, carregarReceitas, resumirReceitas,
+} from "./dados.mjs";
+import { faixaCusto } from "./comum.mjs";
 
-const PASTA = path.resolve(process.cwd(), "conteudo");
-
-const hex = z.string().regex(/^#[0-9a-fA-F]{6}$/, "use uma cor no formato #RRGGBB");
-
-const MarcaSchema = z.object({
-  nome: z.string().min(1),
-  nome_metodo: z.string().min(1),
-  slogan: z.string(),
-  descricao_seo: z.string(),
-  url_site: z.string().url(),
-  logo: z.string(),
-  cores: z.object({
-    fundo: hex,
-    fundo_alt: hex,
-    texto: hex,
-    texto_suave: hex,
-    primaria: hex,
-    acento: hex,
-    destaque: hex,
-    linha: hex,
-  }),
-  contato: z.object({
-    email: z.string(),
-    instagram: z.string(),
-    whatsapp: z.string(),
-  }),
-  ebook: z.object({
-    titulo: z.string(),
-    preco: z.string(),
-    preco_de: z.string(),
-    link_checkout: z.string(),
-    garantia_dias: z.number().int().positive(),
-  }),
-  amostra: z.object({
-    quantidade_receitas: z.number().int().positive(),
-    form_action: z.string(),
-    arquivo_pdf: z.string(),
-  }),
-  empresa: z.object({
-    razao_social: z.string(),
-    cnpj: z.string(),
-    email_privacidade: z.string(),
-  }),
-});
-
-const EquipeSchema = z.object({
-  nutricionista: z.object({
-    nome: z.string(),
-    registro: z.string(),
-    cargo: z.string(),
-    foto: z.string(),
-    bio: z.string(),
-  }),
-  chef: z.object({
-    nome: z.string(),
-    cargo: z.string(),
-    fotos: z.array(z.string()),
-    bio: z.string(),
-  }),
-  negocio: z.object({
-    nome: z.string(),
-    cargo: z.string(),
-    mostrar_no_site: z.boolean(),
-  }),
-});
-
-export function lerYaml<T extends z.ZodTypeAny>(arquivo: string, schema: T): z.infer<T> {
-  const caminho = path.join(PASTA, arquivo);
-  const bruto = yaml.load(fs.readFileSync(caminho, "utf8"));
-  const resultado = schema.safeParse(bruto);
-  if (!resultado.success) {
-    const erros = resultado.error.issues
-      .map((i) => `  • ${i.path.join(".") || "(raiz)"}: ${i.message}`)
-      .join("\n");
-    throw new Error(`\n\nErro em conteudo/${arquivo}:\n${erros}\n`);
-  }
-  return resultado.data;
-}
-
-export const marca = lerYaml("marca.yaml", MarcaSchema);
-export const equipe = lerYaml("equipe.yaml", EquipeSchema);
+export const marca = carregarMarca();
+export const equipe = carregarEquipe();
+export const depoimentos = carregarDepoimentos();
+export const receitas = carregarReceitas();
+export const receitasResumo = resumirReceitas(receitas);
+export const textos = {
+  home: carregarTextos("home"),
+  amostra: carregarTextos("amostra"),
+  preVenda: carregarTextos("pre-venda"),
+};
 
 export type Marca = typeof marca;
+export type Receita = (typeof receitas)[number];
+
+export const custoPorPorcao = (r: Receita) => r.custo_total_estimado / r.porcoes;
+export const faixaDaReceita = (r: Receita) => faixaCusto(custoPorPorcao(r), marca.custo);
+
+/** true enquanto o texto ainda for um marcador do tipo "[NOME DA MARCA]" */
+export const pendente = (valor: string) => !valor || /^\[.*\]$/.test(valor.trim());
+
+// ── Textos editáveis ──────────────────────────────────────────
+
+const atalhos: Record<string, string> = {
+  marca: marca.nome,
+  metodo: marca.nome_metodo,
+  nutricionista: equipe.nutricionista.nome,
+  chef: equipe.chef.nome,
+  preco: marca.ebook.preco,
+  receitas_ebook: String(marca.ebook.quantidade_receitas),
+  receitas_amostra: String(marca.amostra.quantidade_receitas),
+  garantia: String(marca.ebook.garantia_dias),
+};
+
+/** Troca {marca}, {preco} etc. pelos valores da configuração */
+export function t(texto: string = ""): string {
+  return texto.replace(/\{(\w+)\}/g, (original, chave) => atalhos[chave] ?? original);
+}
+
+const escapar = (s: string) =>
+  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+/** Como t(), e transforma *palavra* em <em>palavra</em>. Use com set:html. */
+export function rico(texto: string = ""): string {
+  return escapar(t(texto)).replace(/\*([^*]+)\*/g, "<em>$1</em>");
+}
+
+/** Remove os asteriscos (para <title>, meta e PDF sem formatação) */
+export const simples = (texto: string = "") => t(texto).replace(/\*/g, "");

@@ -1,0 +1,40 @@
+---
+import BotaoCheckout from "../BotaoCheckout.astro";
+import { textos, marca, rico, t } from "../../lib/conteudo";
+interface Props { titulo?: string; texto?: string }
+const c = textos.home.chamada_final;
+const { titulo = c.titulo, texto = c.texto } = Astro.props;
+---
+<section class="secao secao--escura chamada">
+  <div class="container chamada__conteudo" data-revelar>
+    <h2 set:html={rico(titulo)} />
+    <p class="lead">{t(texto)}</p>
+    <p class="chamada__preco">
+      {marca.ebook.preco_de && <s>{marca.ebook.preco_de}</s>}
+      <strong>{marca.ebook.preco}</strong>
+      {marca.ebook.parcelamento && <span>{marca.ebook.parcelamento}</span>}
+    </p>
+    <div class="chamada__ctas">
+      <BotaoCheckout variante="claro" grande />
+      <a href="/amostra-gratis" class="btn btn--contorno btn--grande">Baixar a amostra grátis</a>
+    </div>
+    <p class="chamada__garantia">Garantia de {marca.ebook.garantia_dias} dias · Pagamento seguro pela plataforma de checkout</p>
+  </div>
+</section>
+
+<style>
+  .chamada { text-align: center; position: relative; overflow: hidden; }
+  .chamada::before, .chamada::after {
+    content: ""; position: absolute; border-radius: 50%; pointer-events: none;
+    border: 1px solid color-mix(in srgb, var(--cor-fundo) 10%, transparent);
+  }
+  .chamada::before { width: 40rem; height: 40rem; left: -20rem; bottom: -24rem; }
+  .chamada::after { width: 28rem; height: 28rem; right: -12rem; top: -14rem; }
+  .chamada__conteudo { position: relative; max-width: 48rem; }
+  .chamada__preco { display: flex; justify-content: center; align-items: baseline; flex-wrap: wrap; gap: var(--e-3); margin: var(--e-6) 0; }
+  .chamada__preco strong { font-family: var(--fonte-titulo); font-weight: 400; font-size: var(--t-3xl); line-height: 1; color: var(--cor-fundo); }
+  .chamada__preco s { opacity: 0.6; }
+  .chamada__preco span { opacity: 0.75; font-size: var(--t-sm); }
+  .chamada__ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--e-3); }
+  .chamada__garantia { margin: var(--e-5) 0 0; font-size: var(--t-xs); opacity: 0.7; }
+</style>

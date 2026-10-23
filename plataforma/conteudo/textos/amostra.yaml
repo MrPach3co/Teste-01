@@ -1,0 +1,35 @@
+# Textos da página da amostra grátis (/amostra-gratis) e da página de obrigado.
+# Os mesmos atalhos da home funcionam aqui: {marca}, {receitas_amostra} etc.
+
+sobretitulo: "Amostra grátis"
+titulo: "{receitas_amostra} receitas *completas*, de graça."
+subtitulo: >-
+  Veja o método na prática antes de decidir: receitas testadas, com tempo,
+  custo estimado e informação nutricional por porção.
+o_que_vem:
+  - "{receitas_amostra} receitas completas, do café da manhã ao jantar"
+  - "Tempo total e tempo ativo de cada preparo"
+  - "Custo estimado por porção"
+  - "Informação nutricional por porção"
+  - "Dicas de conservação e substituições"
+
+formulario:
+  titulo: "Para onde enviamos?"
+  botao: "Quero minhas receitas grátis"
+  consentimento: "Quero receber a amostra grátis por e-mail e li a"
+  marketing: "Também quero receber receitas e novidades da {marca} por e-mail. Posso cancelar quando quiser."
+  nota: >-
+    Usamos seu nome e e-mail apenas para enviar a amostra e, se você
+    autorizar, novidades. Não vendemos nem compartilhamos seus dados.
+
+obrigado:
+  # Quando o formulário está ligado a uma ferramenta de e-mail
+  titulo_email: "Confira seu *e-mail*."
+  texto_email: >-
+    Enviamos uma mensagem para você confirmar o endereço. Assim que confirmar,
+    a amostra chega na sua caixa de entrada. Se não encontrar em alguns
+    minutos, olhe também no spam e nas promoções.
+  # Modo demonstração (sem ferramenta de e-mail configurada)
+  titulo_download: "Suas receitas estão *prontas*."
+  texto_download: "Baixe o PDF agora. Ele também fica disponível nesta página."
+  proximo_passo: "Gostou do padrão? O e-book completo tem {receitas_ebook} receitas no mesmo método."

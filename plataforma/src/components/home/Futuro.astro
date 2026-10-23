@@ -1,0 +1,37 @@
+---
+import Icone from "../Icone.astro";
+import { textos, rico, t } from "../../lib/conteudo";
+const f = textos.home.futuro;
+const icones = ["play", "calendario", "ia"];
+---
+{f?.mostrar && (
+  <section class="secao secao--alt" id="futuro">
+    <div class="container">
+      <div class="cabecalho-secao" data-revelar>
+        <span class="sobretitulo">{t(f.sobretitulo)}</span>
+        <h2 set:html={rico(f.titulo)} />
+      </div>
+      <div class="grade grade--3">
+        {f.itens.map((item: any, i: number) => (
+          <article class="futuro" data-revelar style={`--atraso:${i * 90}ms`}>
+            <div class="futuro__topo">
+              <Icone nome={icones[i] ?? "sparkle"} tamanho={28} />
+              <span class="selo">Em breve</span>
+            </div>
+            <h3>{t(item.titulo)}</h3>
+            <p>{t(item.texto)}</p>
+          </article>
+        ))}
+      </div>
+      <p class="futuro__nota" data-revelar>{t(f.nota)}{" "}<a href="/amostra-gratis">Baixar a amostra</a></p>
+    </div>
+  </section>
+)}
+
+<style>
+  .futuro { padding: var(--e-6); border-radius: var(--raio-lg); border: 1px dashed color-mix(in srgb, var(--cor-texto) 22%, transparent); }
+  .futuro__topo { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--e-6); color: var(--cor-primaria); }
+  .futuro h3 { font-size: var(--t-xl); margin-bottom: var(--e-2); }
+  .futuro p { color: var(--cor-texto-suave); margin: 0; }
+  .futuro__nota { margin: var(--e-6) 0 0; color: var(--cor-texto-suave); font-size: var(--t-sm); }
+</style>

@@ -1,0 +1,62 @@
+---
+import Foto from "./Foto.astro";
+import Icone from "./Icone.astro";
+import { custoPorPorcao, faixaDaReceita, type Receita } from "../lib/conteudo";
+import { OBJETIVOS, REFEICOES, formatarMoeda, formatarTempo } from "../lib/comum.mjs";
+
+interface Props { receita: Receita; indice?: number; titulo?: "h2" | "h3" }
+const { receita: r, indice = 0, titulo: Titulo = "h3" } = Astro.props;
+const faixa = faixaDaReceita(r);
+const tons = ["verde", "pimenta", "acafrao"] as const;
+const busca = [r.titulo, r.resumo, ...r.tags, ...r.ingredientes.map((i) => i.nome)].join(" ").toLowerCase();
+---
+<article class="cartao-receita" data-receita
+  data-tempo={r.tempo_preparo_min} data-custo={faixa.nivel}
+  data-objetivos={r.objetivos.join(" ")} data-refeicoes={r.refeicoes.join(" ")}
+  data-busca={busca.normalize("NFD").replace(/[̀-ͯ]/g, "")}
+  data-revelar style={`--atraso:${(indice % 3) * 80}ms`}>
+  <a href={`/receitas/${r.slug}`} class="cartao-receita__link">
+    <div class="cartao-receita__imagem">
+      <Foto caminho={r.foto} alt={r.titulo} proporcao="4/3" larguras={[400, 700]}
+        sizes="(min-width: 1024px) 380px, (min-width: 720px) 50vw, 100vw" tom={tons[indice % 3]} rotuloPlaceholder="" />
+      <div class="cartao-receita__selos">
+        {r.exemplo && <span class="selo selo--exemplo">Exemplo</span>}
+      </div>
+    </div>
+    <div class="cartao-receita__corpo">
+      <p class="cartao-receita__refeicao">{r.refeicoes.map((x) => REFEICOES[x as keyof typeof REFEICOES]).join(" · ")}</p>
+      <Titulo class="cartao-receita__titulo">{r.titulo}</Titulo>
+      <div class="lista-meta">
+        <span class="meta"><Icone nome="relogio" />{formatarTempo(r.tempo_preparo_min)}</span>
+        <span class="meta" title={`Custo ${faixa.rotulo.toLowerCase()}`}><Icone nome="moeda" />{formatarMoeda(custoPorPorcao(r))}/porção</span>
+        <span class="meta"><Icone nome="porcao" />{r.porcoes} {r.porcoes > 1 ? "porções" : "porção"}</span>
+      </div>
+      <ul class="cartao-receita__objetivos" aria-label="Objetivos">
+        {r.objetivos.map((o) => <li class="selo">{OBJETIVOS[o as keyof typeof OBJETIVOS]}</li>)}
+      </ul>
+    </div>
+  </a>
+</article>
+
+<style>
+  .cartao-receita { height: 100%; }
+  .cartao-receita[hidden] { display: none; }
+  .cartao-receita__link {
+    display: flex; flex-direction: column; height: 100%; text-decoration: none; color: inherit;
+    border-radius: var(--raio-lg);
+  }
+  .cartao-receita__imagem { position: relative; border-radius: var(--raio-lg); overflow: hidden; }
+  .cartao-receita__imagem :global(.foto img), .cartao-receita__imagem :global(.placeholder) {
+    transition: transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .cartao-receita__link:hover .cartao-receita__imagem :global(.foto img),
+  .cartao-receita__link:hover .cartao-receita__imagem :global(.placeholder) { transform: scale(1.035); }
+  .cartao-receita__selos { position: absolute; top: var(--e-4); left: var(--e-4); display: flex; gap: var(--e-2); }
+  .cartao-receita__corpo { padding: var(--e-4) var(--e-1) 0; display: grid; gap: var(--e-3); align-content: start; }
+  .cartao-receita__refeicao {
+    margin: 0; font-size: var(--t-xs); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cor-acento);
+  }
+  .cartao-receita__titulo { font-size: var(--t-lg); line-height: 1.25; margin: 0; transition: color var(--transicao); }
+  .cartao-receita__link:hover .cartao-receita__titulo { color: var(--cor-primaria); }
+  .cartao-receita__objetivos { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: var(--e-2); }
+</style>

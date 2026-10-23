@@ -1,0 +1,69 @@
+---
+// Informação nutricional por porção. O selo "revisada por" só aparece quando
+// a nutricionista marcou a receita como revisada (revisado_por_nutricionista: true).
+import Icone from "./Icone.astro";
+import { equipe, type Receita } from "../lib/conteudo";
+
+interface Props { receita: Receita }
+const { nutricao: n } = Astro.props.receita;
+const nutri = equipe.nutricionista;
+const dataBr = n.data_revisao ? new Date(`${n.data_revisao}T12:00:00`).toLocaleDateString("pt-BR") : "";
+
+const linhas = [
+  ["Valor energético", `${n.calorias_kcal} kcal`],
+  ["Proteínas", `${n.proteinas_g} g`],
+  ["Carboidratos", `${n.carboidratos_g} g`],
+  ["Gorduras totais", `${n.gorduras_g} g`],
+  ["Fibras", `${n.fibras_g} g`],
+  ["Sódio", `${n.sodio_mg} mg`],
+];
+---
+<section class="nutricao" aria-labelledby="titulo-nutricao">
+  <header class="nutricao__topo">
+    <div>
+      <h2 id="titulo-nutricao">Informação nutricional</h2>
+      <p>Por porção: {n.porcao}</p>
+    </div>
+    <span class="nutricao__kcal"><strong>{n.calorias_kcal}</strong> kcal</span>
+  </header>
+
+  <table>
+    <caption class="sr-only">Informação nutricional por porção</caption>
+    <tbody>
+      {linhas.map(([nome, valor]) => <tr><th scope="row">{nome}</th><td>{valor}</td></tr>)}
+    </tbody>
+  </table>
+
+  {n.revisado_por_nutricionista ? (
+    <p class="nutricao__selo nutricao__selo--ok">
+      <Icone nome="escudo" tamanho={22} />
+      <span>Informação nutricional revisada por <strong>{nutri.nome}</strong>, <span class="sem-quebra">{nutri.registro}</span>{dataBr && ` em ${dataBr}`}.</span>
+    </p>
+  ) : (
+    <p class="nutricao__selo">
+      <Icone nome="relogio" tamanho={22} />
+      <span>Valores estimados, <strong>aguardando revisão</strong> de {nutri.nome}, <span class="sem-quebra">{nutri.registro}</span>.</span>
+    </p>
+  )}
+  <p class="nutricao__aviso">
+    Valores aproximados, que podem variar conforme marcas e medidas. Conteúdo educativo, que não
+    substitui o acompanhamento nutricional individual.
+  </p>
+</section>
+
+<style>
+  .nutricao { padding: var(--e-6); border-radius: var(--raio-lg); background: var(--cor-primaria); color: var(--cor-fundo); }
+  .nutricao__topo { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--e-4); padding-bottom: var(--e-4); border-bottom: 1px solid color-mix(in srgb, var(--cor-fundo) 25%, transparent); }
+  .nutricao h2 { font-size: var(--t-xl); margin: 0 0 var(--e-1); }
+  .nutricao__topo p { margin: 0; font-size: var(--t-sm); opacity: 0.75; }
+  .nutricao__kcal { font-size: var(--t-sm); opacity: 0.85; white-space: nowrap; }
+  .nutricao__kcal strong { font-family: var(--fonte-titulo); font-weight: 400; font-size: var(--t-2xl); color: var(--cor-destaque); }
+  table { width: 100%; border-collapse: collapse; margin: var(--e-3) 0 var(--e-5); font-size: var(--t-sm); }
+  th, td { padding: var(--e-2) 0; border-bottom: 1px solid color-mix(in srgb, var(--cor-fundo) 12%, transparent); }
+  th { text-align: left; font-weight: 400; opacity: 0.85; }
+  td { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .nutricao__selo { display: flex; gap: var(--e-3); align-items: flex-start; margin: 0 0 var(--e-3); padding: var(--e-4); border-radius: var(--raio); background: color-mix(in srgb, var(--cor-fundo) 8%, transparent); font-size: var(--t-sm); }
+  .nutricao__selo :global(.icone) { flex: none; color: var(--cor-destaque); }
+  .nutricao__selo--ok { background: color-mix(in srgb, var(--cor-destaque) 18%, transparent); }
+  .nutricao__aviso { margin: 0; font-size: var(--t-xs); opacity: 0.65; }
+</style>

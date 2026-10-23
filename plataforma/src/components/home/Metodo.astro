@@ -1,0 +1,56 @@
+---
+import Icone from "../Icone.astro";
+import { textos, rico, t } from "../../lib/conteudo";
+const m = textos.home.metodo;
+---
+<section class="secao secao--escura metodo" id="metodo">
+  <div class="container">
+    <div class="metodo__topo">
+      <div class="cabecalho-secao" data-revelar>
+        <span class="sobretitulo">{t(m.sobretitulo)}</span>
+        <h2 set:html={rico(m.titulo)} />
+      </div>
+      <p class="lead" data-revelar>{t(m.intro)}</p>
+    </div>
+    <ol class="metodo__pilares">
+      {m.pilares.map((p: any, i: number) => (
+        <li class="pilar" data-revelar style={`--atraso:${i * 90}ms`}>
+          <div class="pilar__topo">
+            <span class="pilar__numero">{String(i + 1).padStart(2, "0")}</span>
+            <Icone nome={p.icone} tamanho={30} />
+          </div>
+          <h3>{t(p.nome)}</h3>
+          <p class="pilar__pergunta">{t(p.pergunta)}</p>
+          <p>{t(p.texto)}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .metodo { position: relative; overflow: hidden; }
+  .metodo::before {
+    content: ""; position: absolute; right: -12rem; top: -12rem; width: 36rem; height: 36rem; border-radius: 50%;
+    border: 1px solid color-mix(in srgb, var(--cor-fundo) 12%, transparent);
+    box-shadow: 0 0 0 5rem color-mix(in srgb, var(--cor-fundo) 3%, transparent);
+    pointer-events: none;
+  }
+  .metodo__topo { display: grid; gap: var(--e-4); margin-bottom: var(--e-7); }
+  .metodo__topo .cabecalho-secao { margin-bottom: 0; }
+  @media (min-width: 1024px) { .metodo__topo { grid-template-columns: 1.2fr 1fr; align-items: end; gap: var(--e-8); } }
+
+  .metodo__pilares { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px;
+    background: color-mix(in srgb, var(--cor-fundo) 16%, transparent);
+    border: 1px solid color-mix(in srgb, var(--cor-fundo) 16%, transparent); border-radius: var(--raio-lg); overflow: hidden; }
+  @media (min-width: 720px) { .metodo__pilares { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1100px) { .metodo__pilares { grid-template-columns: repeat(4, 1fr); } }
+
+  .pilar { background: var(--cor-primaria); padding: var(--e-6); transition: background var(--transicao); }
+  .pilar:hover { background: color-mix(in srgb, var(--cor-primaria) 88%, var(--cor-fundo)); }
+  .pilar__topo { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--e-7); color: var(--cor-destaque); }
+  .pilar__numero { font-family: var(--fonte-titulo); font-size: var(--t-lg); color: color-mix(in srgb, var(--cor-fundo) 55%, transparent); }
+  .pilar h3 { font-size: var(--t-2xl); margin-bottom: var(--e-2); }
+  .pilar__pergunta { font-family: var(--fonte-titulo); font-style: italic; color: var(--cor-destaque); font-size: var(--t-lg); }
+  .pilar p:last-child { color: color-mix(in srgb, var(--cor-fundo) 75%, transparent); margin: 0; }
+</style>

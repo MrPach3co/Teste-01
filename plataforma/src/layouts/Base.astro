@@ -3,6 +3,7 @@ import "@fontsource-variable/fraunces/full.css";
 import "@fontsource-variable/fraunces/full-italic.css";
 import "@fontsource-variable/instrument-sans";
 import "../styles/global.css";
+import "../styles/ilhas.css";
 import Cabecalho from "../components/Cabecalho.astro";
 import Rodape from "../components/Rodape.astro";
 import { marca } from "../lib/conteudo";
@@ -12,9 +13,11 @@ interface Props {
   descricao?: string;
   imagem?: string;
   semIndexar?: boolean;
+  /** Dados estruturados (schema.org) para o Google */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { titulo, descricao = marca.descricao_seo, imagem, semIndexar = false } = Astro.props;
+const { titulo, descricao = marca.descricao_seo, imagem = "/og/padrao.png", semIndexar = false, jsonLd } = Astro.props;
 const tituloCompleto = titulo ? `${titulo} · ${marca.nome}` : `${marca.nome} — ${marca.slogan}`;
 const canonica = new URL(Astro.url.pathname, Astro.site).href;
 const imagemAbs = imagem ? new URL(imagem, Astro.site).href : undefined;
@@ -46,6 +49,7 @@ const variaveisCor = Object.entries(marca.cores)
     {imagemAbs && <meta property="og:image" content={imagemAbs} />}
     <meta name="twitter:card" content={imagemAbs ? "summary_large_image" : "summary"} />
 
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
     <style set:html={`:root { ${variaveisCor} }`}></style>
     <script is:inline>document.documentElement.classList.add("js");</script>
     <slot name="head" />

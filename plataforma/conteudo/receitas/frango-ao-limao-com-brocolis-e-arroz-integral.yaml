@@ -1,0 +1,57 @@
+# EXEMPLO — receita de demonstração. Substitua pelas receitas reais do chef.
+titulo: "Frango ao limão e ervas com brócolis tostado e arroz integral"
+exemplo: true
+na_amostra: true
+ordem: 3
+resumo: >-
+  Peito de frango suculento (sim, é possível) marinado em limão, mostarda
+  e alecrim, com brócolis tostado na mesma frigideira.
+foto: ""
+
+refeicoes: [almoco, jantar]
+objetivos: [ganho-de-massa, equilibrio]
+tempo_preparo_min: 30
+tempo_ativo_min: 25
+porcoes: 2
+dificuldade: facil
+custo_total_estimado: 22.40
+tags: [uma-panela, rico-em-proteina, marmita]
+
+ingredientes:
+  - { nome: "peito de frango", quantidade: 400, unidade: g, secao: acougue, nota: "em 4 bifes finos" }
+  - { nome: "limão", quantidade: 2, unidade: unidade, secao: hortifruti, nota: "raspas e suco" }
+  - { nome: "mostarda dijon", quantidade: 1, unidade: colher-sopa, secao: mercearia }
+  - { nome: "mel", quantidade: 1, unidade: colher-cha, secao: mercearia }
+  - { nome: "alho", quantidade: 3, unidade: dente, secao: hortifruti, nota: "picados" }
+  - { nome: "alecrim fresco", quantidade: 2, unidade: ramo, secao: hortifruti }
+  - { nome: "brócolis", quantidade: 300, unidade: g, secao: hortifruti, nota: "em floretes" }
+  - { nome: "arroz integral cozido", quantidade: 300, unidade: g, secao: mercearia, nota: "pode ser sobra" }
+  - { nome: "azeite de oliva", quantidade: 2, unidade: colher-sopa, secao: mercearia, despensa: true }
+  - { nome: "sal", unidade: a-gosto, secao: temperos, despensa: true }
+  - { nome: "pimenta-do-reino", unidade: a-gosto, secao: temperos, despensa: true }
+
+preparo:
+  - "Misture as raspas e o suco de 1 limão, a mostarda, o mel, metade do alho, as folhas de 1 ramo de alecrim, sal e pimenta. Envolva os bifes e deixe marinar por 10 minutos."
+  - "Aqueça uma frigideira grande com 1 colher de azeite em fogo médio-alto. Doure os bifes por 3 a 4 minutos de cada lado, sem mexer, e reserve."
+  - "Na mesma frigideira, junte o restante do azeite e o brócolis. Deixe tostar por 3 minutos sem mexer, adicione o alho restante e 3 colheres de água e tampe por 2 minutos."
+  - "Acrescente o arroz integral e misture para aquecer e pegar o sabor do fundo da frigideira."
+  - "Volte o frango, regue com o suco do segundo limão e finalize com alecrim fresco."
+
+dicas:
+  - "Bifes finos e frigideira bem quente são o segredo para o frango ficar dourado por fora e suculento por dentro."
+  - "Deixe o frango descansar 2 minutos antes de cortar."
+substituicoes:
+  - "Peito de frango → sobrecoxa sem pele (mais suculenta, mais gordura)."
+  - "Arroz integral → quinoa ou batata-doce cozida."
+conservacao: "Até 3 dias na geladeira. Pode congelar em marmitas por até 2 meses."
+
+nutricao:
+  porcao: "1 prato (cerca de 450 g)"
+  calorias_kcal: 600
+  proteinas_g: 54
+  carboidratos_g: 50
+  gorduras_g: 19
+  fibras_g: 8
+  sodio_mg: 520
+  revisado_por_nutricionista: false
+  data_revisao: ""

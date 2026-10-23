@@ -1,0 +1,24 @@
+---
+import Base from "../layouts/Base.astro";
+import ListaCompras from "../ilhas/ListaCompras";
+import { receitasResumo, marca } from "../lib/conteudo";
+---
+<Base titulo="Lista de compras" descricao="Lista de compras gerada automaticamente a partir do seu planejamento semanal.">
+  <section class="secao pagina-lista">
+    <div class="container">
+      <header class="cabecalho-secao">
+        <span class="sobretitulo">Plataforma · Demonstração</span>
+        <h1>Lista de <em>compras</em></h1>
+        <p class="lead">Gerada do seu planejador: ingredientes repetidos somados, porções ajustadas e tudo organizado por seção do mercado.</p>
+      </header>
+      <ListaCompras client:only="preact" receitas={receitasResumo} marca={marca.nome} referenciaCusto={marca.custo.referencia}>
+        <p slot="fallback" class="carregando-texto">Carregando sua lista…</p>
+      </ListaCompras>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .pagina-lista { padding-top: clamp(2rem, 1rem + 4vw, 4rem); }
+  .carregando-texto { padding: var(--e-8) 0; text-align: center; color: var(--cor-texto-suave); }
+</style>

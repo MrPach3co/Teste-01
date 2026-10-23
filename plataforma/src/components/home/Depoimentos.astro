@@ -1,0 +1,39 @@
+---
+// Só é exibida quando há depoimentos reais e autorizados em conteudo/depoimentos.yaml
+import Foto from "../Foto.astro";
+import { textos, depoimentos, rico, t } from "../../lib/conteudo";
+const d = textos.home.depoimentos;
+---
+{depoimentos.length > 0 && (
+  <section class="secao secao--alt" id="depoimentos">
+    <div class="container">
+      <div class="cabecalho-secao" data-revelar>
+        <span class="sobretitulo">{t(d.sobretitulo)}</span>
+        <h2 set:html={rico(d.titulo)} />
+      </div>
+      <div class="depoimentos">
+        {depoimentos.map((dep, i) => (
+          <figure class="depoimento" data-revelar style={`--atraso:${(i % 3) * 90}ms`}>
+            <blockquote>“{dep.texto}”</blockquote>
+            <figcaption>
+              {dep.foto && <Foto caminho={dep.foto} alt={`Foto de ${dep.nome}`} proporcao="1/1" larguras={[96, 192]} sizes="48px" class="depoimento__foto" />}
+              <span><strong>{dep.nome}</strong>{dep.descricao && <span>{dep.descricao}</span>}</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .depoimentos { columns: 1; column-gap: var(--e-5); }
+  @media (min-width: 720px) { .depoimentos { columns: 2; } }
+  @media (min-width: 1100px) { .depoimentos { columns: 3; } }
+  .depoimento { break-inside: avoid; margin: 0 0 var(--e-5); padding: var(--e-6); border-radius: var(--raio-lg); background: var(--cor-fundo); border: 1px solid var(--cor-linha); }
+  blockquote { margin: 0 0 var(--e-5); font-family: var(--fonte-titulo); font-size: var(--t-lg); line-height: 1.45; }
+  figcaption { display: flex; align-items: center; gap: var(--e-3); font-size: var(--t-sm); }
+  figcaption > span { display: grid; }
+  figcaption > span span { color: var(--cor-texto-suave); }
+  figcaption :global(.depoimento__foto) { width: 48px; border-radius: 50%; }
+</style>

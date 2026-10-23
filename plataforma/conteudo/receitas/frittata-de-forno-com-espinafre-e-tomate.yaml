@@ -1,0 +1,56 @@
+# EXEMPLO — receita de demonstração. Substitua pelas receitas reais do chef.
+titulo: "Frittata de forno com espinafre, tomate e queijo minas"
+exemplo: true
+na_amostra: true
+ordem: 4
+resumo: >-
+  Uma assadeira de ovos que rende quatro porções: serve de café da manhã
+  reforçado, jantar rápido ou lanche para levar.
+foto: ""
+
+refeicoes: [cafe-da-manha, jantar]
+objetivos: [controle-de-peso, ganho-de-massa]
+tempo_preparo_min: 30
+tempo_ativo_min: 10
+porcoes: 4
+dificuldade: facil
+custo_total_estimado: 20.90
+tags: [vegetariano, rico-em-proteina, rende-bem]
+
+ingredientes:
+  - { nome: "ovos", quantidade: 8, unidade: unidade, secao: laticinios-ovos }
+  - { nome: "leite", quantidade: 60, unidade: ml, secao: laticinios-ovos }
+  - { nome: "espinafre", quantidade: 120, unidade: g, secao: hortifruti, nota: "folhas" }
+  - { nome: "tomate-cereja", quantidade: 200, unidade: g, secao: hortifruti, nota: "cortados ao meio" }
+  - { nome: "cebola roxa", quantidade: 0.5, unidade: unidade, secao: hortifruti, nota: "em fatias finas" }
+  - { nome: "queijo minas frescal", quantidade: 120, unidade: g, secao: laticinios-ovos, nota: "em cubinhos" }
+  - { nome: "azeite de oliva", quantidade: 1, unidade: colher-sopa, secao: mercearia, despensa: true }
+  - { nome: "orégano seco", unidade: a-gosto, secao: temperos, despensa: true }
+  - { nome: "sal", unidade: a-gosto, secao: temperos, despensa: true }
+  - { nome: "pimenta-do-reino", unidade: a-gosto, secao: temperos, despensa: true }
+
+preparo:
+  - "Preaqueça o forno a 190 °C e unte uma assadeira média (cerca de 20 × 20 cm) com o azeite."
+  - "Bata levemente os ovos com o leite, o orégano, sal e pimenta, só até misturar."
+  - "Espalhe o espinafre e a cebola no fundo da assadeira e despeje os ovos por cima."
+  - "Distribua os tomates e o queijo sobre a superfície."
+  - "Asse por 18 a 22 minutos, até o centro firmar e as bordas dourarem. Espere 5 minutos antes de cortar."
+
+dicas:
+  - "Bater demais os ovos deixa a frittata borrachuda; misture só até a gema sumir."
+  - "Corte em quadrados e guarde: é um lanche de proteína pronto para a semana."
+substituicoes:
+  - "Queijo minas → ricota ou muçarela de búfala."
+  - "Espinafre → couve picada fininha ou abobrinha ralada (esprema bem)."
+conservacao: "Até 4 dias na geladeira. Aqueça 30 segundos no micro-ondas ou coma em temperatura ambiente."
+
+nutricao:
+  porcao: "1 quadrado (1/4 da assadeira)"
+  calorias_kcal: 280
+  proteinas_g: 19
+  carboidratos_g: 6
+  gorduras_g: 20
+  fibras_g: 2
+  sodio_mg: 330
+  revisado_por_nutricionista: false
+  data_revisao: ""

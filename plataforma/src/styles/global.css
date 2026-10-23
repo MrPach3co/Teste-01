@@ -221,3 +221,20 @@ a:hover { color: var(--cor-primaria); }
   .js [data-revelar] { opacity: 1; transform: none; transition: none; }
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+.btn--grande { min-height: 3.75rem; padding-inline: 2.25rem; font-size: var(--t-base); }
+
+/* Pequenos dados (tempo, custo, porções) com ícone */
+.meta { display: inline-flex; align-items: center; gap: 0.4em; font-size: var(--t-sm); color: var(--cor-texto-suave); }
+.meta .icone { width: 1.1em; height: 1.1em; flex: none; }
+.lista-meta { display: flex; flex-wrap: wrap; gap: var(--e-2) var(--e-5); }
+
+.lista-check { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--e-3); }
+.lista-check li { display: grid; grid-template-columns: auto 1fr; gap: var(--e-3); align-items: start; }
+.lista-check .icone { color: var(--cor-primaria); margin-top: 0.15em; width: 1.25em; height: 1.25em; }
+
+.numero-grande {
+  font-family: var(--fonte-titulo); font-size: var(--t-2xl); line-height: 1;
+  color: var(--cor-acento); font-variation-settings: "SOFT" 100, "WONK" 1;
+}
+.sem-quebra { white-space: nowrap; }

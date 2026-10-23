@@ -1,6 +1,6 @@
 # ─────────────────────────────────────────────────────────────
 #  Quem está por trás
-#  Fotos: coloque em public/imagens/equipe/ e informe o caminho.
+#  Fotos: coloque na pasta fotos/equipe/ e informe o caminho.
 #  Enquanto "foto" estiver vazio, aparece um placeholder neutro.
 # ─────────────────────────────────────────────────────────────
 
@@ -9,7 +9,9 @@ nutricionista:
   # Registro profissional, ex.: "CRN-3 12345"
   registro: "CRN-0 00000"
   cargo: "Nutricionista responsável"
-  foto: ""
+  foto: ""               # ex.: "equipe/nutricionista.jpg" (dentro da pasta fotos/)
+  # Opcional: formação e especializações, uma por linha
+  formacao: []           # ex.: ["Nutrição — Universidade X", "Especialização em Nutrição Esportiva"]
   bio: >-
     Revisa toda a informação nutricional das receitas e garante que cada
     orientação tenha base científica. É o rosto da marca e quem conversa
@@ -19,7 +21,7 @@ chef:
   # O chef não aparece em vídeo nem em fotos de rosto: só mãos e pratos.
   nome: "[NOME DO CHEF]"
   cargo: "Chef de cozinha"
-  fotos: []               # ex.: ["/imagens/equipe/chef-maos-1.jpg"]
+  fotos: []               # ex.: ["equipe/chef-maos-1.jpg", "equipe/chef-prato-1.jpg"] (dentro de fotos/)
   bio: >-
     Cria e testa cada receita na cozinha antes de ela chegar até você,
     ajustando tempo, custo e sabor até funcionar na vida real.

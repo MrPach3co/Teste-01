@@ -1,0 +1,31 @@
+---
+import Base from "../layouts/Base.astro";
+import Planejador from "../ilhas/Planejador";
+import { receitasResumo, receitas } from "../lib/conteudo";
+const temExemplos = receitas.some((r) => r.exemplo);
+---
+<Base titulo="Planejador semanal" descricao="Monte o cardápio da sua semana arrastando receitas para os dias e gere a lista de compras automaticamente.">
+  <section class="secao pagina-planejador">
+    <div class="container">
+      <header class="cabecalho-secao">
+        <span class="sobretitulo">Plataforma · Demonstração</span>
+        <h1>Planejador <em>semanal</em></h1>
+        <p class="lead">Distribua as receitas pelos dias da semana. A lista de compras é montada sozinha, com os ingredientes somados.</p>
+        <p class="nota">
+          {temExemplos && <><span class="selo selo--exemplo">Exemplo</span>{" "}</>}
+          Seu plano fica salvo neste navegador. Nada é enviado para nós.
+        </p>
+      </header>
+      <Planejador client:only="preact" receitas={receitasResumo}>
+        <p slot="fallback" class="carregando-texto">Carregando o planejador…</p>
+      </Planejador>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .pagina-planejador { padding-top: clamp(2rem, 1rem + 4vw, 4rem); padding-bottom: calc(var(--e-secao) + 4rem); }
+  .cabecalho-secao { margin-bottom: var(--e-6); }
+  .nota { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2); font-size: var(--t-sm); color: var(--cor-texto-suave); }
+  .carregando-texto { padding: var(--e-8) 0; text-align: center; color: var(--cor-texto-suave); }
+</style>

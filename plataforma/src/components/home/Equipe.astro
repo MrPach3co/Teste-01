@@ -1,0 +1,87 @@
+---
+import Foto from "../Foto.astro";
+import Icone from "../Icone.astro";
+import { textos, equipe, rico, t } from "../../lib/conteudo";
+const e = textos.home.equipe;
+const { nutricionista: nutri, chef } = equipe;
+const fotosChef = chef.fotos.length ? chef.fotos.slice(0, 2) : ["", ""];
+---
+<section class="secao secao--alt" id="quem-somos">
+  <div class="container">
+    <div class="cabecalho-secao" data-revelar>
+      <span class="sobretitulo">{t(e.sobretitulo)}</span>
+      <h2 set:html={rico(e.titulo)} />
+      <p class="lead">{t(e.intro)}</p>
+    </div>
+
+    <div class="equipe">
+      <article class="pessoa pessoa--nutri" data-revelar>
+        <Foto caminho={nutri.foto} alt={`Foto de ${nutri.nome}`} proporcao="5/4" tipoPlaceholder="pessoa"
+          rotuloPlaceholder="Foto da nutricionista" larguras={[500, 900]} sizes="(min-width: 1024px) 560px, 100vw" />
+        <div class="pessoa__texto">
+          <span class="selo"><Icone nome="estetoscopio" tamanho={14} /> {nutri.cargo}</span>
+          <h3>{nutri.nome}</h3>
+          <p class="pessoa__registro">{nutri.registro}</p>
+          <p>{nutri.bio}</p>
+          {nutri.formacao.length > 0 && (
+            <ul class="pessoa__formacao">{nutri.formacao.map((f) => <li>{f}</li>)}</ul>
+          )}
+        </div>
+      </article>
+
+      <article class="pessoa pessoa--chef" data-revelar style="--atraso:120ms">
+        <div class="pessoa__fotos">
+          {fotosChef.map((f, i) => (
+            <Foto caminho={f} alt={`Mãos e pratos do chef ${chef.nome}`} proporcao="5/8"
+              tipoPlaceholder="maos" tom={i === 0 ? "pimenta" : "acafrao"} rotuloPlaceholder={i === 0 ? "Mãos do chef" : ""}
+              larguras={[300, 600]} sizes="(min-width: 1024px) 260px, 50vw" />
+          ))}
+        </div>
+        <div class="pessoa__texto">
+          <span class="selo selo--acento"><Icone nome="chef" tamanho={14} /> {chef.cargo}</span>
+          <h3>{chef.nome}</h3>
+          <p>{chef.bio}</p>
+          <p class="pessoa__nota">Nos bastidores: o chef aparece pelas mãos e pelos pratos.</p>
+        </div>
+      </article>
+    </div>
+
+    <div class="processo" data-revelar>
+      <h3>{t(e.processo_titulo)}</h3>
+      <ol>
+        {e.processo.map((passo: any, i: number) => (
+          <li>
+            <span class="processo__n">{i + 1}</span>
+            <div><strong>{t(passo.titulo)}</strong><p>{t(passo.texto)}</p></div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .equipe { display: grid; gap: var(--e-8) var(--e-7); }
+  @media (min-width: 900px) { .equipe { grid-template-columns: 1fr 1fr; align-items: start; } }
+
+  .pessoa { display: grid; gap: var(--e-5); align-content: start; }
+  .pessoa h3 { font-size: var(--t-xl); margin: var(--e-4) 0 var(--e-1); overflow-wrap: anywhere; }
+  .pessoa__registro { font-weight: 600; letter-spacing: 0.04em; color: var(--cor-primaria); margin-bottom: var(--e-4); }
+  .pessoa__texto p { color: var(--cor-texto-suave); }
+  .pessoa__texto .pessoa__registro { color: var(--cor-primaria); }
+  .pessoa__formacao { padding-left: 1.1em; color: var(--cor-texto-suave); font-size: var(--t-sm); }
+  .pessoa__fotos { display: grid; grid-template-columns: 1fr 1fr; gap: var(--e-3); }
+  .pessoa__nota { font-family: var(--fonte-titulo); font-style: italic; color: var(--cor-acento) !important; }
+
+  .processo { margin-top: var(--e-8); padding: var(--e-6); border-radius: var(--raio-lg); background: var(--cor-fundo); border: 1px solid var(--cor-linha); }
+  .processo h3 { font-size: var(--t-lg); margin-bottom: var(--e-5); }
+  .processo ol { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--e-5); counter-reset: p; }
+  @media (min-width: 900px) { .processo ol { grid-template-columns: repeat(3, 1fr); } }
+  .processo li { display: grid; grid-template-columns: auto 1fr; gap: var(--e-4); }
+  .processo__n {
+    display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 50%;
+    background: var(--cor-primaria); color: var(--cor-fundo); font-weight: 600; font-size: var(--t-sm);
+  }
+  .processo strong { display: block; margin-bottom: var(--e-1); }
+  .processo p { margin: 0; color: var(--cor-texto-suave); font-size: var(--t-sm); }
+</style>

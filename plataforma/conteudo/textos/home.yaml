@@ -1,0 +1,189 @@
+# ─────────────────────────────────────────────────────────────
+#  Textos da página inicial
+#
+#  Atalhos que o site troca automaticamente:
+#   {marca} {metodo} {nutricionista} {chef} {preco}
+#   {receitas_ebook} {receitas_amostra} {garantia}
+#  Palavras entre *asteriscos* ficam em itálico colorido.
+# ─────────────────────────────────────────────────────────────
+
+hero:
+  sobretitulo: "Gastronomia saudável com método"
+  titulo: "Refeições saudáveis e *gostosas*, sem complicação e sem monotonia."
+  subtitulo: >-
+    Receitas criadas e testadas por chef, com informação nutricional revisada
+    por nutricionista e com tempo, custo e objetivo definidos antes de você
+    ligar o fogão.
+  cta_principal: "Baixar {receitas_amostra} receitas grátis"
+  cta_secundario: "Conhecer o e-book"
+  provas:
+    - "Receitas testadas na cozinha"
+    - "Nutrição revisada por nutricionista"
+    - "Custo estimado por porção"
+
+problema:
+  sobretitulo: "O problema"
+  titulo: "Comer bem não deveria ser *mais uma tarefa* na sua semana."
+  intro: >-
+    Você sabe que precisa se alimentar melhor. O que atrapalha raramente é
+    falta de vontade: é a rotina.
+  itens:
+    - icone: relogio
+      titulo: "Falta de tempo"
+      texto: >-
+        Receitas que pedem uma hora no fogão, dez panelas e ingredientes que
+        você não tem. Na terça-feira, o delivery ganha.
+    - icone: prato
+      titulo: "Comida sem graça"
+      texto: >-
+        Frango, arroz e brócolis no vapor todo dia. A alimentação "certinha"
+        dura uma semana e termina por tédio.
+    - icone: moeda
+      titulo: "Dinheiro"
+      texto: >-
+        Ingredientes caros, que estragam na geladeira e aparecem em uma única
+        receita. Comer bem parece luxo.
+  conclusao: "O problema não é você. É a falta de *método*."
+
+metodo:
+  sobretitulo: "O Método {metodo}"
+  titulo: "Quatro pilares em *cada* receita."
+  intro: >-
+    Nenhuma receita entra no nosso acervo sem responder a quatro perguntas.
+    É isso que separa um método de uma lista de receitas.
+  pilares:
+    - icone: relogio
+      nome: "Tempo"
+      pergunta: "Cabe na sua rotina?"
+      texto: >-
+        Tempo total e tempo ativo informados. Preparos que rendem mais de uma
+        refeição e técnicas que reduzem a louça.
+    - icone: moeda
+      nome: "Custo"
+      pergunta: "Cabe no seu bolso?"
+      texto: >-
+        Custo estimado por porção e ingredientes que se repetem ao longo da
+        semana, para nada estragar na geladeira.
+    - icone: alvo
+      nome: "Objetivo"
+      pergunta: "Combina com o que você busca?"
+      texto: >-
+        Receitas organizadas por objetivo (equilíbrio, controle de peso ou
+        ganho de massa), com informação nutricional por porção.
+    - icone: folha
+      nome: "Sabor"
+      pergunta: "Dá vontade de repetir?"
+      texto: >-
+        Técnica de chef aplicada à cozinha de casa: tempero, textura e
+        contraste. Comida saudável que não parece castigo.
+
+plataforma:
+  sobretitulo: "Tecnologia"
+  titulo: "Uma plataforma, não só um *PDF*."
+  intro: >-
+    Além das receitas, você planeja a semana e recebe a lista de compras
+    pronta. Experimente a demonstração com as receitas de exemplo.
+  recursos:
+    - titulo: "Biblioteca com filtros"
+      texto: "Encontre a receita certa por tempo de preparo, custo, objetivo e refeição."
+      link: "/receitas"
+    - titulo: "Planejador semanal"
+      texto: "Arraste receitas para os dias da semana e ajuste as porções de cada refeição."
+      link: "/planejador"
+    - titulo: "Lista de compras automática"
+      texto: "Ingredientes somados e organizados por seção do mercado, prontos para mandar no WhatsApp."
+      link: "/lista-de-compras"
+  cta: "Experimentar a demonstração"
+
+equipe:
+  sobretitulo: "Quem está por trás"
+  titulo: "Especialistas de verdade, *cada um* no seu papel."
+  intro: >-
+    Cada receita passa por duas mãos antes de chegar até você: quem cozinha
+    e quem cuida da informação nutricional.
+  processo_titulo: "Como uma receita chega até você"
+  processo:
+    - titulo: "Criada e testada pelo chef"
+      texto: "Desenvolvida e ajustada na cozinha até funcionar com utensílios e ingredientes comuns."
+    - titulo: "Revisada pela nutricionista"
+      texto: "Ingredientes, porções e informação nutricional conferidos antes da publicação."
+    - titulo: "Publicada com método"
+      texto: "Tempo, custo, objetivo e conservação informados no mesmo padrão em todas as receitas."
+
+como_funciona:
+  sobretitulo: "Como funciona"
+  titulo: "Do primeiro download à *semana planejada*."
+  passos:
+    - titulo: "Baixe a amostra grátis"
+      texto: "Receba {receitas_amostra} receitas completas e veja o padrão do método na prática."
+    - titulo: "Garanta o e-book na pré-venda"
+      texto: "{receitas_ebook} receitas testadas por {preco}, com garantia de {garantia} dias."
+    - titulo: "Planeje sua semana"
+      texto: "Escolha as receitas por tempo, custo e objetivo e distribua nos dias da semana."
+    - titulo: "Vá ao mercado com a lista pronta"
+      texto: "Ingredientes somados e organizados. Menos desperdício e menos decisões na hora da fome."
+
+# Só aparece quando houver depoimentos em conteudo/depoimentos.yaml
+depoimentos:
+  sobretitulo: "Depoimentos"
+  titulo: "Quem já está *cozinhando* com a gente."
+
+faq:
+  sobretitulo: "Perguntas frequentes"
+  titulo: "Antes de você *perguntar*."
+  itens:
+    - pergunta: "O e-book é uma dieta?"
+      resposta: >-
+        Não. Ensinamos culinária saudável: receitas equilibradas, com
+        informação nutricional por porção. Não prescrevemos dietas nem
+        cardápios individuais. Para isso, procure acompanhamento com um(a)
+        nutricionista.
+    - pergunta: "As receitas foram testadas de verdade?"
+      resposta: >-
+        Sim. Todas são criadas e testadas pelo chef da equipe e têm a
+        informação nutricional revisada pela nutricionista responsável antes
+        da publicação.
+    - pergunta: "Preciso de ingredientes caros ou difíceis de achar?"
+      resposta: >-
+        Não. Priorizamos ingredientes de supermercado comum e mostramos o custo
+        estimado por porção em cada receita.
+    - pergunta: "Como funciona a pré-venda?"
+      resposta: >-
+        Você garante o e-book pelo preço de pré-venda ({preco}) e recebe o
+        acesso por e-mail no lançamento. O pagamento é processado com segurança
+        pela plataforma de pagamento.
+    - pergunta: "E se eu não gostar?"
+      resposta: >-
+        Você tem {garantia} dias de garantia a partir da compra. Se não for
+        para você, é só pedir o reembolso integral na própria plataforma de
+        pagamento.
+    - pergunta: "Serve para quem tem restrição alimentar?"
+      resposta: >-
+        Indicamos em cada receita quando ela é vegetariana ou sem glúten e
+        sugerimos substituições. Em caso de alergias, intolerâncias ou
+        condições de saúde, siga a orientação do seu nutricionista ou médico.
+    - pergunta: "Em que formato recebo o e-book?"
+      resposta: >-
+        Em PDF, diagramado para ler no celular, no computador ou imprimir e
+        deixar na cozinha.
+    - pergunta: "A amostra é mesmo grátis?"
+      resposta: >-
+        Sim. Você informa nome e e-mail e recebe {receitas_amostra} receitas
+        completas. Pode cancelar o recebimento de e-mails quando quiser.
+
+futuro:
+  mostrar: true
+  sobretitulo: "O que vem por aí"
+  titulo: "O e-book é só o *começo*."
+  itens:
+    - titulo: "Curso"
+      texto: "Técnicas de cozinha saudável em aulas práticas, do corte ao tempero."
+    - titulo: "Clube por assinatura"
+      texto: "Cardápio semanal e lista de compras prontos toda semana, direto no seu celular."
+    - titulo: "Personalização com IA"
+      texto: "Sugestões de receitas a partir do que você tem em casa e do seu objetivo."
+  nota: "Em desenvolvimento. Quem baixa a amostra fica sabendo primeiro."
+
+chamada_final:
+  titulo: "Sua próxima semana pode ter *outro sabor*."
+  texto: "Garanta o e-book com {receitas_ebook} receitas testadas pelo preço de pré-venda."
