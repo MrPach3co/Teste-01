@@ -22,14 +22,14 @@ logo: ""
 
 # Cores da marca (formato hexadecimal). Mudou aqui, mudou no site inteiro.
 cores:
-  fundo: "#F7F3EC"        # papel — fundo principal
-  fundo_alt: "#EFE8DC"    # fundo de seções alternadas
-  texto: "#1E2620"        # quase preto, levemente verde
-  texto_suave: "#5B635C"  # textos secundários
-  primaria: "#2F4A3A"     # verde-floresta — botões e destaques
-  acento: "#C4673A"       # páprica — detalhes e chamadas
-  destaque: "#D9A94A"     # açafrão — selos e pequenos realces
-  linha: "#DDD4C6"        # bordas e divisórias
+  fundo: "#F8F7F3"        # off-white — fundo principal
+  fundo_alt: "#ECEFEA"    # fundo de seções alternadas
+  texto: "#15211F"        # grafite esverdeado
+  texto_suave: "#56615E"  # textos secundários
+  primaria: "#1E4B4C"     # verde-petróleo — botões, faixas e destaques
+  acento: "#9E5C37"       # cobre — chamadas e detalhes
+  destaque: "#C4A15A"     # dourado suave — selos e pequenos realces
+  linha: "#D9DED7"        # bordas e divisórias
 
 contato:
   email: "contato@exemplo.com.br"
