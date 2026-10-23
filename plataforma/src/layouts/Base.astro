@@ -1,0 +1,77 @@
+---
+import "@fontsource-variable/fraunces/full.css";
+import "@fontsource-variable/fraunces/full-italic.css";
+import "@fontsource-variable/instrument-sans";
+import "../styles/global.css";
+import Cabecalho from "../components/Cabecalho.astro";
+import Rodape from "../components/Rodape.astro";
+import { marca } from "../lib/conteudo";
+
+interface Props {
+  titulo?: string;
+  descricao?: string;
+  imagem?: string;
+  semIndexar?: boolean;
+}
+
+const { titulo, descricao = marca.descricao_seo, imagem, semIndexar = false } = Astro.props;
+const tituloCompleto = titulo ? `${titulo} · ${marca.nome}` : `${marca.nome} — ${marca.slogan}`;
+const canonica = new URL(Astro.url.pathname, Astro.site).href;
+const imagemAbs = imagem ? new URL(imagem, Astro.site).href : undefined;
+
+// Cores de conteudo/marca.yaml viram variáveis CSS (--cor-fundo, --cor-primaria…)
+const variaveisCor = Object.entries(marca.cores)
+  .map(([nome, valor]) => `--cor-${nome.replace(/_/g, "-")}: ${valor};`)
+  .join(" ");
+---
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{tituloCompleto}</title>
+    <meta name="description" content={descricao} />
+    <link rel="canonical" href={canonica} />
+    {semIndexar && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content={marca.cores.fundo} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content={marca.nome} />
+    <meta property="og:title" content={tituloCompleto} />
+    <meta property="og:description" content={descricao} />
+    <meta property="og:url" content={canonica} />
+    {imagemAbs && <meta property="og:image" content={imagemAbs} />}
+    <meta name="twitter:card" content={imagemAbs ? "summary_large_image" : "summary"} />
+
+    <style set:html={`:root { ${variaveisCor} }`}></style>
+    <script is:inline>document.documentElement.classList.add("js");</script>
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+    <Cabecalho />
+    <main id="conteudo">
+      <slot />
+    </main>
+    <Rodape />
+
+    <script>
+      // Revela suavemente os elementos marcados com data-revelar ao rolar
+      const alvos = document.querySelectorAll("[data-revelar]");
+      if ("IntersectionObserver" in window) {
+        const obs = new IntersectionObserver(
+          (entradas) => entradas.forEach((e) => {
+            if (e.isIntersecting) { e.target.classList.add("revelado"); obs.unobserve(e.target); }
+          }),
+          { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
+        );
+        alvos.forEach((el) => obs.observe(el));
+      } else {
+        alvos.forEach((el) => el.classList.add("revelado"));
+      }
+    </script>
+  </body>
+</html>

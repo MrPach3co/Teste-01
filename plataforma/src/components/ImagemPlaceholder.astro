@@ -1,0 +1,50 @@
+---
+// Placeholder honesto: deixa claro que ainda não há foto real do prato.
+// Substitua pela foto verdadeira assim que ela existir.
+interface Props {
+  rotulo?: string;
+  proporcao?: string; // ex.: "4/3", "1/1", "3/4"
+  tom?: "verde" | "pimenta" | "acafrao";
+}
+const { rotulo = "", proporcao = "4/3", tom = "verde" } = Astro.props;
+---
+<figure class:list={["placeholder", `placeholder--${tom}`]} style={`aspect-ratio: ${proporcao}`} role="img"
+  aria-label={`Imagem ilustrativa${rotulo ? `: ${rotulo}` : ""}. Foto real em breve.`}>
+  <svg class="placeholder__prato" viewBox="0 0 120 120" aria-hidden="true">
+    <circle cx="60" cy="60" r="44" fill="none" stroke="currentColor" stroke-width="1" />
+    <circle cx="60" cy="60" r="30" fill="none" stroke="currentColor" stroke-width="1" opacity=".55" />
+    <path d="M12 34v22M16 34v22M20 34v22M12 56c0 5 8 5 8 0M16 56v40" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round" transform="translate(-6 0)" />
+    <path d="M110 34c-5 0-6 12-6 22h6v40" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round" transform="translate(4 0)" />
+  </svg>
+  <figcaption>
+    {rotulo && <span class="placeholder__rotulo">{rotulo}</span>}
+    <span class="placeholder__aviso">Imagem ilustrativa · foto real em breve</span>
+  </figcaption>
+</figure>
+
+<style>
+  .placeholder {
+    --tom: var(--cor-primaria);
+    position: relative; margin: 0; overflow: hidden;
+    display: grid; place-items: center; align-content: center; gap: var(--e-4);
+    width: 100%;
+    border-radius: var(--raio-lg);
+    color: color-mix(in srgb, var(--tom) 55%, var(--cor-fundo));
+    background:
+      radial-gradient(120% 80% at 20% 10%, color-mix(in srgb, var(--tom) 10%, var(--cor-fundo)) 0%, transparent 60%),
+      repeating-linear-gradient(135deg, transparent 0 14px, color-mix(in srgb, var(--tom) 5%, transparent) 14px 15px),
+      color-mix(in srgb, var(--tom) 14%, var(--cor-fundo));
+  }
+  .placeholder--pimenta { --tom: var(--cor-acento); }
+  .placeholder--acafrao { --tom: var(--cor-destaque); }
+  .placeholder__prato { width: clamp(64px, 22%, 120px); }
+  figcaption { display: grid; gap: var(--e-1); text-align: center; padding-inline: var(--e-4); }
+  .placeholder__rotulo {
+    font-family: var(--fonte-titulo); font-size: var(--t-lg); line-height: 1.2;
+    color: color-mix(in srgb, var(--tom) 80%, var(--cor-texto));
+  }
+  .placeholder__aviso {
+    font-size: var(--t-xs); letter-spacing: 0.08em; text-transform: uppercase;
+    color: color-mix(in srgb, var(--tom) 60%, var(--cor-texto-suave));
+  }
+</style>

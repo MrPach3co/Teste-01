@@ -1,0 +1,121 @@
+---
+import Logo from "./Logo.astro";
+
+const links = [
+  { href: "/#metodo", texto: "O Método" },
+  { href: "/#quem-somos", texto: "Quem somos" },
+  { href: "/receitas", texto: "Receitas" },
+  { href: "/planejador", texto: "Planejador" },
+  { href: "/pre-venda", texto: "E-book" },
+];
+---
+<header class="cabecalho" data-cabecalho>
+  <div class="container cabecalho__barra">
+    <Logo />
+
+    <nav class="cabecalho__nav" id="menu-principal" aria-label="Principal">
+      <ul>
+        {links.map((l) => <li><a href={l.href}>{l.texto}</a></li>)}
+      </ul>
+      <a href="/amostra-gratis" class="btn btn--acento cabecalho__cta">Amostra grátis</a>
+    </nav>
+
+    <button class="cabecalho__botao" type="button" aria-expanded="false" aria-controls="menu-principal" data-botao-menu>
+      <span class="sr-only">Abrir menu</span>
+      <span class="hamburguer" aria-hidden="true"></span>
+    </button>
+  </div>
+</header>
+
+<script>
+  const cabecalho = document.querySelector<HTMLElement>("[data-cabecalho]")!;
+  const botao = document.querySelector<HTMLButtonElement>("[data-botao-menu]")!;
+
+  const aoRolar = () => cabecalho.classList.toggle("rolado", window.scrollY > 12);
+  aoRolar();
+  window.addEventListener("scroll", aoRolar, { passive: true });
+
+  const fechar = () => {
+    cabecalho.classList.remove("aberto");
+    botao.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
+  };
+  botao.addEventListener("click", () => {
+    const abrir = !cabecalho.classList.contains("aberto");
+    cabecalho.classList.toggle("aberto", abrir);
+    botao.setAttribute("aria-expanded", String(abrir));
+    document.body.style.overflow = abrir ? "hidden" : "";
+  });
+  cabecalho.querySelectorAll("nav a").forEach((a) => a.addEventListener("click", fechar));
+  document.addEventListener("keydown", (e) => e.key === "Escape" && fechar());
+</script>
+
+<style>
+  .cabecalho { position: sticky; top: 0; z-index: 50; }
+  /* O fundo desfocado fica num pseudo-elemento: backdrop-filter no próprio
+     cabeçalho prenderia o menu "fixed" do celular dentro dele. */
+  .cabecalho::before {
+    content: ""; position: absolute; inset: 0; z-index: -1;
+    opacity: 0; transition: opacity var(--transicao);
+    background: color-mix(in srgb, var(--cor-fundo) 88%, transparent);
+    backdrop-filter: saturate(1.4) blur(14px);
+    -webkit-backdrop-filter: saturate(1.4) blur(14px);
+    box-shadow: 0 1px 0 var(--cor-linha);
+  }
+  .cabecalho.rolado::before, .cabecalho.aberto::before { opacity: 1; }
+  .cabecalho__barra {
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 4.5rem; gap: var(--e-5);
+  }
+
+  .cabecalho__nav ul { list-style: none; margin: 0; padding: 0; }
+  .cabecalho__nav a:not(.btn) {
+    text-decoration: none; font-size: var(--t-sm); font-weight: 500;
+    color: var(--cor-texto-suave); transition: color var(--transicao);
+  }
+  .cabecalho__nav a:not(.btn):hover { color: var(--cor-texto); }
+
+  .cabecalho__botao {
+    display: grid; place-items: center;
+    width: 2.75rem; height: 2.75rem; margin-right: -0.5rem;
+    background: none; border: 0; cursor: pointer; color: inherit;
+  }
+  .hamburguer, .hamburguer::before, .hamburguer::after {
+    display: block; width: 22px; height: 1.5px; background: currentColor;
+    transition: transform var(--transicao), opacity var(--transicao);
+  }
+  .hamburguer { position: relative; }
+  .hamburguer::before, .hamburguer::after { content: ""; position: absolute; left: 0; }
+  .hamburguer::before { top: -7px; }
+  .hamburguer::after { top: 7px; }
+  .aberto .hamburguer { background: transparent; }
+  .aberto .hamburguer::before { transform: translateY(7px) rotate(45deg); }
+  .aberto .hamburguer::after { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Celular: menu em tela cheia */
+  @media (max-width: 899px) {
+    .cabecalho__nav {
+      position: fixed; inset: 4.5rem 0 0; z-index: 49;
+      display: flex; flex-direction: column; gap: var(--e-6);
+      padding: var(--e-6) var(--gutter);
+      background: var(--cor-fundo);
+      opacity: 0; visibility: hidden; transform: translateY(-8px);
+      transition: opacity var(--transicao), transform var(--transicao), visibility var(--transicao);
+    }
+    .aberto .cabecalho__nav { opacity: 1; visibility: visible; transform: none; }
+    .cabecalho__nav ul { display: flex; flex-direction: column; }
+    .cabecalho__nav li { border-bottom: 1px solid var(--cor-linha); }
+    .cabecalho__nav a:not(.btn) {
+      display: block; padding: var(--e-4) 0;
+      font-family: var(--fonte-titulo); font-size: var(--t-xl); color: var(--cor-texto);
+    }
+  }
+
+  /* Desktop: menu em linha */
+  @media (min-width: 900px) {
+    .cabecalho__botao { display: none; }
+    .cabecalho__nav { display: flex; align-items: center; gap: var(--e-6); }
+    .cabecalho__nav ul { display: flex; gap: var(--e-5); }
+    .cabecalho__cta { min-height: 2.75rem; padding: 0.6rem 1.25rem; }
+  }
+</style>

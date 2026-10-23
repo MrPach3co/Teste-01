@@ -1,0 +1,94 @@
+---
+import Logo from "./Logo.astro";
+import { marca } from "../lib/conteudo";
+const ano = new Date().getFullYear();
+---
+<footer class="rodape">
+  <div class="container">
+    <div class="rodape__topo">
+      <div class="rodape__marca">
+        <Logo />
+        <p>{marca.slogan}</p>
+      </div>
+
+      <nav aria-label="Rodapé" class="rodape__colunas">
+        <div>
+          <h2>Conteúdo</h2>
+          <ul>
+            <li><a href="/receitas">Receitas</a></li>
+            <li><a href="/planejador">Planejador semanal</a></li>
+            <li><a href="/amostra-gratis">Amostra grátis</a></li>
+            <li><a href="/pre-venda">E-book</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Contato</h2>
+          <ul>
+            <li><a href={`mailto:${marca.contato.email}`}>{marca.contato.email}</a></li>
+            {marca.contato.instagram && <li><a href={marca.contato.instagram} rel="noopener" target="_blank">Instagram</a></li>}
+            {marca.contato.whatsapp && <li><a href={marca.contato.whatsapp} rel="noopener" target="_blank">WhatsApp</a></li>}
+          </ul>
+        </div>
+        <div>
+          <h2>Legal</h2>
+          <ul>
+            <li><a href="/privacidade">Política de privacidade</a></li>
+            <li><a href="/termos">Termos de uso</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <p class="rodape__aviso">
+      O conteúdo deste site é educativo, voltado ao ensino de culinária saudável,
+      e não substitui o acompanhamento nutricional individual. Para orientações
+      específicas sobre a sua alimentação, consulte um(a) nutricionista.
+    </p>
+
+    <div class="rodape__base">
+      <span>© {ano} {marca.nome}. Todos os direitos reservados.</span>
+      {marca.empresa.cnpj && !marca.empresa.cnpj.startsWith("[") && <span>CNPJ {marca.empresa.cnpj}</span>}
+    </div>
+  </div>
+</footer>
+
+<style>
+  .rodape {
+    background: var(--cor-texto);
+    color: color-mix(in srgb, var(--cor-fundo) 72%, transparent);
+    padding-block: var(--e-8) var(--e-6);
+    font-size: var(--t-sm);
+  }
+  .rodape :global(.logo) { color: var(--cor-fundo); }
+  .rodape a { text-decoration: none; }
+  .rodape a:hover { color: var(--cor-fundo); }
+
+  .rodape__topo { display: grid; gap: var(--e-7); }
+  .rodape__marca p { margin-top: var(--e-3); max-width: 22rem; }
+
+  .rodape__colunas { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--e-6); }
+  .rodape h2 {
+    font-family: var(--fonte-texto); font-size: var(--t-xs); font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--cor-fundo); margin-bottom: var(--e-4);
+  }
+  .rodape ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e-2); }
+  .rodape li { overflow-wrap: anywhere; }
+
+  .rodape__aviso {
+    margin: var(--e-7) 0 var(--e-5);
+    padding-top: var(--e-5);
+    border-top: 1px solid color-mix(in srgb, var(--cor-fundo) 14%, transparent);
+    font-size: var(--t-xs); line-height: 1.6; max-width: 48rem;
+    color: color-mix(in srgb, var(--cor-fundo) 58%, transparent);
+  }
+  .rodape__base {
+    display: flex; flex-wrap: wrap; gap: var(--e-2) var(--e-5);
+    font-size: var(--t-xs); color: color-mix(in srgb, var(--cor-fundo) 50%, transparent);
+  }
+
+  @media (min-width: 900px) {
+    .rodape__topo { grid-template-columns: 1fr 1.6fr; }
+    .rodape__colunas { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>

@@ -1,0 +1,21 @@
+---
+import { marca } from "../lib/conteudo";
+const { class: classe = "" } = Astro.props;
+---
+<a href="/" class:list={["logo", classe]} aria-label={`${marca.nome} — página inicial`}>
+  {marca.logo
+    ? <img src={marca.logo} alt={marca.nome} height="36" />
+    : <span class="logo__texto">{marca.nome}</span>}
+</a>
+
+<style>
+  .logo { display: inline-flex; align-items: center; text-decoration: none; color: inherit; }
+  .logo img { height: 36px; width: auto; }
+  .logo__texto {
+    font-family: var(--fonte-titulo);
+    font-size: 1.35rem;
+    letter-spacing: -0.01em;
+    font-variation-settings: "SOFT" 100, "WONK" 1;
+    white-space: nowrap;
+  }
+</style>

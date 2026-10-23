@@ -1,0 +1,63 @@
+# ─────────────────────────────────────────────────────────────
+#  Configuração da marca
+#  Tudo o que aparece no site sobre a marca vem daqui.
+#  Edite à vontade: o site é reconstruído a cada publicação.
+# ─────────────────────────────────────────────────────────────
+
+nome: "[NOME DA MARCA]"
+# Nome do método, usado em "O Método ___"
+nome_metodo: "[NOME]"
+slogan: "Comida saudável que dá vontade de comer."
+descricao_seo: >-
+  Receitas saudáveis testadas por chef e com informação nutricional revisada
+  por nutricionista. Refeições gostosas, sem complicação e sem monotonia.
+
+# Endereço final do site (sem barra no fim). Usado em SEO e compartilhamento.
+url_site: "https://www.exemplo.com.br"
+
+# Logo: deixe vazio ("") para usar o nome da marca escrito em fonte elegante.
+# Para usar um arquivo, coloque-o em public/imagens/ e informe o caminho,
+# por exemplo: "/imagens/logo.svg"
+logo: ""
+
+# Cores da marca (formato hexadecimal). Mudou aqui, mudou no site inteiro.
+cores:
+  fundo: "#F7F3EC"        # papel — fundo principal
+  fundo_alt: "#EFE8DC"    # fundo de seções alternadas
+  texto: "#1E2620"        # quase preto, levemente verde
+  texto_suave: "#5B635C"  # textos secundários
+  primaria: "#2F4A3A"     # verde-floresta — botões e destaques
+  acento: "#C4673A"       # páprica — detalhes e chamadas
+  destaque: "#D9A94A"     # açafrão — selos e pequenos realces
+  linha: "#DDD4C6"        # bordas e divisórias
+
+contato:
+  email: "contato@exemplo.com.br"
+  instagram: ""           # ex.: "https://instagram.com/suamarca"
+  whatsapp: ""            # ex.: "https://wa.me/5511999999999"
+
+# Produto principal (pré-venda)
+ebook:
+  titulo: "50 Receitas Testadas"
+  preco: "R$ 39,90"
+  preco_de: ""            # opcional: preço "de" riscado, ex.: "R$ 59,90"
+  # Link de checkout da Hotmart ou Kiwify. Enquanto vazio, o botão mostra
+  # "Pré-venda em breve" e fica desativado.
+  link_checkout: ""
+  garantia_dias: 7
+
+# Amostra grátis
+amostra:
+  quantidade_receitas: 5
+  # Endereço (action) do formulário do MailerLite/Brevo. Enquanto vazio, o
+  # formulário funciona em modo demonstração e libera o download direto.
+  form_action: ""
+  # PDF entregue na página de obrigado (gerado pelo script do e-book).
+  arquivo_pdf: "/downloads/amostra-gratis.pdf"
+
+# Dados do responsável pelo tratamento de dados (LGPD) — exibidos na
+# política de privacidade.
+empresa:
+  razao_social: "[RAZÃO SOCIAL]"
+  cnpj: "[CNPJ]"
+  email_privacidade: "privacidade@exemplo.com.br"

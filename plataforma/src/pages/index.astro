@@ -1,0 +1,26 @@
+---
+// Home provisória da Etapa 1 — será substituída pela home completa na Etapa 2.
+import Base from "../layouts/Base.astro";
+import ImagemPlaceholder from "../components/ImagemPlaceholder.astro";
+---
+<Base>
+  <section class="secao">
+    <div class="container provisoria">
+      <div data-revelar>
+        <span class="sobretitulo">Em construção · Etapa 1</span>
+        <h1>Refeições saudáveis e <em>gostosas</em>, sem complicação.</h1>
+        <p class="lead">A base da plataforma está pronta: identidade, cabeçalho, rodapé e
+          componentes. A home completa chega na próxima etapa.</p>
+        <a href="/estilo" class="btn">Ver o guia de estilo <span class="seta" aria-hidden="true">→</span></a>
+      </div>
+      <div data-revelar style="--atraso:150ms">
+        <ImagemPlaceholder rotulo="Prato do dia" proporcao="4/5" />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .provisoria { display: grid; gap: var(--e-7); align-items: center; }
+  @media (min-width: 900px) { .provisoria { grid-template-columns: 1.2fr 1fr; } }
+</style>
