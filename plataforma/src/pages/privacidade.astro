@@ -1,0 +1,94 @@
+---
+import PaginaLegal from "../layouts/PaginaLegal.astro";
+import { marca } from "../lib/conteudo";
+const { empresa, nome } = marca;
+---
+<PaginaLegal titulo="Política de Privacidade" descricao={`Como a ${nome} trata seus dados pessoais, em conformidade com a LGPD.`} atualizacao="23 de outubro de 2026">
+  <p>
+    Esta política explica, de forma simples, quais dados pessoais a {nome} coleta, por que coleta, com quem
+    compartilha e como você pode exercer seus direitos, conforme a Lei Geral de Proteção de Dados
+    (Lei nº 13.709/2018, “LGPD”).
+  </p>
+
+  <h2>1. Quem é o responsável pelos seus dados</h2>
+  <p>
+    O controlador dos dados é <strong>{empresa.razao_social}</strong>, inscrita no CNPJ {empresa.cnpj}, com sede em
+    {" "}{empresa.cidade}. Para qualquer assunto sobre privacidade, fale com a gente em
+    {" "}<a href={`mailto:${empresa.email_privacidade}`}>{empresa.email_privacidade}</a>.
+  </p>
+
+  <h2>2. Quais dados coletamos e para quê</h2>
+  <table>
+    <thead><tr><th>Dado</th><th>Finalidade</th><th>Base legal</th></tr></thead>
+    <tbody>
+      <tr><td>Nome e e-mail (amostra grátis)</td><td>Enviar a amostra de receitas que você pediu</td><td>Consentimento (art. 7º, I)</td></tr>
+      <tr><td>Nome e e-mail (novidades)</td><td>Enviar receitas, conteúdos e ofertas, somente se você marcar essa opção</td><td>Consentimento (art. 7º, I)</td></tr>
+      <tr><td>Dados de compra</td><td>Processar o pagamento e liberar o acesso ao e-book. São coletados pela plataforma de pagamento, não por este site</td><td>Execução de contrato (art. 7º, V)</td></tr>
+      <tr><td>Mensagens enviadas por e-mail</td><td>Responder às suas dúvidas e solicitações</td><td>Legítimo interesse (art. 7º, IX)</td></tr>
+    </tbody>
+  </table>
+  <p>
+    Não coletamos dados sensíveis, como informações de saúde. O conteúdo é educativo e não pedimos
+    informações sobre sua alimentação, peso ou condições de saúde.
+  </p>
+
+  <h2>3. Planejador e lista de compras</h2>
+  <p>
+    O planejador semanal e a lista de compras funcionam inteiramente no seu navegador: o que você planeja fica
+    salvo no próprio aparelho (armazenamento local do navegador) e <strong>não é enviado para nós</strong>.
+    Você pode apagar esses dados a qualquer momento limpando os dados de navegação deste site.
+  </p>
+
+  <h2>4. Cookies</h2>
+  <p>
+    Este site não usa cookies de publicidade nem de rastreamento. Se isso mudar (por exemplo, com uma
+    ferramenta de estatísticas), esta política será atualizada e, quando necessário, pediremos seu consentimento.
+  </p>
+
+  <h2>5. Com quem compartilhamos</h2>
+  <p>Compartilhamos dados apenas com fornecedores necessários para o funcionamento do serviço:</p>
+  <ul>
+    <li><strong>Ferramenta de e-mail</strong>, para envio da amostra e, se autorizado, de novidades;</li>
+    <li><strong>Plataforma de pagamento</strong> (como Hotmart ou Kiwify), que processa as compras;</li>
+    <li><strong>Hospedagem do site</strong>, que pode registrar dados técnicos de acesso, como endereço IP, por segurança.</li>
+  </ul>
+  <p>
+    Alguns desses fornecedores podem armazenar dados fora do Brasil. Nesses casos, exigimos garantias
+    adequadas de proteção, nos termos do art. 33 da LGPD. <strong>Nunca vendemos seus dados.</strong>
+  </p>
+
+  <h2>6. Por quanto tempo guardamos</h2>
+  <p>
+    Mantemos seu nome e e-mail enquanto você estiver inscrito. Ao cancelar a inscrição (pelo link presente em
+    todos os e-mails) ou pedir a exclusão, apagamos seus dados em até 15 dias, exceto o que a lei nos obrigar
+    a guardar.
+  </p>
+
+  <h2>7. Seus direitos</h2>
+  <p>Conforme o art. 18 da LGPD, você pode, a qualquer momento e sem custo:</p>
+  <ul>
+    <li>confirmar se tratamos seus dados e acessá-los;</li>
+    <li>corrigir dados incompletos, inexatos ou desatualizados;</li>
+    <li>pedir a anonimização, o bloqueio ou a eliminação de dados desnecessários;</li>
+    <li>pedir a portabilidade dos seus dados;</li>
+    <li>revogar o consentimento e pedir a eliminação dos dados tratados com base nele;</li>
+    <li>saber com quem compartilhamos seus dados.</li>
+  </ul>
+  <p>
+    Para exercer qualquer direito, escreva para <a href={`mailto:${empresa.email_privacidade}`}>{empresa.email_privacidade}</a>.
+    Respondemos em até 15 dias. Você também pode apresentar reclamação à Autoridade Nacional de Proteção
+    de Dados (ANPD).
+  </p>
+
+  <h2>8. Segurança</h2>
+  <p>
+    Adotamos medidas técnicas e administrativas razoáveis para proteger seus dados, como conexão criptografada
+    (HTTPS) e acesso restrito às ferramentas que guardam informações pessoais.
+  </p>
+
+  <h2>9. Alterações</h2>
+  <p>
+    Podemos atualizar esta política. A data da última atualização fica sempre no topo da página e, em mudanças
+    relevantes, avisaremos por e-mail quem estiver inscrito.
+  </p>
+</PaginaLegal>

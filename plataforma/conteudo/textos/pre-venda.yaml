@@ -39,15 +39,17 @@ sumario:
 
 para_quem:
   titulo: "Para quem é (e para quem não é)"
+  titulo_e: "É para quem…"
   e_para:
-    - "Quem quer comer melhor sem passar horas na cozinha"
-    - "Quem cansou de comida saudável sem graça"
-    - "Quem quer controlar o gasto com alimentação"
-    - "Quem cozinha para si ou para a família"
+    - "quer comer melhor sem passar horas na cozinha"
+    - "cansou de comida saudável sem graça"
+    - "quer controlar o gasto com alimentação"
+    - "cozinha para si ou para a família"
+  titulo_nao: "Não é para quem…"
   nao_e_para:
-    - "Quem procura uma dieta individual ou prescrição nutricional"
-    - "Quem busca promessas de resultado rápido"
-    - "Quem precisa de cardápio para condições de saúde específicas (nesse caso, procure um nutricionista)"
+    - "procura uma dieta individual ou prescrição nutricional"
+    - "busca promessas de resultado rápido"
+    - "precisa de cardápio para condições de saúde específicas (nesse caso, procure um nutricionista)"
 
 garantia:
   titulo: "Garantia incondicional de {garantia} dias"

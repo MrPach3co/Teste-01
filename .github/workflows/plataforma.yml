@@ -1,0 +1,27 @@
+# Confere a plataforma a cada push: testes e build.
+# Se algum arquivo de conteudo/ estiver inválido, este check fica vermelho
+# antes de chegar ao site.
+name: Plataforma
+
+on:
+  push:
+    paths: ["plataforma/**", ".github/workflows/plataforma.yml"]
+  pull_request:
+    paths: ["plataforma/**", ".github/workflows/plataforma.yml"]
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: plataforma
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: plataforma/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run build

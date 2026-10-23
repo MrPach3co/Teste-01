@@ -174,3 +174,30 @@ export function montarListaDeCompras(entradas, receitas) {
 
   return { secoes, despensa, custoTotal, refeicoes };
 }
+
+/** Escapa texto para inserir com segurança em HTML */
+export const escaparHtml = (s = "") =>
+  String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+/**
+ * Cria as funções de texto usadas no site e no e-book:
+ *  t()       troca {marca}, {preco}… pelos valores da configuração
+ *  rico()    como t(), escapa HTML e transforma *palavra* em <em>palavra</em>
+ *  simples() como t(), sem os asteriscos
+ */
+export function criarTextos(marca, equipe) {
+  const atalhos = {
+    marca: marca.nome,
+    metodo: marca.nome_metodo,
+    nutricionista: equipe.nutricionista.nome,
+    chef: equipe.chef.nome,
+    preco: marca.ebook.preco,
+    receitas_ebook: String(marca.ebook.quantidade_receitas),
+    receitas_amostra: String(marca.amostra.quantidade_receitas),
+    garantia: String(marca.ebook.garantia_dias),
+  };
+  const t = (texto = "") => String(texto).replace(/\{(\w+)\}/g, (original, chave) => atalhos[chave] ?? original);
+  const rico = (texto = "") => escaparHtml(t(texto)).replace(/\*([^*]+)\*/g, "<em>$1</em>");
+  const simples = (texto = "") => t(texto).replace(/\*/g, "");
+  return { t, rico, simples };
+}

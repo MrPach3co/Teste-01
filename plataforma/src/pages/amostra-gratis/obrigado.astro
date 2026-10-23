@@ -1,0 +1,60 @@
+---
+import Base from "../../layouts/Base.astro";
+import Icone from "../../components/Icone.astro";
+import BotaoCheckout from "../../components/BotaoCheckout.astro";
+import { marca, textos, rico, t } from "../../lib/conteudo";
+const o = textos.amostra.obrigado;
+const temEmail = Boolean(marca.amostra.form_action);
+---
+<Base titulo="Obrigado" semIndexar>
+  <section class="secao obrigado">
+    <div class="container obrigado__caixa">
+      <span class="obrigado__icone"><Icone nome={temEmail ? "email" : "download"} tamanho={30} /></span>
+      <p class="obrigado__saudacao" data-saudacao hidden></p>
+
+      <div data-modo="email" hidden={!temEmail}>
+        <h1 set:html={rico(o.titulo_email)} />
+        <p class="lead">{t(o.texto_email)}</p>
+      </div>
+      <div data-modo="download" hidden={temEmail}>
+        <h1 set:html={rico(o.titulo_download)} />
+        <p class="lead">{t(o.texto_download)}</p>
+        <a href={marca.amostra.arquivo_pdf} class="btn btn--acento btn--grande" download>
+          <Icone nome="download" tamanho={20} /> Baixar a amostra (PDF)
+        </a>
+      </div>
+
+      <hr class="divisoria" />
+
+      <div class="obrigado__proximo">
+        <p>{t(o.proximo_passo)}</p>
+        <div class="obrigado__ctas">
+          <a href="/pre-venda" class="btn">Conhecer o e-book</a>
+          <BotaoCheckout variante="" class="btn--contorno" />
+        </div>
+        <p class="obrigado__extra">Enquanto isso, <a href="/planejador">experimente o planejador semanal</a>.</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const modo = new URLSearchParams(location.search).get("modo");
+  if (modo === "email" || modo === "download") {
+    document.querySelectorAll<HTMLElement>("[data-modo]").forEach((el) => (el.hidden = el.dataset.modo !== modo));
+    document.querySelector<HTMLElement>(".obrigado__icone")!.dataset.modo = modo;
+  }
+  try {
+    const nome = sessionStorage.getItem("amostra:nome");
+    const saudacao = document.querySelector<HTMLElement>("[data-saudacao]")!;
+    if (nome) { saudacao.textContent = `Obrigado, ${nome}!`; saudacao.hidden = false; }
+  } catch { /* opcional */ }
+</script>
+
+<style>
+  .obrigado__caixa { max-width: 40rem; text-align: center; }
+  .obrigado__icone { display: inline-grid; place-items: center; width: 4.5rem; height: 4.5rem; border-radius: 50%; background: var(--cor-primaria); color: var(--cor-fundo); margin-bottom: var(--e-5); }
+  .obrigado__saudacao { font-weight: 600; color: var(--cor-acento); margin-bottom: var(--e-2); }
+  .obrigado__ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--e-3); margin: var(--e-4) 0; }
+  .obrigado__extra { font-size: var(--t-sm); color: var(--cor-texto-suave); }
+</style>

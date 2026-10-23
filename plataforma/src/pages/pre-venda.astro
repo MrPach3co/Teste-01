@@ -1,0 +1,319 @@
+---
+import Base from "../layouts/Base.astro";
+import Icone from "../components/Icone.astro";
+import CapaLivro from "../components/CapaLivro.astro";
+import BotaoCheckout from "../components/BotaoCheckout.astro";
+import Faq from "../components/Faq.astro";
+import Foto from "../components/Foto.astro";
+import ChamadaFinal from "../components/home/ChamadaFinal.astro";
+import { marca, equipe, textos, receitas, rico, t, simples, custoPorPorcao } from "../lib/conteudo";
+import { OBJETIVOS, REFEICOES, formatarMoeda, formatarQuantidade, formatarTempo } from "../lib/comum.mjs";
+
+const pv = textos.preVenda;
+const e = marca.ebook;
+const exemplo = receitas[1] ?? receitas[0];
+const icones = ["livro", "escudo", "moeda", "alvo", "relogio", "chef"];
+
+const fatos = [
+  { valor: String(e.quantidade_receitas), rotulo: "receitas testadas" },
+  { valor: String(Object.keys(REFEICOES).length), rotulo: "refeições do dia" },
+  { valor: String(Object.keys(OBJETIVOS).length), rotulo: "objetivos" },
+  { valor: `${e.garantia_dias} dias`, rotulo: "de garantia" },
+];
+
+const precoNumero = Number(e.preco.replace(/[^\d,]/g, "").replace(",", "."));
+const jsonLd = e.link_checkout ? {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  name: `${e.titulo} · ${marca.nome}`,
+  description: e.subtitulo,
+  brand: { "@type": "Brand", name: marca.nome },
+  offers: {
+    "@type": "Offer",
+    price: precoNumero.toFixed(2),
+    priceCurrency: "BRL",
+    availability: "https://schema.org/PreOrder",
+    url: new URL("/pre-venda", marca.url_site).href,
+  },
+} : undefined;
+---
+<Base titulo={`E-book ${e.titulo}`} descricao={e.subtitulo} jsonLd={jsonLd}>
+  <section class="pv-hero">
+    <div class="container pv-hero__grade">
+      <div class="pv-hero__texto">
+        <span class="sobretitulo">{t(pv.hero.sobretitulo)}</span>
+        <h1 set:html={rico(pv.hero.titulo)} />
+        <p class="lead">{e.subtitulo}</p>
+
+        <div class="preco">
+          <div class="preco__valores">
+            {e.preco_de && <s>{e.preco_de}</s>}
+            <strong>{e.preco}</strong>
+            {e.parcelamento && <span>{e.parcelamento}</span>}
+          </div>
+          <BotaoCheckout variante="acento" grande />
+          <ul class="preco__garantias">
+            <li><Icone nome="escudo" tamanho={18} /> Garantia de {e.garantia_dias} dias</li>
+            <li><Icone nome="cadeado" tamanho={18} /> Pagamento seguro</li>
+            <li><Icone nome="email" tamanho={18} /> Acesso por e-mail</li>
+          </ul>
+          {e.previsao_entrega && <p class="preco__entrega">Entrega prevista: <strong>{e.previsao_entrega}</strong></p>}
+        </div>
+      </div>
+      <div class="pv-hero__capa"><CapaLivro /></div>
+    </div>
+  </section>
+
+  <section class="fatos" aria-label="O e-book em números">
+    <div class="container">
+      <dl class="fatos__lista">
+        {fatos.map((f) => <div data-revelar><dt>{f.rotulo}</dt><dd>{f.valor}</dd></div>)}
+      </dl>
+    </div>
+  </section>
+
+  <section class="secao">
+    <div class="container">
+      <div class="cabecalho-secao" data-revelar>
+        <span class="sobretitulo">E-book</span>
+        <h2>{t(pv.beneficios_titulo)}</h2>
+      </div>
+      <div class="grade grade--3 beneficios">
+        {pv.beneficios.map((b: any, i: number) => (
+          <article class="beneficio" data-revelar style={`--atraso:${(i % 3) * 80}ms`}>
+            <span class="beneficio__icone"><Icone nome={icones[i] ?? "check"} /></span>
+            <h3>{t(b.titulo)}</h3>
+            <p>{t(b.texto)}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="secao secao--alt">
+    <div class="container sumario-grade">
+      <div>
+        <div class="cabecalho-secao" data-revelar>
+          <span class="sobretitulo">Sumário</span>
+          <h2>{t(pv.sumario_titulo)}</h2>
+        </div>
+        <ol class="sumario">
+          {pv.sumario.map((c: any, i: number) => (
+            <li data-revelar style={`--atraso:${i * 60}ms`}>
+              <span class="sumario__n">{String(i + 1).padStart(2, "0")}</span>
+              <div><strong>{t(c.titulo)}</strong><p>{t(c.texto)}</p></div>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      {exemplo && (
+        <figure class="anatomia" data-revelar>
+          <figcaption>
+            <span class="selo selo--exemplo">Exemplo</span> Como cada receita é apresentada
+          </figcaption>
+          <div class="pagina">
+            <Foto caminho={exemplo.foto} alt={exemplo.titulo} proporcao="16/9" larguras={[500, 800]} sizes="(min-width: 1024px) 480px, 100vw" rotuloPlaceholder="" />
+            <p class="pagina__refeicao">{exemplo.refeicoes.map((m) => REFEICOES[m as keyof typeof REFEICOES]).join(" · ")}</p>
+            <h3>{exemplo.titulo}</h3>
+            <div class="pagina__ficha">
+              <span><Icone nome="relogio" tamanho={14} />{formatarTempo(exemplo.tempo_preparo_min)}</span>
+              <span><Icone nome="moeda" tamanho={14} />{formatarMoeda(custoPorPorcao(exemplo))}/porção</span>
+              <span><Icone nome="porcao" tamanho={14} />{exemplo.porcoes} porções</span>
+            </div>
+            <div class="pagina__colunas">
+              <ul>
+                {exemplo.ingredientes.slice(0, 5).map((i) => <li><b>{formatarQuantidade(i.quantidade, i.unidade)}</b> {i.nome}</li>)}
+                <li class="pagina__mais">…</li>
+              </ul>
+              <div class="pagina__nutri">
+                <strong>{exemplo.nutricao.calorias_kcal} kcal</strong>
+                <span>{exemplo.nutricao.proteinas_g} g proteínas</span>
+                <span>{exemplo.nutricao.carboidratos_g} g carboidratos</span>
+                <span>{exemplo.nutricao.gorduras_g} g gorduras</span>
+              </div>
+            </div>
+          </div>
+          <ul class="anatomia__notas">
+            <li><b>1</b> Tempo, custo e rendimento logo no topo</li>
+            <li><b>2</b> Ingredientes com medidas caseiras</li>
+            <li><b>3</b> Informação nutricional por porção</li>
+          </ul>
+        </figure>
+      )}
+    </div>
+  </section>
+
+  <section class="secao">
+    <div class="container">
+      <div class="cabecalho-secao cabecalho-secao--centro" data-revelar>
+        <span class="sobretitulo">Transparência</span>
+        <h2>{t(pv.para_quem.titulo)}</h2>
+      </div>
+      <div class="grade grade--2 para-quem">
+        <div class="para-quem__coluna" data-revelar>
+          <h3>{t(pv.para_quem.titulo_e)}</h3>
+          <ul class="lista-check">{pv.para_quem.e_para.map((x: string) => <li><Icone nome="check" />{t(x)}</li>)}</ul>
+        </div>
+        <div class="para-quem__coluna para-quem__coluna--nao" data-revelar style="--atraso:100ms">
+          <h3>{t(pv.para_quem.titulo_nao)}</h3>
+          <ul class="lista-check">{pv.para_quem.nao_e_para.map((x: string) => <li><Icone nome="x" />{t(x)}</li>)}</ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao secao--alt">
+    <div class="container autores" data-revelar>
+      <div class="autores__item">
+        <Icone nome="estetoscopio" tamanho={28} />
+        <div><span>Informação nutricional</span><strong>{equipe.nutricionista.nome}</strong><small>{equipe.nutricionista.registro}</small></div>
+      </div>
+      <div class="autores__item">
+        <Icone nome="chef" tamanho={28} />
+        <div><span>Receitas criadas e testadas por</span><strong>{equipe.chef.nome}</strong><small>{equipe.chef.cargo}</small></div>
+      </div>
+      <a href="/#quem-somos" class="btn btn--contorno">Conhecer a equipe</a>
+    </div>
+  </section>
+
+  <section class="secao">
+    <div class="container garantia" data-revelar>
+      <div class="garantia__selo" aria-hidden="true">
+        <svg viewBox="0 0 200 200">
+          <defs><path id="circulo" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" /></defs>
+          <text><textPath href="#circulo" textLength="486" lengthAdjust="spacing">GARANTIA INCONDICIONAL · GARANTIA INCONDICIONAL · </textPath></text>
+        </svg>
+        <span><strong>{e.garantia_dias}</strong>dias</span>
+      </div>
+      <div>
+        <h2>{t(pv.garantia.titulo)}</h2>
+        <p class="lead">{t(pv.garantia.texto)}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao secao--alt">
+    <div class="container faq-grade">
+      <div class="cabecalho-secao" data-revelar>
+        <span class="sobretitulo">Dúvidas</span>
+        <h2>Sobre a <em>compra</em></h2>
+        <p class="lead">{t(pv.amostra_cta)} <a href="/amostra-gratis">Baixar amostra</a></p>
+      </div>
+      <Faq itens={pv.faq} />
+    </div>
+  </section>
+
+  <ChamadaFinal />
+
+  <div class="barra-compra" data-barra-compra>
+    <div><strong>{e.preco}</strong><span>{e.titulo}</span></div>
+    <BotaoCheckout variante="acento" texto="Garantir" />
+  </div>
+</Base>
+
+<script>
+  // Barra de compra fixa no celular, que aparece depois do primeiro botão
+  const barra = document.querySelector<HTMLElement>("[data-barra-compra]");
+  const alvo = document.querySelector(".preco");
+  if (barra && alvo && "IntersectionObserver" in window) {
+    new IntersectionObserver(([e]) => barra.classList.toggle("visivel", !e.isIntersecting && e.boundingClientRect.top < 0)).observe(alvo);
+  }
+</script>
+
+<style>
+  .pv-hero { padding-block: clamp(2rem, 1rem + 4vw, 4rem) var(--e-8); overflow: hidden; }
+  .pv-hero__grade { display: grid; gap: var(--e-8); align-items: center; }
+  @media (min-width: 1024px) { .pv-hero__grade { grid-template-columns: 1.15fr 1fr; } }
+  .pv-hero__capa { padding-block: var(--e-5); }
+
+  .preco { display: grid; gap: var(--e-4); justify-items: start; margin-top: var(--e-6); padding: var(--e-5); border-radius: var(--raio-lg); background: var(--cor-fundo-alt); max-width: 30rem; }
+  .preco__valores { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--e-3); }
+  .preco__valores strong { font-family: var(--fonte-titulo); font-weight: 400; font-size: var(--t-2xl); line-height: 1; color: var(--cor-primaria); }
+  .preco__valores s { color: var(--cor-texto-suave); }
+  .preco__valores span { font-size: var(--t-sm); color: var(--cor-texto-suave); }
+  .preco__garantias { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--e-2) var(--e-4); font-size: var(--t-xs); color: var(--cor-texto-suave); }
+  .preco__garantias li { display: inline-flex; align-items: center; gap: 0.35em; }
+  .preco__garantias :global(.icone) { color: var(--cor-primaria); }
+  .preco__entrega { margin: 0; font-size: var(--t-sm); }
+
+  .fatos { border-block: 1px solid var(--cor-linha); }
+  .fatos__lista { display: grid; grid-template-columns: repeat(2, 1fr); margin: 0; }
+  @media (min-width: 900px) { .fatos__lista { grid-template-columns: repeat(4, 1fr); } }
+  .fatos__lista div { display: flex; flex-direction: column-reverse; padding: var(--e-6) var(--e-4); text-align: center; border-right: 1px solid var(--cor-linha); }
+  .fatos__lista div:nth-child(2n) { border-right: 0; }
+  @media (min-width: 900px) { .fatos__lista div:nth-child(2n) { border-right: 1px solid var(--cor-linha); } .fatos__lista div:last-child { border-right: 0; } }
+  .fatos dd { margin: 0; font-family: var(--fonte-titulo); font-size: var(--t-2xl); line-height: 1.1; color: var(--cor-primaria); }
+  .fatos dt { font-size: var(--t-xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--cor-texto-suave); }
+
+  .beneficio { padding: var(--e-6); border-radius: var(--raio-lg); border: 1px solid var(--cor-linha); transition: border-color var(--transicao), transform var(--transicao); }
+  .beneficio:hover { border-color: var(--cor-primaria); transform: translateY(-2px); }
+  .beneficio__icone { display: inline-grid; place-items: center; width: 3rem; height: 3rem; border-radius: 50%; background: var(--cor-fundo-alt); color: var(--cor-primaria); margin-bottom: var(--e-5); }
+  .beneficio h3 { font-size: var(--t-lg); margin-bottom: var(--e-2); }
+  .beneficio p { margin: 0; color: var(--cor-texto-suave); }
+
+  .sumario-grade { display: grid; gap: var(--e-8); align-items: start; }
+  @media (min-width: 1024px) { .sumario-grade { grid-template-columns: 1fr 1fr; } }
+  .sumario { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--cor-linha); }
+  .sumario li { display: grid; grid-template-columns: 3rem 1fr; gap: var(--e-3); padding: var(--e-4) 0; border-bottom: 1px solid var(--cor-linha); }
+  .sumario__n { font-family: var(--fonte-titulo); font-size: var(--t-lg); color: var(--cor-acento); }
+  .sumario strong { font-family: var(--fonte-titulo); font-weight: 400; font-size: var(--t-lg); }
+  .sumario p { margin: var(--e-1) 0 0; font-size: var(--t-sm); color: var(--cor-texto-suave); }
+
+  .anatomia { margin: 0; }
+  @media (min-width: 1024px) { .anatomia { position: sticky; top: 6rem; } }
+  .anatomia figcaption { display: flex; align-items: center; gap: var(--e-2); margin-bottom: var(--e-4); font-size: var(--t-sm); color: var(--cor-texto-suave); }
+  .pagina { padding: var(--e-5); border-radius: 6px; background: #fffdf8; box-shadow: 0 1px 2px rgb(0 0 0 / 0.05), 0 24px 48px -18px rgb(21 33 31 / 0.3); transform: rotate(-1.2deg); }
+  .pagina__refeicao { margin: var(--e-4) 0 var(--e-1); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cor-acento); }
+  .pagina h3 { font-size: var(--t-lg); margin-bottom: var(--e-3); }
+  .pagina__ficha { display: flex; flex-wrap: wrap; gap: var(--e-2) var(--e-4); padding-bottom: var(--e-3); margin-bottom: var(--e-3); border-bottom: 1px solid var(--cor-linha); font-size: var(--t-xs); color: var(--cor-texto-suave); }
+  .pagina__ficha span { display: inline-flex; gap: 0.3em; align-items: center; }
+  .pagina__colunas { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--e-4); font-size: var(--t-xs); }
+  .pagina__colunas ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.3rem; }
+  .pagina__mais { color: var(--cor-texto-suave); }
+  .pagina__nutri { display: grid; gap: 0.2rem; align-content: start; padding: var(--e-3); border-radius: 8px; background: var(--cor-primaria); color: var(--cor-fundo); }
+  .pagina__nutri strong { font-family: var(--fonte-titulo); font-weight: 400; font-size: var(--t-lg); color: var(--cor-destaque); }
+  .anatomia__notas { list-style: none; margin: var(--e-6) 0 0; padding: 0; display: grid; gap: var(--e-2); font-size: var(--t-sm); color: var(--cor-texto-suave); }
+  .anatomia__notas b { display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; margin-right: var(--e-2); border-radius: 50%; background: var(--cor-acento); color: #fff; font-size: var(--t-xs); }
+
+  .para-quem__coluna { padding: var(--e-6); border-radius: var(--raio-lg); background: var(--cor-fundo-alt); }
+  .para-quem__coluna h3 { font-size: var(--t-xl); margin-bottom: var(--e-5); }
+  .para-quem__coluna--nao { background: transparent; border: 1px solid var(--cor-linha); }
+  .para-quem__coluna--nao :global(.icone) { color: var(--cor-acento); }
+
+  .autores { display: grid; gap: var(--e-5); align-items: center; }
+  @media (min-width: 900px) { .autores { grid-template-columns: 1fr 1fr auto; } }
+  .autores__item { display: flex; gap: var(--e-4); align-items: center; }
+  .autores__item > :global(.icone) { flex: none; color: var(--cor-acento); }
+  .autores__item div { display: grid; }
+  .autores__item span { font-size: var(--t-xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--cor-texto-suave); }
+  .autores__item strong { font-family: var(--fonte-titulo); font-weight: 400; font-size: var(--t-lg); }
+  .autores__item small { color: var(--cor-primaria); font-weight: 600; }
+
+  .garantia { display: grid; gap: var(--e-6); align-items: center; max-width: 54rem; }
+  @media (min-width: 720px) { .garantia { grid-template-columns: auto 1fr; gap: var(--e-7); } }
+  .garantia__selo { position: relative; width: 11rem; height: 11rem; display: grid; place-items: center; }
+  .garantia__selo svg { position: absolute; inset: 0; animation: girar 30s linear infinite; }
+  .garantia__selo text { font: 600 12px var(--fonte-texto); fill: var(--cor-acento); }
+  .garantia__selo span { display: grid; place-items: center; width: 7rem; height: 7rem; border-radius: 50%; background: var(--cor-primaria); color: var(--cor-fundo); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: 0.15em; line-height: 1; }
+  .garantia__selo strong { font-family: var(--fonte-titulo); font-weight: 400; font-size: 2.6rem; letter-spacing: 0; color: var(--cor-destaque); }
+  @keyframes girar { to { transform: rotate(360deg); } }
+
+  .faq-grade { display: grid; gap: var(--e-6); }
+  @media (min-width: 1024px) { .faq-grade { grid-template-columns: 1fr 1.5fr; gap: var(--e-8); align-items: start; } }
+
+  .barra-compra {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+    display: flex; justify-content: space-between; align-items: center; gap: var(--e-3);
+    padding: 0.75rem var(--gutter) calc(0.75rem + env(safe-area-inset-bottom));
+    background: color-mix(in srgb, var(--cor-fundo) 94%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--cor-linha);
+    transform: translateY(110%); transition: transform var(--transicao);
+  }
+  .barra-compra.visivel { transform: none; }
+  .barra-compra div { display: grid; line-height: 1.2; }
+  .barra-compra strong { font-family: var(--fonte-titulo); font-weight: 400; font-size: var(--t-lg); }
+  .barra-compra span { font-size: var(--t-xs); color: var(--cor-texto-suave); }
+  .barra-compra :global(.btn) { min-height: 2.75rem; padding-inline: 1.25rem; }
+  @media (min-width: 900px) { .barra-compra { display: none; } }
+</style>

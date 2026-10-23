@@ -1,13 +1,8 @@
-# Kaza IA
+# Teste-01
 
-Protótipo de busca de imóveis por linguagem natural.
+Este repositório contém dois projetos independentes:
 
-```
-frontend/   landing page estática (HTML/CSS/JS puro)
-backend/    API em FastAPI — busca (com IA opcional), contas, lista de espera
-docs/       documentação, incluindo rascunho de política de privacidade
-```
-
-Para rodar tudo localmente, veja `backend/README.md` — o backend também
-serve o frontend, então um único comando (`uvicorn app.main:app --reload`)
-sobe o site inteiro em `http://localhost:8000`.
+| Pasta | Projeto |
+|---|---|
+| [`plataforma/`](plataforma/README.md) | **Plataforma de gastronomia saudável**: site institucional, amostra grátis, pré-venda, biblioteca de receitas, planejador semanal, lista de compras e gerador do e-book em PDF. Publicação: [`plataforma/PUBLICAR.md`](plataforma/PUBLICAR.md). |
+| `frontend/`, `backend/` | **Kaza IA**: protótipo de busca de imóveis por linguagem natural (veja `backend/README.md` e `DEPLOY.md`). |

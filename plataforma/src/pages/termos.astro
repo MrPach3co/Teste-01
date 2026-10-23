@@ -1,0 +1,73 @@
+---
+import PaginaLegal from "../layouts/PaginaLegal.astro";
+import { marca } from "../lib/conteudo";
+const { empresa, nome, ebook } = marca;
+---
+<PaginaLegal titulo="Termos de Uso" descricao={`Condições de uso do site e dos produtos da ${nome}.`} atualizacao="23 de outubro de 2026">
+  <p>
+    Ao usar este site e os produtos da {nome}, você concorda com estes termos. Se não concordar, por favor
+    não utilize o serviço.
+  </p>
+
+  <h2>1. Natureza do conteúdo</h2>
+  <p>
+    Todo o conteúdo da {nome} (receitas, textos, informações nutricionais, e-books e materiais) tem caráter
+    <strong> educativo</strong> e ensina culinária saudável. <strong>Não é prescrição dietética individual</strong>
+    {" "}e não substitui o acompanhamento de nutricionista, médico ou outro profissional de saúde.
+  </p>
+  <p>
+    As informações nutricionais são aproximadas, calculadas por porção, e podem variar conforme marcas,
+    medidas e modo de preparo. Pessoas com alergias, intolerâncias, gestantes ou com condições de saúde
+    específicas devem consultar um profissional antes de mudar a alimentação e conferir os rótulos dos
+    ingredientes.
+  </p>
+
+  <h2>2. Custos estimados</h2>
+  <p>
+    Os custos exibidos nas receitas são estimativas com base em preços médios de mercado na data indicada e
+    servem apenas como referência. Os preços reais variam conforme a região, a loja e a época.
+  </p>
+
+  <h2>3. Compras, pré-venda e garantia</h2>
+  <p>
+    As compras são processadas por plataformas de pagamento parceiras, que têm termos próprios. Na pré-venda,
+    você garante o produto antes do lançamento e recebe o acesso por e-mail quando ele for liberado.
+  </p>
+  <p>
+    Você pode desistir da compra em até <strong>{ebook.garantia_dias} dias</strong> após a confirmação, com
+    reembolso integral, conforme o direito de arrependimento previsto no art. 49 do Código de Defesa do
+    Consumidor. O pedido é feito pela própria plataforma de pagamento ou pelo e-mail
+    {" "}<a href={`mailto:${marca.contato.email}`}>{marca.contato.email}</a>.
+  </p>
+
+  <h2>4. Propriedade intelectual</h2>
+  <p>
+    Textos, receitas, fotos, marca, layout e materiais são protegidos pela Lei de Direitos Autorais
+    (Lei nº 9.610/1998). O e-book é de uso pessoal: não é permitido revender, redistribuir, publicar ou
+    compartilhar o arquivo, no todo ou em parte, sem autorização por escrito.
+  </p>
+
+  <h2>5. Área de demonstração</h2>
+  <p>
+    A biblioteca, o planejador e a lista de compras deste site são uma versão de demonstração. As receitas
+    marcadas como <strong>EXEMPLO</strong> servem para mostrar o funcionamento e podem ser alteradas ou
+    removidas. O planejamento fica salvo apenas no seu navegador e pode ser perdido se os dados de navegação
+    forem apagados.
+  </p>
+
+  <h2>6. Responsabilidades</h2>
+  <p>
+    Fazemos o possível para manter o site disponível e as informações corretas, mas não garantimos que o
+    serviço esteja livre de interrupções ou erros. Cuidados de higiene, conservação dos alimentos e segurança
+    na cozinha são responsabilidade de quem prepara as receitas.
+  </p>
+
+  <h2>7. Privacidade</h2>
+  <p>O tratamento de dados pessoais segue a nossa <a href="/privacidade">Política de Privacidade</a>.</p>
+
+  <h2>8. Alterações e foro</h2>
+  <p>
+    Estes termos podem ser atualizados, e a versão vigente fica sempre nesta página. Fica eleito o foro da
+    comarca de {empresa.cidade}, sem prejuízo do foro do domicílio do consumidor.
+  </p>
+</PaginaLegal>

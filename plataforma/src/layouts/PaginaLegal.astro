@@ -1,0 +1,40 @@
+---
+import Base from "./Base.astro";
+import { marca, pendente } from "../lib/conteudo";
+interface Props { titulo: string; descricao: string; atualizacao: string }
+const { titulo, descricao, atualizacao } = Astro.props;
+const dadosPendentes = pendente(marca.empresa.razao_social) || pendente(marca.empresa.cnpj);
+---
+<Base titulo={titulo} descricao={descricao}>
+  <article class="secao legal">
+    <div class="container legal__container">
+      <header>
+        <span class="sobretitulo">Legal</span>
+        <h1>{titulo}</h1>
+        <p class="legal__data">Última atualização: {atualizacao}</p>
+        {dadosPendentes && (
+          <p class="legal__alerta" role="note">
+            Rascunho: complete os dados da empresa em <code>conteudo/marca.yaml</code> e revise este texto
+            com um profissional antes de publicar.
+          </p>
+        )}
+      </header>
+      <div class="legal__texto"><slot /></div>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .legal { padding-top: clamp(2rem, 1rem + 4vw, 4rem); }
+  .legal__container { max-width: 46rem; }
+  .legal h1 { font-size: var(--t-2xl); }
+  .legal__data { color: var(--cor-texto-suave); font-size: var(--t-sm); }
+  .legal__alerta { padding: var(--e-4); border-radius: var(--raio); background: color-mix(in srgb, var(--cor-destaque) 20%, var(--cor-fundo)); font-size: var(--t-sm); }
+  .legal__texto { margin-top: var(--e-7); }
+  .legal__texto :global(h2) { font-size: var(--t-xl); margin-top: var(--e-7); }
+  .legal__texto :global(p), .legal__texto :global(li) { color: color-mix(in srgb, var(--cor-texto) 85%, var(--cor-fundo)); }
+  .legal__texto :global(ul) { padding-left: 1.2em; display: grid; gap: var(--e-2); margin-bottom: var(--e-4); }
+  .legal__texto :global(table) { width: 100%; border-collapse: collapse; font-size: var(--t-sm); margin-bottom: var(--e-4); }
+  .legal__texto :global(th), .legal__texto :global(td) { text-align: left; padding: var(--e-3); border-bottom: 1px solid var(--cor-linha); vertical-align: top; }
+  code { font-size: 0.9em; }
+</style>

@@ -27,12 +27,12 @@ const [principal, secundaria] = receitas;
       <div class="hero__visual" aria-label="Exemplo de receita">
         <div class="hero__foto-principal hero__anim" style="--i:2">
           <Foto caminho={principal.foto} alt={principal.titulo} proporcao="4/5" prioridade
-            larguras={[480, 800, 1100]} sizes="(min-width: 1024px) 520px, 90vw" rotuloPlaceholder={principal.titulo} />
+            larguras={[480, 800, 1100]} sizes="(min-width: 1024px) 520px, 90vw" rotuloPlaceholder="" />
         </div>
         {secundaria && (
           <div class="hero__foto-secundaria hero__anim" style="--i:4">
             <Foto caminho={secundaria.foto} alt={secundaria.titulo} proporcao="1/1" tom="pimenta"
-              larguras={[300, 500]} sizes="220px" rotuloPlaceholder="" />
+              larguras={[300, 500]} sizes="220px" rotuloPlaceholder="" compacto />
           </div>
         )}
         <a href={`/receitas/${principal.slug}`} class="hero__ficha hero__anim" style="--i:5">

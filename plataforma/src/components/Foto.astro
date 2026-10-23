@@ -16,12 +16,13 @@ interface Props {
   tom?: "verde" | "pimenta" | "acafrao";
   rotuloPlaceholder?: string;
   tipoPlaceholder?: "prato" | "pessoa" | "maos";
+  compacto?: boolean;
   class?: string;
 }
 
 const {
   caminho = "", alt, proporcao = "4/3", larguras = [400, 800, 1200], sizes = "100vw",
-  prioridade = false, tom = "verde", rotuloPlaceholder, tipoPlaceholder = "prato", class: classe,
+  prioridade = false, tom = "verde", rotuloPlaceholder, tipoPlaceholder = "prato", compacto = false, class: classe,
 } = Astro.props;
 
 const arquivos = import.meta.glob<{ default: ImageMetadata }>("/fotos/**/*.{jpg,jpeg,png,webp,avif}");
@@ -36,7 +37,7 @@ if (caminho && !imagem) console.warn(`[foto] não encontrei fotos/${caminho}; us
       loading={prioridade ? "eager" : "lazy"} fetchpriority={prioridade ? "high" : "auto"} />
   </div>
 ) : (
-  <ImagemPlaceholder rotulo={rotuloPlaceholder ?? alt} proporcao={proporcao} tom={tom} tipo={tipoPlaceholder} class={classe} />
+  <ImagemPlaceholder rotulo={rotuloPlaceholder ?? alt} proporcao={proporcao} tom={tom} tipo={tipoPlaceholder} compacto={compacto} class={classe} />
 )}
 
 <style>

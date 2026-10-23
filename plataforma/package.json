@@ -6,7 +6,10 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "test": "node --test testes/*.test.mjs",
+    "ebook": "node scripts/gerar-ebook.mjs",
+    "imagens": "node scripts/gerar-imagens.mjs"
   },
   "dependencies": {
     "@astrojs/preact": "^4.1.3",

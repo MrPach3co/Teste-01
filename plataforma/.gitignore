@@ -1,3 +1,5 @@
 node_modules/
 dist/
 .astro/
+# E-book completo: produto pago, não deve ir para o repositório nem para o site
+ebook/

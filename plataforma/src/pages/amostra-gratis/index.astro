@@ -1,0 +1,171 @@
+---
+import Base from "../../layouts/Base.astro";
+import Icone from "../../components/Icone.astro";
+import CapaLivro from "../../components/CapaLivro.astro";
+import { marca, textos, receitas, rico, t, simples } from "../../lib/conteudo";
+import { REFEICOES, formatarTempo } from "../../lib/comum.mjs";
+
+const a = textos.amostra;
+const naAmostra = receitas.filter((r) => r.na_amostra).slice(0, marca.amostra.quantidade_receitas);
+const config = {
+  action: marca.amostra.form_action,
+  campoNome: marca.amostra.campo_nome,
+  campoEmail: marca.amostra.campo_email,
+};
+---
+<Base titulo="Amostra grátis" descricao={simples(a.subtitulo)}>
+  <section class="secao amostra">
+    <div class="container amostra__grade">
+      <div class="amostra__texto">
+        <span class="sobretitulo">{t(a.sobretitulo)}</span>
+        <h1 set:html={rico(a.titulo)} />
+        <p class="lead">{t(a.subtitulo)}</p>
+
+        <ul class="lista-check amostra__itens">
+          {a.o_que_vem.map((item: string) => <li><Icone nome="check" />{t(item)}</li>)}
+        </ul>
+
+        {naAmostra.length > 0 && (
+          <div class="amostra__receitas">
+            <h2>Receitas incluídas</h2>
+            <ol>
+              {naAmostra.map((r) => (
+                <li>
+                  <span>{r.titulo}{r.exemplo && <em class="selo selo--exemplo">Exemplo</em>}</span>
+                  <small>{REFEICOES[r.refeicoes[0] as keyof typeof REFEICOES]} · {formatarTempo(r.tempo_preparo_min)}</small>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
+      </div>
+
+      <div class="amostra__lateral">
+        <div class="amostra__capa"><CapaLivro titulo="Amostra grátis" subtitulo="O método na prática" selo={`${marca.amostra.quantidade_receitas} receitas`} pequeno /></div>
+
+        <form class="formulario" data-form-amostra novalidate data-config={JSON.stringify(config)}>
+          <h2>{t(a.formulario.titulo)}</h2>
+
+          <div class="campo-grupo">
+            <label for="nome">Seu nome</label>
+            <input class="campo" id="nome" name="nome" type="text" autocomplete="given-name" required maxlength="80" />
+            <span class="erro" data-erro="nome">Conta pra gente como você se chama.</span>
+          </div>
+          <div class="campo-grupo">
+            <label for="email">Seu melhor e-mail</label>
+            <input class="campo" id="email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="120" />
+            <span class="erro" data-erro="email">Confira o e-mail: parece que falta alguma coisa.</span>
+          </div>
+
+          <!-- Campo invisível contra robôs de spam -->
+          <div class="armadilha" aria-hidden="true">
+            <label>Não preencha <input type="text" name="site" tabindex="-1" autocomplete="off" /></label>
+          </div>
+
+          <label class="consentimento">
+            <input type="checkbox" name="consentimento" required />
+            <span>{t(a.formulario.consentimento)} <a href="/privacidade" target="_blank">Política de Privacidade</a>.</span>
+          </label>
+          <span class="erro" data-erro="consentimento">Para enviar a amostra, precisamos do seu consentimento.</span>
+
+          <label class="consentimento">
+            <input type="checkbox" name="marketing" />
+            <span>{t(a.formulario.marketing)}</span>
+          </label>
+
+          <button type="submit" class="btn btn--acento btn--grande">{t(a.formulario.botao)} <span class="seta" aria-hidden="true">→</span></button>
+          <p class="erro erro--geral" data-erro="envio" role="alert">Não conseguimos enviar agora. Tente de novo em instantes.</p>
+
+          <p class="formulario__nota"><Icone nome="cadeado" tamanho={16} /> {t(a.formulario.nota)}</p>
+        </form>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("[data-form-amostra]")!;
+  const config = JSON.parse(form.dataset.config!);
+  const botao = form.querySelector<HTMLButtonElement>("button[type=submit]")!;
+
+  const mostrarErro = (campo: string, mostrar: boolean) =>
+    form.querySelector(`[data-erro="${campo}"]`)!.classList.toggle("visivel", mostrar);
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const dados = new FormData(form);
+    const nome = String(dados.get("nome") ?? "").trim();
+    const email = String(dados.get("email") ?? "").trim();
+    const consentiu = dados.get("consentimento") === "on";
+
+    const erros = {
+      nome: nome.length < 2,
+      email: !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email),
+      consentimento: !consentiu,
+    };
+    Object.entries(erros).forEach(([campo, erro]) => mostrarErro(campo, erro));
+    mostrarErro("envio", false);
+    if (Object.values(erros).some(Boolean)) {
+      form.querySelector<HTMLElement>(".campo:invalid, input:not(:checked)[required]")?.focus();
+      return;
+    }
+    if (dados.get("site")) return; // robô
+
+    try { sessionStorage.setItem("amostra:nome", nome.split(" ")[0]); } catch { /* opcional */ }
+
+    if (!config.action) {
+      // Modo demonstração: sem ferramenta de e-mail configurada, libera o download direto.
+      location.href = "/amostra-gratis/obrigado?modo=download";
+      return;
+    }
+
+    botao.disabled = true;
+    botao.textContent = "Enviando…";
+    try {
+      const envio = new FormData();
+      envio.set(config.campoNome, nome);
+      envio.set(config.campoEmail, email);
+      if (dados.get("marketing") === "on") envio.set("marketing", "sim");
+      await fetch(config.action, { method: "POST", body: envio, mode: "no-cors" });
+      location.href = "/amostra-gratis/obrigado?modo=email";
+    } catch {
+      mostrarErro("envio", true);
+      botao.disabled = false;
+      botao.textContent = "Tentar de novo";
+    }
+  });
+</script>
+
+<style>
+  .amostra { padding-top: clamp(2rem, 1rem + 4vw, 4rem); }
+  .amostra__grade { display: grid; gap: var(--e-7); align-items: start; }
+  @media (min-width: 1024px) { .amostra__grade { grid-template-columns: 1.1fr 1fr; gap: var(--e-8); } }
+  .amostra__itens { margin: var(--e-6) 0; }
+  .amostra__receitas { padding: var(--e-5); border-radius: var(--raio-lg); background: var(--cor-fundo-alt); }
+  .amostra__receitas h2 { font-size: var(--t-lg); }
+  .amostra__receitas ol { margin: 0; padding-left: 1.4em; display: grid; gap: var(--e-3); }
+  .amostra__receitas li::marker { color: var(--cor-acento); font-family: var(--fonte-titulo); }
+  .amostra__receitas li span { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2); font-weight: 500; }
+  .amostra__receitas li em { font-style: normal; font-size: 0.65rem; padding: 0.15em 0.6em; }
+  .amostra__receitas small { color: var(--cor-texto-suave); font-size: var(--t-xs); }
+
+  .amostra__lateral { position: relative; }
+  @media (min-width: 1024px) { .amostra__lateral { position: sticky; top: 6rem; } }
+  .amostra__capa { display: flex; justify-content: center; margin-bottom: calc(-1 * var(--e-7)); position: relative; z-index: 1; }
+
+  .formulario {
+    display: grid; gap: var(--e-4); padding: calc(var(--e-7) + var(--e-4)) var(--e-6) var(--e-6);
+    border-radius: var(--raio-lg); background: var(--cor-fundo); border: 1px solid var(--cor-linha); box-shadow: var(--sombra);
+  }
+  .formulario h2 { font-size: var(--t-xl); margin: 0; text-align: center; }
+  .campo-grupo { display: grid; gap: var(--e-1); }
+  .campo-grupo label { font-size: var(--t-sm); font-weight: 600; }
+  .consentimento { display: grid; grid-template-columns: auto 1fr; gap: var(--e-3); align-items: start; font-size: var(--t-sm); color: var(--cor-texto-suave); cursor: pointer; }
+  .consentimento input { width: 1.15rem; height: 1.15rem; margin-top: 0.2rem; accent-color: var(--cor-primaria); }
+  .erro { display: none; font-size: var(--t-xs); color: #a23b2a; }
+  .erro.visivel { display: block; }
+  .armadilha { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .formulario .btn { width: 100%; }
+  .formulario__nota { display: flex; gap: var(--e-2); align-items: flex-start; margin: 0; font-size: var(--t-xs); color: var(--cor-texto-suave); }
+  .formulario__nota :global(.icone) { flex: none; margin-top: 0.1rem; color: var(--cor-primaria); }
+</style>

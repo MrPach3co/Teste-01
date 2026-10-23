@@ -7,6 +7,8 @@ import "../styles/ilhas.css";
 import Cabecalho from "../components/Cabecalho.astro";
 import Rodape from "../components/Rodape.astro";
 import { marca } from "../lib/conteudo";
+import fonteTitulo from "@fontsource-variable/fraunces/files/fraunces-latin-full-normal.woff2?url";
+import fonteTexto from "@fontsource-variable/instrument-sans/files/instrument-sans-latin-wght-normal.woff2?url";
 
 interface Props {
   titulo?: string;
@@ -33,11 +35,14 @@ const variaveisCor = Object.entries(marca.cores)
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{tituloCompleto}</title>
+    <link rel="preload" href={fonteTitulo} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={fonteTexto} as="font" type="font/woff2" crossorigin />
     <meta name="description" content={descricao} />
     <link rel="canonical" href={canonica} />
     {semIndexar && <meta name="robots" content="noindex" />}
     <meta name="theme-color" content={marca.cores.fundo} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     <meta property="og:type" content="website" />

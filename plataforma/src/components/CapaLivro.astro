@@ -1,0 +1,81 @@
+---
+// Capa do e-book em 3D feita só com CSS (sem imagem), usando as cores da marca.
+import { marca, equipe, pendente } from "../lib/conteudo";
+interface Props { titulo?: string; subtitulo?: string; selo?: string; pequeno?: boolean }
+const {
+  titulo = marca.ebook.titulo,
+  subtitulo = "Receitas testadas por chef",
+  selo = `${marca.ebook.quantidade_receitas} receitas`,
+  pequeno = false,
+} = Astro.props;
+const nutri = equipe.nutricionista;
+---
+<div class:list={["livro", pequeno && "livro--pequeno"]} aria-hidden="true">
+  <div class="livro__objeto">
+    <div class="livro__capa">
+      <span class="livro__marca">{marca.nome}</span>
+      <div class="livro__miolo">
+        <span class="livro__selo">{selo}</span>
+        <strong>{titulo}</strong>
+        <span class="livro__sub">{subtitulo}</span>
+      </div>
+      <span class="livro__autoria">
+        Nutrição: {pendente(nutri.nome) ? "nutricionista responsável" : nutri.nome}
+      </span>
+      <svg class="livro__ornamento" viewBox="0 0 200 200"><circle cx="100" cy="100" r="90" /><circle cx="100" cy="100" r="62" /><circle cx="100" cy="100" r="34" /></svg>
+    </div>
+    <div class="livro__lombada"></div>
+    <div class="livro__paginas"></div>
+  </div>
+  <div class="livro__sombra"></div>
+</div>
+
+<style>
+  .livro { --l: min(21rem, 70vw); position: relative; width: var(--l); aspect-ratio: 3 / 4; margin-inline: auto; perspective: 1600px; }
+  .livro--pequeno { --l: 11rem; }
+  .livro__objeto {
+    position: absolute; inset: 0; transform-style: preserve-3d;
+    transform: rotateY(-24deg) rotateX(4deg); transition: transform 900ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .livro:hover .livro__objeto { transform: rotateY(-12deg) rotateX(2deg); }
+  .livro__capa {
+    position: absolute; inset: 0; overflow: hidden;
+    display: grid; grid-template-rows: auto 1fr auto; padding: 9% 9% 8%;
+    border-radius: 3px 10px 10px 3px;
+    background:
+      linear-gradient(90deg, rgb(0 0 0 / 0.22) 0, rgb(255 255 255 / 0.08) 3%, transparent 7%),
+      radial-gradient(120% 90% at 85% 0%, color-mix(in srgb, var(--cor-destaque) 22%, transparent), transparent 55%),
+      var(--cor-primaria);
+    color: var(--cor-fundo); transform: translateZ(14px);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.06);
+  }
+  .livro__marca { font-family: var(--fonte-titulo); font-size: calc(var(--l) * 0.055); letter-spacing: 0.02em; opacity: 0.9; }
+  .livro__miolo { align-self: center; display: grid; gap: calc(var(--l) * 0.03); position: relative; z-index: 1; }
+  .livro__selo {
+    justify-self: start; padding: 0.3em 0.8em; border-radius: 999px; font-size: calc(var(--l) * 0.038); font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase; background: var(--cor-destaque); color: var(--cor-texto);
+  }
+  .livro__miolo strong {
+    font-family: var(--fonte-titulo); font-weight: 400; font-size: calc(var(--l) * 0.13); line-height: 1.02;
+    font-variation-settings: "SOFT" 100, "WONK" 1; text-wrap: balance;
+  }
+  .livro__sub { font-family: var(--fonte-titulo); font-style: italic; font-size: calc(var(--l) * 0.05); color: var(--cor-destaque); }
+  .livro__autoria { font-size: calc(var(--l) * 0.036); opacity: 0.75; letter-spacing: 0.04em; position: relative; z-index: 1; }
+  .livro__ornamento { position: absolute; right: -28%; bottom: -22%; width: 85%; fill: none; stroke: currentColor; stroke-width: 0.8; opacity: 0.16; }
+  .livro__lombada {
+    position: absolute; top: 0; bottom: 0; left: 0; width: 28px;
+    background: color-mix(in srgb, var(--cor-primaria) 70%, black);
+    transform: rotateY(-90deg) translateZ(14px) translateX(-14px); transform-origin: left;
+  }
+  .livro__paginas {
+    position: absolute; top: 1.5%; bottom: 1.5%; right: 0; width: 26px;
+    background: repeating-linear-gradient(90deg, #fbf8f2 0 2px, #e9e3d8 2px 3px);
+    transform: rotateY(90deg) translateZ(-12px) translateX(13px); transform-origin: right;
+  }
+  .livro__sombra {
+    position: absolute; left: 6%; right: -4%; bottom: -7%; height: 12%;
+    background: radial-gradient(50% 50% at 50% 50%, rgb(21 33 31 / 0.35), transparent 70%);
+    filter: blur(8px); z-index: -1;
+  }
+  @media (prefers-reduced-motion: reduce) { .livro__objeto { transition: none; } }
+</style>
