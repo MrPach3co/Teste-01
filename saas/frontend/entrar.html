@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entrar — Kaza Pro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+  body{ min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; }
+  .caixa{ width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 20px; }
+  .caixa > .logo{ align-self: center; }
+  .cartao{ padding: 28px; }
+  form{ display: flex; flex-direction: column; gap: 14px; }
+  h1{ font-size: 24px; }
+  .sub{ color: var(--grafite-soft); font-size: 14px; margin-top: -8px; }
+  .trocar{ text-align: center; font-size: 14px; color: var(--grafite-soft); }
+  .trocar button{ background: none; border: 0; font: inherit; color: var(--mata); font-weight: 600; cursor: pointer; text-decoration: underline; }
+  .btn-solid{ padding: 13px; }
+</style>
+</head>
+<body>
+<div class="caixa">
+  <a href="/" class="logo"><span class="dot"></span>Kaza <small>PRO</small></a>
+
+  <div class="cartao">
+    <form id="form-login">
+      <h1>Entrar no painel</h1>
+      <label class="campo"><span>E-mail</span><input name="email" type="email" autocomplete="email" required></label>
+      <label class="campo"><span>Senha</span><input name="senha" type="password" autocomplete="current-password" required></label>
+      <div class="aviso aviso-erro" hidden></div>
+      <button class="btn btn-solid" type="submit">Entrar</button>
+    </form>
+
+    <form id="form-cadastro" hidden>
+      <h1>Criar conta grátis</h1>
+      <p class="sub">Sem cartão de crédito. Seu widget fica pronto em minutos.</p>
+      <label class="campo"><span>Nome da imobiliária</span><input name="nome_imobiliaria" required minlength="2" maxlength="200" autocomplete="organization"></label>
+      <label class="campo"><span>Seu nome</span><input name="nome" required minlength="2" maxlength="200" autocomplete="name"></label>
+      <label class="campo"><span>E-mail</span><input name="email" type="email" required autocomplete="email"></label>
+      <label class="campo"><span>Senha (mínimo 8 caracteres)</span><input name="senha" type="password" required minlength="8" maxlength="72" autocomplete="new-password"></label>
+      <label class="check"><input type="checkbox" name="aceitou_termos" required>
+        <span>Li e aceito os <a href="termos.html" target="_blank">Termos de Uso</a> e a <a href="privacidade.html" target="_blank">Política de Privacidade</a>.</span></label>
+      <div class="aviso aviso-erro" hidden></div>
+      <button class="btn btn-solid" type="submit">Criar conta</button>
+    </form>
+  </div>
+
+  <p class="trocar" id="trocar-login">Ainda não tem conta? <button type="button" data-ir="cadastro">Criar grátis</button></p>
+  <p class="trocar" id="trocar-cadastro" hidden>Já tem conta? <button type="button" data-ir="login">Entrar</button></p>
+</div>
+
+<script>
+(function () {
+  if (localStorage.getItem('kp_token')) { location.replace('app.html'); return; }
+
+  const telas = {
+    login: [document.getElementById('form-login'), document.getElementById('trocar-login')],
+    cadastro: [document.getElementById('form-cadastro'), document.getElementById('trocar-cadastro')],
+  };
+
+  function mostrar(qual) {
+    Object.entries(telas).forEach(([nome, els]) => els.forEach((e) => { e.hidden = nome !== qual; }));
+    history.replaceState(null, '', qual === 'cadastro' ? '#cadastro' : '#');
+    telas[qual][0].querySelector('input').focus();
+  }
+
+  document.querySelectorAll('[data-ir]').forEach((b) => b.addEventListener('click', () => mostrar(b.dataset.ir)));
+  mostrar(location.hash === '#cadastro' ? 'cadastro' : 'login');
+
+  function mensagemDeErro(dados) {
+    if (typeof dados.detail === 'string') return dados.detail;
+    if (Array.isArray(dados.detail)) {
+      const campo = dados.detail[0].loc.at(-1);
+      const nomes = { email: 'E-mail inválido.', senha: 'A senha precisa ter de 8 a 72 caracteres.' };
+      return nomes[campo] || 'Confira os campos preenchidos.';
+    }
+    return 'Algo deu errado. Tente de novo.';
+  }
+
+  async function enviar(form, url, corpo) {
+    const erro = form.querySelector('.aviso-erro');
+    const botao = form.querySelector('[type=submit]');
+    erro.hidden = true;
+    botao.disabled = true;
+    try {
+      const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corpo) });
+      const dados = await r.json().catch(() => ({}));
+      if (!r.ok) { erro.textContent = mensagemDeErro(dados); erro.hidden = false; return; }
+      localStorage.setItem('kp_token', dados.access_token);
+      location.replace(url.endsWith('cadastro') ? 'app.html#widget' : 'app.html');
+    } catch {
+      erro.textContent = 'Sem conexão com o servidor.';
+      erro.hidden = false;
+    } finally {
+      botao.disabled = false;
+    }
+  }
+
+  telas.login[0].addEventListener('submit', (e) => {
+    e.preventDefault();
+    const f = e.target.elements;
+    enviar(e.target, '/api/auth/login', { email: f.email.value.trim(), senha: f.senha.value });
+  });
+
+  telas.cadastro[0].addEventListener('submit', (e) => {
+    e.preventDefault();
+    const f = e.target.elements;
+    enviar(e.target, '/api/auth/cadastro', {
+      nome_imobiliaria: f.nome_imobiliaria.value.trim(),
+      nome: f.nome.value.trim(),
+      email: f.email.value.trim(),
+      senha: f.senha.value,
+      aceitou_termos: f.aceitou_termos.checked,
+    });
+  });
+})();
+</script>
+</body>
+</html>

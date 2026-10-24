@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel — Kaza Pro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div class="painel" id="painel" hidden>
+  <aside class="lateral">
+    <a href="/" class="logo"><span class="dot"></span>Kaza <small>PRO</small></a>
+    <div class="lateral-imob" id="nome-imob"></div>
+    <nav class="menu">
+      <a href="#inicio" data-secao="inicio">Visão geral</a>
+      <a href="#imoveis" data-secao="imoveis">Imóveis</a>
+      <a href="#leads" data-secao="leads">Leads <span class="contador" id="contador-leads" hidden></span></a>
+      <a href="#widget" data-secao="widget">Widget no site</a>
+      <a href="#equipe" data-secao="equipe">Equipe</a>
+      <a href="#plano" data-secao="plano">Plano</a>
+      <a href="#conta" data-secao="conta">Minha conta</a>
+    </nav>
+    <div class="lateral-rodape">
+      <div id="nome-usuario"></div>
+      <button class="btn btn-ghost btn-sm" id="sair" type="button">Sair</button>
+    </div>
+  </aside>
+
+  <main class="conteudo">
+    <div class="aviso aviso-ok" id="aviso-global" hidden></div>
+
+    <!-- VISÃO GERAL -->
+    <section data-pagina="inicio" hidden>
+      <header class="cab"><h1>Visão geral</h1><p>Como a busca do seu site está performando neste mês.</p></header>
+      <div class="kpis" id="kpis"></div>
+      <div class="graficos">
+        <figure class="cartao grafico"><figcaption>Buscas por dia <small>últimos 30 dias</small></figcaption><div id="grafico-buscas"></div></figure>
+        <figure class="cartao grafico"><figcaption>Leads por dia <small>últimos 30 dias</small></figcaption><div id="grafico-leads"></div></figure>
+      </div>
+      <div class="duas-colunas">
+        <div class="cartao bloco"><h2>O que seus clientes mais procuram</h2><div class="termos" id="termos"></div></div>
+        <div class="cartao bloco"><h2>Buscas recentes</h2><ul class="recentes" id="recentes"></ul></div>
+      </div>
+    </section>
+
+    <!-- IMÓVEIS -->
+    <section data-pagina="imoveis" hidden>
+      <header class="cab cab-acoes">
+        <div><h1>Imóveis</h1><p id="resumo-imoveis"></p></div>
+        <div class="acoes">
+          <button class="btn" type="button" id="btn-importar">Importar planilha</button>
+          <button class="btn btn-solid" type="button" id="btn-novo-imovel">+ Novo imóvel</button>
+        </div>
+      </header>
+      <input type="text" id="filtro-imoveis" placeholder="Filtrar por título, bairro ou código…" class="filtro">
+      <div class="lista-imoveis" id="lista-imoveis"></div>
+    </section>
+
+    <!-- LEADS -->
+    <section data-pagina="leads" hidden>
+      <header class="cab cab-acoes">
+        <div><h1>Leads</h1><p>Contatos que chegaram pela busca do seu site.</p></div>
+        <div class="acoes"><button class="btn" type="button" id="btn-exportar-leads">Exportar para Excel</button></div>
+      </header>
+      <div class="chips" id="filtro-status"></div>
+      <div class="lista-leads" id="lista-leads"></div>
+    </section>
+
+    <!-- WIDGET -->
+    <section data-pagina="widget" hidden>
+      <header class="cab"><h1>Widget no site</h1><p>Copie o código, cole no seu site e pronto — a busca com IA aparece para os seus visitantes.</p></header>
+      <div class="duas-colunas">
+        <div class="pilha">
+          <div class="cartao bloco">
+            <h2>1. Botão flutuante <span class="selo">recomendado</span></h2>
+            <p class="ajuda">Cole antes de <code>&lt;/body&gt;</code> em todas as páginas. Aparece um botão no canto inferior direito.</p>
+            <pre class="codigo" id="codigo-flutuante"></pre>
+            <button class="btn btn-sm" type="button" data-copiar="codigo-flutuante">Copiar código</button>
+          </div>
+          <div class="cartao bloco">
+            <h2>2. Embutido numa página</h2>
+            <p class="ajuda">Para uma página "Encontre seu imóvel": a busca aparece dentro do conteúdo.</p>
+            <pre class="codigo" id="codigo-inline"></pre>
+            <button class="btn btn-sm" type="button" data-copiar="codigo-inline">Copiar código</button>
+          </div>
+          <div class="cartao bloco">
+            <h2>3. Link direto</h2>
+            <p class="ajuda">Sem site? Use na bio do Instagram, no Google Meu Negócio ou mande no WhatsApp.</p>
+            <pre class="codigo" id="link-direto"></pre>
+            <div class="acoes"><button class="btn btn-sm" type="button" data-copiar="link-direto">Copiar link</button>
+              <a class="btn btn-sm" id="abrir-link" target="_blank" rel="noopener">Abrir</a></div>
+          </div>
+          <form class="cartao bloco form-grade" id="form-marca" data-dono>
+            <h2>Aparência</h2>
+            <label class="campo"><span>Nome exibido</span><input name="nome" required minlength="2" maxlength="200"></label>
+            <label class="campo"><span>Cor da marca</span><input name="cor_primaria" type="color"></label>
+            <label class="campo"><span>WhatsApp para os botões (com DDD)</span><input name="whatsapp" type="tel" placeholder="+55 11 99999-0000" maxlength="20"></label>
+            <div class="acoes"><button class="btn btn-solid" type="submit">Salvar</button></div>
+          </form>
+          <div class="cartao bloco" data-dono>
+            <h2>Chave do widget</h2>
+            <p class="ajuda">Gere uma nova se alguém estiver usando sua chave em outro site. O código antigo para de funcionar.</p>
+            <button class="btn btn-sm btn-perigo" type="button" id="btn-regenerar">Gerar nova chave</button>
+          </div>
+        </div>
+        <div class="previa">
+          <div class="previa-rotulo">Pré-visualização — é exatamente o que seu cliente vê</div>
+          <iframe id="previa" title="Pré-visualização do widget"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- EQUIPE -->
+    <section data-pagina="equipe" hidden>
+      <header class="cab"><h1>Equipe</h1><p>Corretores com acesso ao painel. Todos veem os imóveis e leads da imobiliária.</p></header>
+      <div class="duas-colunas">
+        <div class="cartao bloco"><h2>Pessoas</h2><ul class="lista-equipe" id="lista-equipe"></ul></div>
+        <form class="cartao bloco form-grade" id="form-equipe" data-dono>
+          <h2>Adicionar corretor</h2>
+          <label class="campo"><span>Nome</span><input name="nome" required minlength="2" maxlength="200"></label>
+          <label class="campo"><span>E-mail</span><input name="email" type="email" required></label>
+          <div class="aviso aviso-erro" hidden></div>
+          <div class="aviso aviso-ok" hidden></div>
+          <div class="acoes"><button class="btn btn-solid" type="submit">Adicionar</button></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- PLANO -->
+    <section data-pagina="plano" hidden>
+      <header class="cab"><h1>Plano</h1><p id="plano-atual"></p></header>
+      <div class="uso" id="uso"></div>
+      <div class="planos" id="lista-planos"></div>
+      <div class="aviso aviso-info" id="sem-pagamento" hidden>
+        Pagamento online ainda não está ativo nesta instalação. Para mudar de plano, fale com o suporte.
+      </div>
+      <div class="acoes" id="area-portal" hidden><button class="btn" type="button" id="btn-portal">Gerenciar assinatura e faturas</button></div>
+    </section>
+
+    <!-- CONTA -->
+    <section data-pagina="conta" hidden>
+      <header class="cab"><h1>Minha conta</h1></header>
+      <div class="duas-colunas">
+        <form class="cartao bloco form-grade" id="form-senha">
+          <h2>Trocar senha</h2>
+          <label class="campo"><span>Senha atual</span><input name="senha_atual" type="password" required autocomplete="current-password"></label>
+          <label class="campo"><span>Nova senha (mínimo 8)</span><input name="nova_senha" type="password" required minlength="8" maxlength="72" autocomplete="new-password"></label>
+          <div class="aviso aviso-erro" hidden></div>
+          <div class="acoes"><button class="btn btn-solid" type="submit">Salvar nova senha</button></div>
+        </form>
+        <div class="cartao bloco">
+          <h2>Seus dados (LGPD)</h2>
+          <p class="ajuda">Baixe uma cópia dos seus dados pessoais ou exclua sua conta.</p>
+          <div class="acoes">
+            <button class="btn" type="button" id="btn-meus-dados">Baixar meus dados</button>
+            <button class="btn btn-perigo" type="button" id="btn-excluir-conta">Excluir minha conta</button>
+          </div>
+          <p class="ajuda" id="aviso-exclusao"></p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Modal de imóvel -->
+<dialog id="modal-imovel" class="modal">
+  <form method="dialog" id="form-imovel" class="form-imovel">
+    <header class="modal-cab"><h2 id="titulo-modal-imovel">Novo imóvel</h2><button class="btn btn-ghost btn-sm" value="cancelar" formnovalidate aria-label="Fechar">✕</button></header>
+    <div class="grade">
+      <label class="campo largo"><span>Título do anúncio</span><input name="titulo" required minlength="3" maxlength="200" placeholder="Ex.: Apartamento reformado perto do metrô"></label>
+      <label class="campo"><span>Tipo</span><select name="tipo" required></select></label>
+      <label class="campo"><span>Finalidade</span><select name="finalidade"><option value="venda">Venda</option><option value="aluguel">Aluguel</option></select></label>
+      <label class="campo"><span>Preço (R$; aluguel = valor mensal)</span><input name="preco" type="number" min="1" step="1" required></label>
+      <label class="campo"><span>Código de referência</span><input name="codigo_referencia" maxlength="50"></label>
+      <label class="campo"><span>Bairro</span><input name="bairro" required minlength="2" maxlength="120" list="bairros-conhecidos"></label>
+      <label class="campo"><span>Cidade</span><input name="cidade" required minlength="2" maxlength="120"></label>
+      <label class="campo"><span>Quartos</span><input name="quartos" type="number" min="0" max="50" value="0"></label>
+      <label class="campo"><span>Banheiros</span><input name="banheiros" type="number" min="0" max="50" value="0"></label>
+      <label class="campo"><span>Vagas</span><input name="vagas" type="number" min="0" max="50" value="0"></label>
+      <label class="campo"><span>Área (m²)</span><input name="area_m2" type="number" min="0" step="0.1" value="0"></label>
+      <label class="campo largo"><span>URL da foto principal (https://…)</span><input name="foto_url" type="url" pattern="https://.*" maxlength="500"></label>
+      <fieldset class="largo"><legend>Características</legend><div class="caracteristicas" id="caixa-caracteristicas"></div></fieldset>
+      <label class="campo largo"><span class="rotulo-com-acao">Descrição
+        <button class="btn btn-sm" type="button" id="btn-gerar-descricao">✦ Gerar com IA</button></span>
+        <textarea name="descricao" rows="5" maxlength="5000"></textarea></label>
+      <label class="check largo"><input type="checkbox" name="ativo" checked><span>Disponível — aparece nas buscas do site</span></label>
+    </div>
+    <datalist id="bairros-conhecidos"></datalist>
+    <div class="aviso aviso-erro" id="erro-imovel" hidden></div>
+    <footer class="modal-rodape">
+      <button class="btn btn-ghost" value="cancelar" formnovalidate>Cancelar</button>
+      <button class="btn btn-solid" type="submit" value="salvar">Salvar imóvel</button>
+    </footer>
+  </form>
+</dialog>
+
+<!-- Modal de importação -->
+<dialog id="modal-importar" class="modal modal-estreito">
+  <form method="dialog" id="form-importar" class="pilha">
+    <header class="modal-cab"><h2>Importar planilha</h2><button class="btn btn-ghost btn-sm" value="cancelar" formnovalidate aria-label="Fechar">✕</button></header>
+    <p class="ajuda">Salve sua planilha como CSV (Excel: Arquivo → Salvar como → CSV). Use o modelo para ver as colunas aceitas.</p>
+    <button class="btn btn-sm" type="button" id="btn-modelo-csv">Baixar modelo</button>
+    <input type="file" name="arquivo" accept=".csv,text/csv" required>
+    <div class="aviso" id="resultado-importacao" hidden></div>
+    <footer class="modal-rodape">
+      <button class="btn btn-ghost" value="cancelar" formnovalidate>Fechar</button>
+      <button class="btn btn-solid" type="submit" value="importar">Importar</button>
+    </footer>
+  </form>
+</dialog>
+
+<div class="dica" id="dica" role="tooltip" hidden></div>
+<script src="app.js"></script>
+</body>
+</html>

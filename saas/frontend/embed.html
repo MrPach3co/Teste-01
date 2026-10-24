@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Busca de imóveis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="embed.css">
+</head>
+<body>
+<div class="busca" id="busca">
+  <header class="busca-topo">
+    <div>
+      <div class="busca-nome" id="nome-imobiliaria">Carregando…</div>
+      <div class="busca-sub">Descreva o imóvel que você procura</div>
+    </div>
+    <button type="button" class="btn btn-ghost btn-sm" id="fechar" aria-label="Fechar" hidden>✕</button>
+  </header>
+
+  <main class="busca-corpo" id="corpo" aria-live="polite">
+    <div class="balao balao-ia">
+      Olá! Me conte com suas palavras o que você procura — bairro, quartos, orçamento, se quer comprar ou alugar —
+      e eu te mostro os imóveis que mais combinam.
+    </div>
+    <div class="exemplos" id="exemplos"></div>
+  </main>
+
+  <form class="busca-form" id="form-busca" autocomplete="off">
+    <input id="texto" type="text" maxlength="300" placeholder="Ex.: apartamento com 2 quartos perto do metrô até 900 mil" aria-label="Descreva o imóvel" required>
+    <button type="submit" class="btn btn-solid" id="enviar">Buscar</button>
+  </form>
+  <div class="marca" id="marca" hidden>Busca inteligente por <a href="/" target="_blank" rel="noopener">Kaza Pro</a></div>
+</div>
+
+<!-- Formulário de contato (lead) -->
+<div class="sobreposicao" id="modal-lead" hidden>
+  <form class="cartao modal" id="form-lead">
+    <h3>Quero saber mais</h3>
+    <p class="modal-imovel" id="lead-imovel"></p>
+    <label class="campo"><span>Seu nome</span><input name="nome" required minlength="2" maxlength="200"></label>
+    <label class="campo"><span>WhatsApp / telefone</span><input name="telefone" type="tel" placeholder="(11) 99999-0000" maxlength="30"></label>
+    <label class="campo"><span>E-mail</span><input name="email" type="email" maxlength="255"></label>
+    <label class="campo"><span>Mensagem (opcional)</span><textarea name="mensagem" maxlength="2000" rows="2"></textarea></label>
+    <label class="check"><input type="checkbox" name="aceitou_contato" required>
+      <span>Autorizo a imobiliária a entrar em contato comigo sobre este e outros imóveis. Posso pedir a exclusão dos meus dados quando quiser.</span></label>
+    <div class="aviso aviso-erro" id="lead-erro" hidden></div>
+    <div class="modal-acoes">
+      <button type="button" class="btn btn-ghost" id="lead-cancelar">Cancelar</button>
+      <button type="submit" class="btn btn-solid">Enviar contato</button>
+    </div>
+  </form>
+</div>
+
+<script src="embed.js"></script>
+</body>
+</html>

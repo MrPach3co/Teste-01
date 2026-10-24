@@ -1,0 +1,98 @@
+/* Tokens e componentes compartilhados por todas as páginas do Kaza Pro. */
+:root{
+  --concreto: #F1EEE7;
+  --concreto-alt: #E8E3D8;
+  --grafite: #1B1A17;
+  --grafite-soft: #5A564C;
+  --mata: #1F3B2C;
+  --mata-light: #2E5741;
+  --mata-bg: #E3EBE4;
+  --telha: #9C4A26;
+  --telha-bg: #F5E6DE;
+  --areia-line: #D9D2C2;
+  --branco: #FFFDF9;
+  --erro: #A1271B;
+
+  --display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --texto: 'Inter', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --raio: 14px;
+  --sombra: 0 1px 2px rgba(27,26,23,.05), 0 8px 24px rgba(27,26,23,.06);
+}
+
+*{ box-sizing: border-box; margin: 0; padding: 0; }
+html{ -webkit-text-size-adjust: 100%; }
+body{
+  background: var(--concreto);
+  color: var(--grafite);
+  font-family: var(--texto);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+a{ color: inherit; }
+img{ max-width: 100%; display: block; }
+::selection{ background: var(--mata); color: var(--branco); }
+:focus-visible{ outline: 2px solid var(--mata); outline-offset: 2px; }
+
+h1,h2,h3,h4{ font-family: var(--display); letter-spacing: -0.02em; line-height: 1.15; }
+
+.logo{
+  font-family: var(--display); font-weight: 700; font-size: 19px;
+  display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+}
+.logo .dot{ width: 10px; height: 10px; border-radius: 50%; background: var(--telha); }
+.logo small{
+  font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: .08em;
+  background: var(--mata); color: var(--branco); padding: 2px 6px; border-radius: 5px;
+}
+
+/* Botões */
+.btn{
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font: 600 14px/1 var(--texto);
+  padding: 11px 18px; border-radius: 10px;
+  border: 1px solid var(--areia-line); background: var(--branco); color: var(--grafite);
+  cursor: pointer; text-decoration: none; white-space: nowrap;
+  transition: background .15s ease, border-color .15s ease, transform .1s ease;
+}
+.btn:hover{ border-color: var(--grafite-soft); }
+.btn:active{ transform: translateY(1px); }
+.btn:disabled{ opacity: .55; cursor: not-allowed; }
+.btn-solid{ background: var(--mata); border-color: var(--mata); color: var(--branco); }
+.btn-solid:hover{ background: var(--mata-light); border-color: var(--mata-light); }
+.btn-ghost{ background: transparent; border-color: transparent; }
+.btn-ghost:hover{ background: var(--concreto-alt); border-color: transparent; }
+.btn-perigo{ color: var(--erro); }
+.btn-perigo:hover{ border-color: var(--erro); }
+.btn-sm{ padding: 7px 12px; font-size: 13px; border-radius: 8px; }
+
+/* Formulários */
+.campo{ display: flex; flex-direction: column; gap: 6px; }
+.campo > span{ font-size: 13px; font-weight: 600; color: var(--grafite-soft); }
+input, select, textarea{
+  font: 15px/1.4 var(--texto); color: var(--grafite);
+  background: var(--branco); border: 1px solid var(--areia-line); border-radius: 10px;
+  padding: 10px 12px; width: 100%;
+}
+input:focus, select:focus, textarea:focus{ outline: none; border-color: var(--mata); box-shadow: 0 0 0 3px var(--mata-bg); }
+textarea{ resize: vertical; min-height: 90px; }
+input[type="checkbox"]{ width: 16px; height: 16px; accent-color: var(--mata); flex: none; margin-top: 2px; }
+input[type="color"]{ padding: 4px; height: 42px; }
+.check{ display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--grafite-soft); }
+
+.cartao{
+  background: var(--branco); border: 1px solid var(--areia-line); border-radius: var(--raio);
+  box-shadow: var(--sombra);
+}
+
+.aviso{ padding: 10px 14px; border-radius: 10px; font-size: 14px; }
+.aviso-erro{ background: #FBE9E6; color: var(--erro); }
+.aviso-ok{ background: var(--mata-bg); color: var(--mata); }
+.aviso-info{ background: var(--telha-bg); color: var(--telha); }
+[hidden]{ display: none !important; }
+
+.eyebrow{
+  font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--telha);
+}
