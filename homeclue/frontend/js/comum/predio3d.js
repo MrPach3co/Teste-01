@@ -7,9 +7,9 @@ import { el, reaisCurto } from './util.js';
 const VENDOR = '../../vendor/three/';
 
 export const STATUS_3D = {
-  disponivel: { rotulo: 'Disponível', brilho: [0.16, 1.32, 0.5] },
-  reservada: { rotulo: 'Reservada', brilho: [1.5, 0.84, 0.1] },
-  vendida: { rotulo: 'Vendida', brilho: [1.42, 0.2, 0.17] },
+  disponivel: { rotulo: 'Disponível', brilho: [0.02, 1.2, 0.12] },
+  reservada: { rotulo: 'Reservada', brilho: [1.5, 0.62, 0.04] },
+  vendida: { rotulo: 'Vendida', brilho: [1.4, 0.07, 0.05] },
 };
 const APAGADA = [0.035, 0.04, 0.055];
 
@@ -562,7 +562,7 @@ export async function predio3D(container, emp, { aoClicar, filtro = () => true }
 
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(cena, camera));
-  const bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.62, 0.5, 0.9);
+  const bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.62, 0.5, 0.82);
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
 
