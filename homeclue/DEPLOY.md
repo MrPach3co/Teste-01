@@ -1,8 +1,7 @@
 # Pondo a Homeclue no ar (Railway + Postgres + Stripe)
 
-O repositório tem dois produtos: na raiz, o protótipo antigo (Kaza IA, um
-portal); em `homeclue/`, a Homeclue. No Railway, a Homeclue é um serviço
-próprio apontando para a pasta `homeclue`.
+A Homeclue fica na pasta `homeclue/` deste repositório. No Railway, o
+serviço aponta para essa pasta.
 
 ## 1. Serviço
 

@@ -65,3 +65,13 @@ def test_resumo_para_o_corretor():
     c = Criterios(finalidade="venda", tipos=["casa"], bairros=["Olaria"], preco_max=600_000, quartos_min=3,
                   caracteristicas=["jardim"], perto_de=["escola"], desejos=["sol da manhã"])
     assert c.resumo() == "Comprar casa em Olaria, até R$ 600 mil, 3+ quartos, jardim / quintal, perto de escola, “sol da manhã”"
+
+
+def test_nome_de_lugar_nao_vira_pedido_de_proximidade():
+    # "Rio das Ostras" não é pedido de rio, e "Parque São Clemente" não é pedido de parque.
+    praia, _ = interpretar("apartamento perto da praia em Rio das Ostras", ["Centro", "Parque São Clemente"],
+                           ["Nova Friburgo", "Rio das Ostras"])
+    assert praia.cidades == ["Rio das Ostras"] and "natureza" not in praia.perto_de
+    parque, _ = interpretar("casa perto de escola no Parque São Clemente", ["Parque São Clemente"], ["Nova Friburgo"])
+    assert parque.perto_de == ["escola"] and parque.bairros == ["Parque São Clemente"]
+    assert "natureza" in interpretar("sítio perto do rio", [], [])[0].perto_de

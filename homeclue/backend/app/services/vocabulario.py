@@ -212,7 +212,8 @@ PADROES_PERTO_DE: dict[str, str] = {
     "saude": r"hospital|posto de saude|clinica|upa\b|pronto[- ]socorro",
     "comercio": r"comercio|mercado|supermercado|padaria|farmacia|centro comercial|lojas",
     "transporte": r"onibus|transporte|rodoviaria|ponto de",
-    "natureza": r"natureza|mata|trilha|cachoeira|parque|verde|rio\b",
+    # "rio" sozinho; "Rio de Janeiro", "Rio das Ostras", "Rio Bonito"… são nomes de lugar.
+    "natureza": r"natureza|mata|trilha|cachoeira|parque|verde|\brio\b(?! (?:d[aeo]s?|bonito|dourado|grande|novo)\b)",
     "seguranca": r"delegacia|policia|batalhao|bombeiro",
 }
 

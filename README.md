@@ -1,25 +1,15 @@
 # Homeclue
 
-**O produto está em [`homeclue/`](homeclue/README.md):** busca com IA instalada
-no site de cada imobiliária, com match explicado, trava contra invenção, leads
-no WhatsApp do corretor, feed XML, painel, demanda, planta interativa,
-maquete 3D e espelho de lançamentos. Veja também
-[`homeclue/DEPLOY.md`](homeclue/DEPLOY.md), [`homeclue/PENDENCIAS.md`](homeclue/PENDENCIAS.md)
-e [`homeclue/COMERCIAL.md`](homeclue/COMERCIAL.md).
+[![Testes](https://github.com/MrPach3co/Teste-01/actions/workflows/homeclue.yml/badge.svg)](https://github.com/MrPach3co/Teste-01/actions/workflows/homeclue.yml)
 
----
+Busca com IA instalada no site de cada imobiliária: o comprador descreve o
+imóvel com as próprias palavras e vê os imóveis daquela imobiliária com a
+compatibilidade e a prova de cada ponto, e chama o corretor no WhatsApp com
+o resumo da busca.
 
-## Protótipo antigo (Kaza IA)
+O produto está em [`homeclue/`](homeclue/README.md):
 
-O que está na raiz (`frontend/`, `backend/`, `docs/`) é o primeiro protótipo,
-ainda com o nome Kaza IA, pensado como portal. A Homeclue não é portal; este
-código fica só como referência.
-
-```
-frontend/   landing page estática do protótipo (HTML/CSS/JS puro)
-backend/    API em FastAPI do protótipo — busca, contas, lista de espera
-docs/       documentação do protótipo
-```
-
-Para rodar o protótipo, veja `backend/README.md`. Para rodar a Homeclue, veja
-[`homeclue/README.md`](homeclue/README.md).
+- [`homeclue/README.md`](homeclue/README.md): o que é, como rodar e como o documento de produto virou software
+- [`homeclue/DEPLOY.md`](homeclue/DEPLOY.md): como pôr no ar (Railway, Postgres, e-mail e Stripe)
+- [`homeclue/PENDENCIAS.md`](homeclue/PENDENCIAS.md): o que depende de algo fora do código
+- [`homeclue/COMERCIAL.md`](homeclue/COMERCIAL.md): Correta, imobiliárias da região e roteiro da demonstração

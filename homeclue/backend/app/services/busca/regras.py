@@ -194,7 +194,13 @@ def extrair_caracteristicas(t: str) -> tuple[list[str], list[str]]:
     return pedidas, recusadas
 
 
-def extrair_perto_de(t: str) -> list[str]:
+def extrair_perto_de(t: str, lugares: list[str] | tuple[str, ...] = ()) -> list[str]:
+    # Nome de lugar não é pedido de proximidade: "perto da praia em Rio das
+    # Ostras" não pede rio, e "no Parque São Clemente" não pede parque.
+    for nome in sorted(lugares, key=len, reverse=True):
+        nome_norm = normalizar(nome)
+        if nome_norm:
+            t = re.sub(rf"\b{re.escape(nome_norm)}\b", " ", t)
     categorias: list[str] = []
     for m in re.finditer(r"perto|proxim\w*|ao lado|a pe\b|caminhando|andando|vizinho", t):
         janela = t[m.end():m.end() + 60]
@@ -285,7 +291,7 @@ def interpretar(texto: str, bairros_conhecidos: list[str], cidades_conhecidas: l
         vagas_min=vagas,
         area_min=extrair_area(t),
         caracteristicas=pedidas,
-        perto_de=extrair_perto_de(t),
+        perto_de=extrair_perto_de(t, [*cidades_conhecidas, *bairros_conhecidos]),
         desejos=extrair_desejos(texto, t),
     )
     # Bairro com o mesmo nome de cidade (raro) fica só como bairro.
