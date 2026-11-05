@@ -30,6 +30,10 @@ class CobrancaIndisponivel(Exception):
     pass
 
 
+class FalhaAoCancelar(Exception):
+    pass
+
+
 def _precos() -> dict[str, str]:
     return {
         plano: preco
@@ -111,6 +115,21 @@ def criar_portal(imobiliaria: Imobiliaria) -> str:
         params={"customer": imobiliaria.stripe_customer_id, "return_url": f"{settings.url_publica}/app.html#plano"}
     )
     return sessao.url
+
+
+def cancelar_assinatura(imobiliaria: Imobiliaria) -> None:
+    """Cancela já a assinatura da imobiliária (usado ao excluir a conta).
+    Assinatura que o Stripe não conhece mais (cancelada pelo portal, por
+    exemplo) não impede nada; qualquer outra falha impede a exclusão."""
+    if not imobiliaria.stripe_subscription_id:
+        return
+    try:
+        _cliente().v1.subscriptions.cancel(imobiliaria.stripe_subscription_id)
+    except stripe.InvalidRequestError as erro:
+        logger.info("Assinatura %s já não estava ativa: %s", imobiliaria.stripe_subscription_id, erro)
+    except (stripe.StripeError, CobrancaIndisponivel) as erro:
+        logger.error("Falha ao cancelar a assinatura %s: %s", imobiliaria.stripe_subscription_id, erro)
+        raise FalhaAoCancelar(str(erro)) from erro
 
 
 def validar_webhook(corpo: bytes, assinatura: str) -> None:

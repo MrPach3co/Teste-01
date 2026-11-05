@@ -68,6 +68,7 @@
 
 /* Imóveis */
 .lista-imoveis{ display: flex; flex-direction: column; gap: 8px; }
+.mais-imoveis{ align-self: center; margin-top: 4px; }
 .linha-imovel{ display: grid; grid-template-columns: 60px 1fr auto auto; gap: 14px; align-items: center; padding: 12px 14px; }
 .miniatura{ width: 60px; height: 60px; border-radius: 10px; background-size: cover; background-position: center; background-color: var(--concreto-alt); }
 .linha-imovel h3{ font-family: var(--texto); font-size: 15px; font-weight: 600; letter-spacing: 0; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }

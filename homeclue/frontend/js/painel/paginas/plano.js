@@ -22,7 +22,7 @@ export async function render(pagina) {
   const plano = catalogo.planos.find((p) => p.id === atual) || catalogo.planos[0];
   pagina.appendChild(cabecalho('Plano', `Você está no plano ${plano.nome}.`));
   const usos = el('div', 'uso');
-  usos.append(uso('Buscas neste mês', m.buscas_mes, plano.limite_buscas_mes), uso('Imóveis', m.imoveis_total, plano.limite_imoveis),
+  usos.append(uso('Buscas com IA neste mês', m.buscas_mes, plano.limite_buscas_mes), uso('Imóveis', m.imoveis_total, plano.limite_imoveis),
     uso('Usuários', m.usuarios_total, plano.limite_usuarios));
   pagina.appendChild(usos);
 
@@ -32,7 +32,7 @@ export async function render(pagina) {
     const valor = el('div', 'valor', p.preco_mensal ? `R$ ${p.preco_mensal.toLocaleString('pt-BR')}` : 'Grátis');
     if (p.preco_mensal) valor.appendChild(el('small', '', ' /mês'));
     const itens = el('ul');
-    for (const t of [`${numero(p.limite_imoveis)} imóveis`, `${numero(p.limite_buscas_mes)} buscas/mês`, `${p.limite_usuarios} usuário(s)`,
+    for (const t of [`${numero(p.limite_imoveis)} imóveis`, `${numero(p.limite_buscas_mes)} buscas com IA/mês`, `${p.limite_usuarios} usuário(s)`,
       ...p.recursos.map((r) => catalogo.nomes_recursos[r]).filter(Boolean)]) itens.appendChild(el('li', '', t));
     c.append(el('h3', '', p.nome), el('p', 'ajuda', p.destaque), valor, itens);
     if (p.id === atual) c.appendChild(el('span', 'selo', 'SEU PLANO'));

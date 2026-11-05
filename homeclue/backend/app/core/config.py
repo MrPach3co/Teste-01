@@ -50,6 +50,14 @@ class Settings(BaseSettings):
     # E-mails (separados por vírgula) com acesso ao painel do dono do SaaS.
     admin_emails: str = ""
 
+    # Envio de e-mail por SMTP (Resend, Brevo, Amazon SES, Gmail…): "esqueci
+    # minha senha" e aviso de novo lead. Sem SMTP_HOST, o e-mail só vai para o log.
+    smtp_host: str = ""
+    smtp_porta: int = 587  # 587 = STARTTLS; 465 = TLS direto
+    smtp_usuario: str = ""
+    smtp_senha: str = ""
+    email_remetente: str = "Homeclue <nao-responda@homeclue.com.br>"
+
     # Fila de tarefas (feed, contexto do bairro, análise de fotos).
     tarefas_em_segundo_plano: bool = True
     feed_intervalo_horas: int = 6

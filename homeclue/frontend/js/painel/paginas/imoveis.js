@@ -19,14 +19,14 @@ function numeroOuNulo(v) {
 function linha(imovel, recarregar) {
   const c = el('article', `cartao linha-imovel${imovel.ativo && !imovel.removido_do_feed_em ? '' : ' pausado'}`);
   const mini = el('div', 'miniatura');
-  fundoFoto(mini, imovel.fotos[0] && imovel.fotos[0].url, imovel.id);
+  fundoFoto(mini, imovel.foto, imovel.id);
   const info = el('div');
   const titulo = el('h3', '', imovel.titulo);
   titulo.appendChild(el('span', `etiqueta${imovel.origem === 'feed' ? ' etiqueta-feed' : ''}`, imovel.origem === 'feed' ? 'feed XML' : 'manual'));
   if (imovel.codigo_referencia) titulo.appendChild(el('span', 'etiqueta', imovel.codigo_referencia));
   if (imovel.removido_do_feed_em) titulo.appendChild(el('span', 'etiqueta etiqueta-alerta', 'saiu do feed'));
   else if (!imovel.ativo) titulo.appendChild(el('span', 'etiqueta etiqueta-alerta', 'pausado'));
-  if (imovel.planta && imovel.planta.comodos && imovel.planta.comodos.length) titulo.appendChild(el('span', 'etiqueta', 'planta/3D'));
+  if (imovel.tem_planta) titulo.appendChild(el('span', 'etiqueta', 'planta/3D'));
   const tipo = estado.vocabulario.tipos[imovel.tipo] || imovel.tipo;
   const partes = [tipo, `${imovel.bairro}, ${imovel.cidade}`, imovel.quartos !== null ? `${imovel.quartos} qts` : null,
     imovel.area_m2 ? `${imovel.area_m2} m²` : null, `${imovel.visualizacoes} aberturas (30 dias)`, `${imovel.total_leads} leads`];
@@ -163,6 +163,10 @@ function abaContexto(imovel) {
 
 async function abrirEditor(imovel, recarregar) {
   const v = await garantirVocabulario();
+  // A lista traz só o resumo; o formulário precisa do imóvel completo.
+  if (imovel) {
+    try { imovel = await api(`/api/imoveis/${imovel.id}`); } catch (e) { avisar(e.message, 'erro'); return; }
+  }
   const doFeed = imovel && imovel.origem === 'feed';
   const { conteudo, rodape, fechar } = abrirModal(imovel ? 'Editar imóvel' : 'Novo imóvel', { largo: true });
   if (doFeed) conteudo.appendChild(el('p', 'aviso aviso-info', 'Este imóvel vem do feed XML: os dados do anúncio são atualizados pelo seu sistema. Aqui você pode pausar, escolher o corretor responsável, adicionar o vídeo de drone e desenhar a planta.'));
@@ -367,6 +371,10 @@ export async function render(pagina) {
   const caixa = el('div', 'lista-imoveis');
   pagina.appendChild(caixa);
 
+  // Estoque grande (1.000+ imóveis): desenha aos poucos, para a página não
+  // criar milhares de cartões e baixar milhares de fotos de uma vez.
+  const POR_VEZ = 60;
+  let mostrando = POR_VEZ;
   const desenhar = () => {
     const termo = busca.value.trim().toLowerCase();
     const filtrados = imoveis.filter((x) => (!origem.value || x.origem === origem.value)
@@ -376,10 +384,16 @@ export async function render(pagina) {
         Object.assign(el('a', 'btn btn-solid', 'Conectar o feed XML'), { href: '#integracao' })));
       return;
     }
-    caixa.replaceChildren(...filtrados.map((x) => linha(x, recarregar)));
+    caixa.replaceChildren(...filtrados.slice(0, mostrando).map((x) => linha(x, recarregar)));
     if (!filtrados.length) caixa.appendChild(el('p', 'ajuda', 'Nenhum imóvel com esse filtro.'));
+    if (filtrados.length > mostrando) {
+      caixa.appendChild(botao(`Mostrar mais (${filtrados.length - mostrando} restantes)`, 'mais-imoveis', () => {
+        mostrando += POR_VEZ;
+        desenhar();
+      }));
+    }
   };
-  busca.addEventListener('input', desenhar);
-  origem.addEventListener('change', desenhar);
+  busca.addEventListener('input', () => { mostrando = POR_VEZ; desenhar(); });
+  origem.addEventListener('change', () => { mostrando = POR_VEZ; desenhar(); });
   desenhar();
 }

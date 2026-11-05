@@ -1,9 +1,11 @@
+import hmac
+
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
 from app.core.config import obter_settings
-from app.core.security import decodificar_token_acesso
+from app.core.security import decodificar_token_acesso, impressao_da_senha
 from app.db.session import obter_db
 from app.models import Imobiliaria, Usuario
 
@@ -27,6 +29,9 @@ def obter_usuario_atual(
         raise _erro_credenciais
     usuario = db.get(Usuario, int(payload["sub"]))
     if usuario is None:
+        raise _erro_credenciais
+    # Senha trocada depois que o token foi emitido: a sessão não vale mais.
+    if not hmac.compare_digest(str(payload.get("fp", "")), impressao_da_senha(usuario.senha_hash)):
         raise _erro_credenciais
     return usuario
 

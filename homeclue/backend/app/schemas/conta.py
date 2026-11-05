@@ -1,20 +1,24 @@
 from datetime import datetime
+from typing import Annotated
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
+from pydantic import AfterValidator, BaseModel, ConfigDict, EmailStr, Field, field_validator
 
 _PADRAO_TELEFONE = r"^\+?[0-9 ()-]*$"
+
+# E-mail digitado vira minúsculas: "Ana@Imob.com" e "ana@imob.com" são a mesma conta.
+Email = Annotated[EmailStr, AfterValidator(lambda valor: valor.strip().lower())]
 
 
 class Cadastro(BaseModel):
     nome_imobiliaria: str = Field(min_length=2, max_length=200)
     nome: str = Field(min_length=2, max_length=200)
-    email: EmailStr
+    email: Email
     senha: str = Field(min_length=8, max_length=72)
     aceitou_termos: bool
 
 
 class Login(BaseModel):
-    email: EmailStr
+    email: Email
     senha: str
 
 
@@ -39,6 +43,15 @@ class PerfilAtualizacao(BaseModel):
     whatsapp: str | None = Field(default=None, max_length=20, pattern=_PADRAO_TELEFONE)
 
 
+class PedidoRedefinicao(BaseModel):
+    email: Email
+
+
+class Redefinicao(BaseModel):
+    token: str = Field(min_length=10, max_length=2000)
+    nova_senha: str = Field(min_length=8, max_length=72)
+
+
 class TrocaSenha(BaseModel):
     senha_atual: str
     nova_senha: str = Field(min_length=8, max_length=72)
@@ -46,7 +59,7 @@ class TrocaSenha(BaseModel):
 
 class NovoCorretor(BaseModel):
     nome: str = Field(min_length=2, max_length=200)
-    email: EmailStr
+    email: Email
     whatsapp: str | None = Field(default=None, max_length=20, pattern=_PADRAO_TELEFONE)
 
 

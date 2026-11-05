@@ -122,7 +122,8 @@ def config(request: Request, chave: str, db: Session = Depends(obter_db)) -> Con
         exemplos=_exemplos(imoveis),
         recursos={
             "voz": True,
-            "busca_por_foto": tem_recurso(plano, BUSCA_POR_FOTO) and ia_cliente.disponivel(),
+            "busca_por_foto": tem_recurso(plano, BUSCA_POR_FOTO) and ia_cliente.disponivel()
+            and not limites.cota_de_buscas_esgotada(db, imobiliaria),
             "comparador": tem_recurso(plano, COMPARADOR),
             "rankings": tem_recurso(plano, RANKINGS),
             "contexto_bairro": tem_recurso(plano, CONTEXTO_BAIRRO),
@@ -185,8 +186,11 @@ def _garantir_cota(db: Session, imobiliaria: Imobiliaria) -> None:
 @limiter.limit("20/minute")
 def buscar(request: Request, chave: str, dados: BuscaEntrada, db: Session = Depends(obter_db)) -> BuscaResposta:
     imobiliaria = _imobiliaria_pela_chave(chave, db)
-    _garantir_cota(db, imobiliaria)
-    resultado = motor.executar(db, imobiliaria, dados.texto, Criterios.de_dict(dados.criterios), dados.historico)
+    # Cota de buscas com IA esgotada: a busca do site continua funcionando no
+    # motor de regras (sem custo) até virar o mês ou a imobiliária mudar de plano.
+    com_ia = not limites.cota_de_buscas_esgotada(db, imobiliaria)
+    resultado = motor.executar(db, imobiliaria, dados.texto, Criterios.de_dict(dados.criterios), dados.historico,
+                               usar_ia=com_ia)
     return _registrar_e_responder(db, imobiliaria, resultado, dados.texto, dados.sessao, dados.turno, dados.modo)
 
 

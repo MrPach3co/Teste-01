@@ -9,7 +9,7 @@ from app.core.security import gerar_codigo_lead
 from app.core.telefone import numero_whatsapp
 from app.core.tempo import agora_utc
 from app.models import Imobiliaria, Imovel, Lead, RegistroBusca, Unidade
-from app.services import cobranca
+from app.services import avisos, cobranca
 from app.services.busca.criterios import Criterios
 from app.services.tarefas import enfileirar
 
@@ -74,4 +74,6 @@ def criar_lead(db: Session, imobiliaria: Imobiliaria, *, origem: str, imovel: Im
     db.refresh(lead)
     if cobranca.cobranca_por_lead_ativa() and imobiliaria.stripe_customer_id:
         enfileirar(db, "cobrar_lead", imobiliaria_id=imobiliaria.id, referencia=str(lead.id))
+    if origem == "formulario":
+        avisos.avisar_novo_lead(db, lead)
     return lead

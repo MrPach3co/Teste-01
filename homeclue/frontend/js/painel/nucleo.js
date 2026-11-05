@@ -1,7 +1,14 @@
 // Núcleo do painel: sessão, chamadas à API, avisos, modais e downloads.
 import { el } from '../comum/util.js';
 
-export const token = (() => { try { return localStorage.getItem('hc_token'); } catch { return null; } })();
+let tokenAtual = (() => { try { return localStorage.getItem('hc_token'); } catch { return null; } })();
+export const token = tokenAtual;
+
+/** Troca o token da sessão (a troca de senha devolve um novo; os outros aparelhos saem). */
+export function guardarToken(novo) {
+  tokenAtual = novo;
+  try { localStorage.setItem('hc_token', novo); } catch { /* sem armazenamento */ }
+}
 export const estado = { sessao: null, vocabulario: null };
 
 export function sair() {
@@ -20,7 +27,7 @@ function erroDaApi(dados) {
 }
 
 export async function api(caminho, opcoes = {}) {
-  const headers = { Authorization: `Bearer ${token}`, ...(opcoes.headers || {}) };
+  const headers = { Authorization: `Bearer ${tokenAtual}`, ...(opcoes.headers || {}) };
   const config = { ...opcoes, headers };
   if (opcoes.json !== undefined) {
     headers['Content-Type'] = 'application/json';

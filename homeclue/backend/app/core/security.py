@@ -1,3 +1,5 @@
+import hashlib
+import hmac
 import secrets
 from datetime import datetime, timedelta, timezone
 
@@ -38,6 +40,42 @@ def decodificar_token_acesso(token: str) -> dict | None:
         return jwt.decode(token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm])
     except JWTError:
         return None
+
+
+def impressao_da_senha(senha_hash: str) -> str:
+    """Muda sempre que a senha muda. Vai dentro dos tokens: trocar a senha
+    derruba as sessões abertas em outros aparelhos e os links de redefinição."""
+    return hmac.new(settings.jwt_secret_key.encode(), senha_hash.encode(), hashlib.sha256).hexdigest()[:16]
+
+
+def token_de_sessao(usuario) -> str:
+    return criar_token_acesso({"sub": str(usuario.id), "fp": impressao_da_senha(usuario.senha_hash)})
+
+
+_FIM_REDEFINICAO = "redefinir_senha"
+VALIDADE_REDEFINICAO = timedelta(hours=1)
+
+
+def _chave_redefinicao() -> str:
+    # Chave própria: um link de redefinição nunca vale como token de sessão.
+    return hmac.new(settings.jwt_secret_key.encode(), b"homeclue:redefinir-senha", hashlib.sha256).hexdigest()
+
+
+def criar_token_redefinicao(usuario) -> str:
+    dados = {"sub": str(usuario.id), "fp": impressao_da_senha(usuario.senha_hash), "fim": _FIM_REDEFINICAO,
+             "exp": datetime.now(timezone.utc) + VALIDADE_REDEFINICAO}
+    return jwt.encode(dados, _chave_redefinicao(), algorithm=settings.jwt_algorithm)
+
+
+def ler_token_redefinicao(token: str) -> tuple[int, str] | None:
+    """(id do usuário, impressão da senha de quando o link foi criado)."""
+    try:
+        dados = jwt.decode(token, _chave_redefinicao(), algorithms=[settings.jwt_algorithm])
+    except JWTError:
+        return None
+    if dados.get("fim") != _FIM_REDEFINICAO or not str(dados.get("sub", "")).isdigit():
+        return None
+    return int(dados["sub"]), str(dados.get("fp", ""))
 
 
 def gerar_chave_publica() -> str:

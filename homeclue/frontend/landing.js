@@ -30,7 +30,7 @@
     mes.textContent = ' /mês';
     valor.appendChild(mes);
     const itens = document.createElement('ul');
-    itens.append(item(`Até ${numero(p.limite_imoveis)} imóveis`), item(`${numero(p.limite_buscas_mes)} buscas por mês`),
+    itens.append(item(`Até ${numero(p.limite_imoveis)} imóveis`), item(`${numero(p.limite_buscas_mes)} buscas com IA por mês`),
       item(`${p.limite_usuarios} usuário${p.limite_usuarios > 1 ? 's' : ''}`), item('Feed XML, match explicado e leads no WhatsApp'));
     for (const r of p.recursos) if (nomesRecursos[r]) itens.appendChild(item(nomesRecursos[r]));
     const cta = document.createElement('a');

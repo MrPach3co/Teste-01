@@ -1,5 +1,5 @@
 import { el, svgEl } from '../../comum/util.js';
-import { api, cabecalho } from '../nucleo.js';
+import { api, aviso_bloqueado, cabecalho } from '../nucleo.js';
 
 const numero = (v) => (v === null || v === undefined ? '∞' : v.toLocaleString('pt-BR'));
 const reais = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
@@ -70,6 +70,10 @@ export async function render(pagina) {
   const p = m.plano;
   const cor = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
   pagina.appendChild(cabecalho('Visão geral', 'Como a busca do seu site está trabalhando neste mês — o valor que a Homeclue entrega, em números.'));
+  if (p.limite_buscas_mes && m.buscas_mes >= p.limite_buscas_mes) {
+    pagina.appendChild(aviso_bloqueado(`As ${numero(p.limite_buscas_mes)} buscas com IA do seu plano acabaram neste mês. `
+      + 'A busca do seu site continua funcionando, no modo básico (sem IA), até o mês virar ou você mudar de plano.'));
+  }
 
   const kpis = el('div', 'kpis');
   kpis.append(

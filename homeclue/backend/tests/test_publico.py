@@ -153,11 +153,21 @@ def test_lancamentos_e_espelho(client):
     assert vendida["preco"] is None  # preço de unidade vendida não é exposto
 
 
-def test_cota_de_buscas_esgotada(client, monkeypatch):
-    from app.services import limites
+def test_cota_esgotada_continua_buscando_sem_ia(client, monkeypatch):
+    from types import SimpleNamespace
 
+    from app.services import limites
+    from app.services.ia import cliente
+
+    def nao_pode(**_):
+        raise AssertionError("com a cota esgotada, a IA não pode ser chamada")
+
+    monkeypatch.setattr(cliente, "_cliente", SimpleNamespace(messages=SimpleNamespace(create=nao_pode)))
+    assert client.get("/api/publico/pk_demo/config").json()["recursos"]["busca_por_foto"] is True
     monkeypatch.setattr(limites, "contar_buscas_mes", lambda db, imobiliaria_id: 10**9)
-    assert client.post("/api/publico/pk_demo/buscar", json={"texto": "casa"}).status_code == 429
+    corpo = client.post("/api/publico/pk_demo/buscar", json={"texto": "casa com lareira"}).json()
+    assert corpo["fonte"] == "regras" and corpo["resultados"]  # o site não fica sem busca
+    assert client.get("/api/publico/pk_demo/config").json()["recursos"]["busca_por_foto"] is False
 
 
 def test_registro_guarda_lacunas_para_o_relatorio(client, db):

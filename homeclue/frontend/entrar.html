@@ -33,6 +33,25 @@
       <label class="campo"><span>Senha</span><input name="senha" type="password" autocomplete="current-password" required></label>
       <div class="aviso aviso-erro" hidden></div>
       <button class="btn btn-solid" type="submit">Entrar</button>
+      <p class="trocar"><button type="button" data-ir="esqueci">Esqueci minha senha</button></p>
+    </form>
+
+    <form id="form-esqueci" hidden>
+      <h1>Esqueci minha senha</h1>
+      <p class="sub">Informe o e-mail da sua conta. Enviamos um link para você criar uma nova senha.</p>
+      <label class="campo"><span>E-mail</span><input name="email" type="email" autocomplete="email" required></label>
+      <div class="aviso aviso-erro" hidden></div>
+      <div class="aviso aviso-ok" hidden></div>
+      <button class="btn btn-solid" type="submit">Enviar link</button>
+    </form>
+
+    <form id="form-redefinir" hidden>
+      <h1>Criar nova senha</h1>
+      <p class="sub">Depois de salvar, você entra direto no painel. Aparelhos que estavam conectados saem da conta.</p>
+      <label class="campo"><span>Nova senha (mínimo 8 caracteres)</span><input name="nova_senha" type="password" required minlength="8" maxlength="72" autocomplete="new-password"></label>
+      <label class="campo"><span>Repita a nova senha</span><input name="confirmacao" type="password" required minlength="8" maxlength="72" autocomplete="new-password"></label>
+      <div class="aviso aviso-erro" hidden></div>
+      <button class="btn btn-solid" type="submit">Salvar e entrar</button>
     </form>
 
     <form id="form-cadastro" hidden>
@@ -51,73 +70,9 @@
 
   <p class="trocar" id="trocar-login">Ainda não tem conta? <button type="button" data-ir="cadastro">Criar grátis</button></p>
   <p class="trocar" id="trocar-cadastro" hidden>Já tem conta? <button type="button" data-ir="login">Entrar</button></p>
+  <p class="trocar" id="trocar-esqueci" hidden>Lembrou a senha? <button type="button" data-ir="login">Entrar</button></p>
 </div>
 
-<script>
-(function () {
-  if (localStorage.getItem('hc_token')) { location.replace('app.html'); return; }
-
-  const telas = {
-    login: [document.getElementById('form-login'), document.getElementById('trocar-login')],
-    cadastro: [document.getElementById('form-cadastro'), document.getElementById('trocar-cadastro')],
-  };
-
-  function mostrar(qual) {
-    Object.entries(telas).forEach(([nome, els]) => els.forEach((e) => { e.hidden = nome !== qual; }));
-    history.replaceState(null, '', qual === 'cadastro' ? '#cadastro' : '#');
-    telas[qual][0].querySelector('input').focus();
-  }
-
-  document.querySelectorAll('[data-ir]').forEach((b) => b.addEventListener('click', () => mostrar(b.dataset.ir)));
-  mostrar(location.hash === '#cadastro' ? 'cadastro' : 'login');
-
-  function mensagemDeErro(dados) {
-    if (typeof dados.detail === 'string') return dados.detail;
-    if (Array.isArray(dados.detail)) {
-      const campo = dados.detail[0].loc.at(-1);
-      const nomes = { email: 'E-mail inválido.', senha: 'A senha precisa ter de 8 a 72 caracteres.' };
-      return nomes[campo] || 'Confira os campos preenchidos.';
-    }
-    return 'Algo deu errado. Tente de novo.';
-  }
-
-  async function enviar(form, url, corpo) {
-    const erro = form.querySelector('.aviso-erro');
-    const botao = form.querySelector('[type=submit]');
-    erro.hidden = true;
-    botao.disabled = true;
-    try {
-      const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corpo) });
-      const dados = await r.json().catch(() => ({}));
-      if (!r.ok) { erro.textContent = mensagemDeErro(dados); erro.hidden = false; return; }
-      localStorage.setItem('hc_token', dados.access_token);
-      location.replace(url.endsWith('cadastro') ? 'app.html#widget' : 'app.html');
-    } catch {
-      erro.textContent = 'Sem conexão com o servidor.';
-      erro.hidden = false;
-    } finally {
-      botao.disabled = false;
-    }
-  }
-
-  telas.login[0].addEventListener('submit', (e) => {
-    e.preventDefault();
-    const f = e.target.elements;
-    enviar(e.target, '/api/auth/login', { email: f.email.value.trim(), senha: f.senha.value });
-  });
-
-  telas.cadastro[0].addEventListener('submit', (e) => {
-    e.preventDefault();
-    const f = e.target.elements;
-    enviar(e.target, '/api/auth/cadastro', {
-      nome_imobiliaria: f.nome_imobiliaria.value.trim(),
-      nome: f.nome.value.trim(),
-      email: f.email.value.trim(),
-      senha: f.senha.value,
-      aceitou_termos: f.aceitou_termos.checked,
-    });
-  });
-})();
-</script>
+<script src="entrar.js"></script>
 </body>
 </html>

@@ -2,8 +2,9 @@ import logging
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
@@ -74,6 +75,40 @@ app.add_middleware(
     allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
     allow_headers=["Authorization", "Content-Type"],
 )
+
+# Respostas comprimidas: a lista de imóveis e os scripts ficam ~5x menores.
+app.add_middleware(GZipMiddleware, minimum_size=1024)
+
+# Política de segurança das páginas. Scripts só do próprio domínio (nenhum
+# script embutido no HTML); fotos de qualquer https (vêm do feed de cada
+# imobiliária); vídeos só do YouTube e do Vimeo.
+_CSP = (
+    "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+    "font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' https:; "
+    "connect-src 'self'; frame-src 'self' https://www.youtube-nocookie.com https://player.vimeo.com; "
+    "object-src 'none'; base-uri 'self'; form-action 'self'"
+)
+# Só a busca (embed.html) pode ser embutida em outro site — é o widget no site
+# da imobiliária. Painel, login e o resto não (proteção contra clickjacking).
+_EMBUTIVEIS = {"/embed.html"}
+
+
+@app.middleware("http")
+async def cabecalhos_de_seguranca(request: Request, call_next):
+    resposta = await call_next(request)
+    cabecalhos = resposta.headers
+    cabecalhos.setdefault("X-Content-Type-Options", "nosniff")
+    cabecalhos.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+    if settings.ambiente == "producao":
+        cabecalhos.setdefault("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
+    if cabecalhos.get("content-type", "").startswith("text/html"):
+        if request.url.path in _EMBUTIVEIS:
+            cabecalhos.setdefault("Content-Security-Policy", _CSP)
+        else:
+            cabecalhos.setdefault("Content-Security-Policy", _CSP + "; frame-ancestors 'none'")
+            cabecalhos.setdefault("X-Frame-Options", "DENY")
+    return resposta
+
 
 for modulo in (auth, conta, imoveis, feed, leads, painel, bairros, lancamentos, assinatura, publico, arquivos, admin):
     app.include_router(modulo.router)

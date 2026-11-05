@@ -2,12 +2,14 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator, model_validator
 
+from app.schemas.conta import Email
+
 STATUS_LEAD = ["novo", "em_contato", "visita", "proposta", "fechado", "perdido"]
 
 
 class LeadEntradaPublica(BaseModel):
     nome: str = Field(min_length=2, max_length=200)
-    email: EmailStr | None = None
+    email: Email | None = None
     telefone: str | None = Field(default=None, max_length=30, pattern=r"^\+?[0-9 ()-]{8,}$")
     mensagem: str = Field(default="", max_length=2000)
     imovel_id: int | None = None
@@ -35,7 +37,7 @@ class LeadAtualizacao(BaseModel):
     # Leads de WhatsApp chegam sem dados pessoais; o corretor completa depois da conversa.
     nome: str | None = Field(default=None, max_length=200)
     telefone: str | None = Field(default=None, max_length=30)
-    email: EmailStr | None = None
+    email: Email | None = None
 
     @field_validator("status")
     @classmethod

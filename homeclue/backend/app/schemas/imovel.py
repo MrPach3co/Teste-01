@@ -87,6 +87,33 @@ class ImovelEntrada(BaseModel):
 CAMPOS_EDITAVEIS_EM_IMOVEL_DO_FEED = {"ativo", "corretor_id", "video_drone_url"}
 
 
+class ImovelResumo(BaseModel):
+    """Linha da lista do painel. Leve de propósito: com o estoque inteiro
+    (1.000+ imóveis), a lista completa passava de 3 MB. O formulário de
+    edição busca o imóvel completo."""
+
+    id: int
+    origem: str
+    titulo: str
+    tipo: str
+    finalidade: str
+    preco: float
+    preco_aluguel: float | None
+    bairro: str
+    cidade: str
+    quartos: int | None
+    area_m2: float | None
+    codigo_referencia: str | None
+    corretor_id: int | None
+    ativo: bool
+    removido_do_feed_em: datetime | None
+    criado_em: datetime
+    foto: str | None = None
+    tem_planta: bool = False
+    total_leads: int = 0
+    visualizacoes: int = 0
+
+
 class ImovelSaida(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 

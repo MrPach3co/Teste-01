@@ -12,7 +12,7 @@ import traceback
 from collections.abc import Callable
 from datetime import timedelta
 
-from sqlalchemy import and_, delete, or_, select, update
+from sqlalchemy import and_, case, delete, or_, select, update
 from sqlalchemy.orm import Session
 
 from app.core.config import obter_settings
@@ -25,6 +25,9 @@ logger = logging.getLogger(__name__)
 settings = obter_settings()
 
 MAX_TENTATIVAS = 3
+# Tarefas lentas e numerosas (uma por imóvel) vão para o fim da fila: com um
+# feed de 1.000+ imóveis, um e-mail de senha não pode esperar todas elas.
+_LENTAS = ("contexto_bairro", "analisar_fotos")
 _TRAVA = timedelta(minutes=15)
 _EXECUTORES: dict[str, Callable[[Session, Tarefa], None]] = {}
 
@@ -39,7 +42,7 @@ def executor(tipo: str):
 
 def _carregar_executores() -> None:
     # Importados aqui para evitar import circular; cada módulo se registra com @executor.
-    from app.services import cobranca, contexto  # noqa: F401
+    from app.services import avisos, cobranca, contexto  # noqa: F401
     from app.services.feed import sincronizar  # noqa: F401
     from app.services.ia import visao  # noqa: F401
 
@@ -71,7 +74,9 @@ def processar_uma(db: Session) -> bool:
     """Executa a próxima tarefa vencida. Retorna False se a fila está vazia."""
     _carregar_executores()
     agora = agora_utc()
-    tarefa_id = db.scalar(select(Tarefa.id).where(_disponivel(agora)).order_by(Tarefa.executar_em, Tarefa.id).limit(1))
+    prioridade = case((Tarefa.tipo.in_(_LENTAS), 1), else_=0)
+    tarefa_id = db.scalar(select(Tarefa.id).where(_disponivel(agora))
+                          .order_by(prioridade, Tarefa.executar_em, Tarefa.id).limit(1))
     if tarefa_id is None:
         return False
     travou = db.execute(

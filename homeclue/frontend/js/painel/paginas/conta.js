@@ -1,5 +1,5 @@
 import { el } from '../../comum/util.js';
-import { api, avisar, baixar, botao, cabecalho, campo, ehDono, entrada, estado, sair } from '../nucleo.js';
+import { api, avisar, baixar, botao, cabecalho, campo, ehDono, entrada, estado, guardarToken, sair } from '../nucleo.js';
 import { recarregarSessao } from '../main.js';
 
 export async function render(pagina) {
@@ -27,7 +27,12 @@ export async function render(pagina) {
   senha.append(el('h2', '', 'Trocar senha'), campo('Senha atual', atual), campo('Nova senha (mínimo 8)', nova), trocar);
   senha.addEventListener('submit', async (e) => {
     e.preventDefault();
-    try { await api('/api/auth/trocar-senha', { method: 'POST', json: { senha_atual: atual.value, nova_senha: nova.value } }); senha.reset(); avisar('Senha alterada.'); }
+    try {
+      const r = await api('/api/auth/trocar-senha', { method: 'POST', json: { senha_atual: atual.value, nova_senha: nova.value } });
+      guardarToken(r.access_token);
+      senha.reset();
+      avisar('Senha alterada. Outros aparelhos conectados saíram da conta.');
+    }
     catch (err) { avisar(err.message, 'erro'); }
   });
 

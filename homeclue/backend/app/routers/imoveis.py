@@ -17,6 +17,7 @@ from app.schemas.imovel import (
     CAMPOS_EDITAVEIS_EM_IMOVEL_DO_FEED,
     DescricaoGerada,
     ImovelEntrada,
+    ImovelResumo,
     ImovelSaida,
     PedidoDescricao,
     PlantaEntrada,
@@ -77,7 +78,7 @@ def vocabulario() -> dict:
     return {"tipos": TIPOS, "caracteristicas": CARACTERISTICAS, "tipos_comodo": TIPOS_COMODO}
 
 
-@router.get("", response_model=list[ImovelSaida])
+@router.get("", response_model=list[ImovelResumo])
 def listar(imobiliaria: Imobiliaria = Depends(obter_imobiliaria_atual), db: Session = Depends(obter_db)):
     leads = dict(db.execute(
         select(Lead.imovel_id, func.count(Lead.id))
@@ -93,7 +94,18 @@ def listar(imobiliaria: Imobiliaria = Depends(obter_imobiliaria_atual), db: Sess
         select(Imovel).where(Imovel.imobiliaria_id == imobiliaria.id)
         .order_by(Imovel.removido_do_feed_em.is_not(None), Imovel.criado_em.desc())
     ).all()
-    return [_saida(i, leads, visitas) for i in imoveis]
+    return [
+        ImovelResumo(
+            id=i.id, origem=i.origem, titulo=i.titulo, tipo=i.tipo, finalidade=i.finalidade, preco=i.preco,
+            preco_aluguel=i.preco_aluguel, bairro=i.bairro, cidade=i.cidade, quartos=i.quartos, area_m2=i.area_m2,
+            codigo_referencia=i.codigo_referencia, corretor_id=i.corretor_id, ativo=i.ativo,
+            removido_do_feed_em=i.removido_do_feed_em, criado_em=i.criado_em,
+            foto=(i.fotos[0].get("url") if i.fotos else None),
+            tem_planta=bool((i.planta or {}).get("comodos")),
+            total_leads=leads.get(i.id, 0), visualizacoes=visitas.get(i.id, 0),
+        )
+        for i in imoveis
+    ]
 
 
 @router.get("/{imovel_id}", response_model=ImovelSaida)

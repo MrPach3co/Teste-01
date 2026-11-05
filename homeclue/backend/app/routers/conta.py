@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.core.dependencies import exigir_dono, obter_imobiliaria_atual
@@ -85,7 +85,7 @@ def listar_equipe(imobiliaria: Imobiliaria = Depends(obter_imobiliaria_atual)) -
 def adicionar_corretor(dados: NovoCorretor, dono: Usuario = Depends(exigir_dono),
                        db: Session = Depends(obter_db)) -> CorretorCriado:
     limites.garantir_vaga_usuario(db, dono.imobiliaria)
-    if db.scalar(select(Usuario).where(Usuario.email == dados.email)):
+    if db.scalar(select(Usuario).where(func.lower(Usuario.email) == dados.email)):
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Já existe um usuário com este e-mail.")
     senha = gerar_senha_temporaria()
     corretor = Usuario(

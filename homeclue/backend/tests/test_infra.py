@@ -161,3 +161,29 @@ def test_url_do_banco_usa_o_driver_instalado(url, esperada):
     from app.core.config import Settings
 
     assert Settings(database_url=url).database_url_normalizada == esperada
+
+
+def test_fila_atende_email_antes_das_tarefas_lentas(db, monkeypatch):
+    ordem = []
+    tarefas._carregar_executores()
+    for tipo in ("contexto_bairro", "teste_email"):  # restaurados no fim do teste
+        monkeypatch.setitem(tarefas._EXECUTORES, tipo, lambda db_, tarefa: ordem.append(tarefa.tipo))
+    for n in range(3):
+        db.add(Tarefa(tipo="contexto_bairro", referencia=str(n), executar_em=agora_utc() - timedelta(minutes=5)))
+    db.add(Tarefa(tipo="teste_email", executar_em=agora_utc()))  # chegou por último
+    db.commit()
+    tarefas.processar_uma(db)
+    assert ordem == ["teste_email"]
+
+
+def test_cabecalhos_de_seguranca(client):
+    painel = client.get("/app.html")
+    assert painel.headers["x-frame-options"] == "DENY" and "frame-ancestors 'none'" in painel.headers["content-security-policy"]
+    assert "script-src 'self'" in painel.headers["content-security-policy"]
+    widget = client.get("/embed.html?k=pk_demo")
+    assert "x-frame-options" not in widget.headers  # o widget roda dentro do site da imobiliária
+    assert "frame-ancestors" not in widget.headers["content-security-policy"]
+    api = client.get("/api/saude")
+    assert api.headers["x-content-type-options"] == "nosniff" and "content-security-policy" not in api.headers
+    grande = client.get("/js/painel/paginas/imoveis.js", headers={"Accept-Encoding": "gzip"})
+    assert grande.headers.get("content-encoding") == "gzip"

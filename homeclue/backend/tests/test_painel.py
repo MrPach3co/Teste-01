@@ -158,3 +158,63 @@ def test_lancamento_premium_grade_e_status(client):
                       files={"arquivo": ("u.csv", csv.encode(), "text/csv")}).json()
     u201 = next(u for u in emp["unidades"] if u["codigo"] == "201")
     assert u201["status"] == "reservada" and u201["preco"] == 410000 and u201["area_m2"] == 95.5
+
+
+def test_email_nao_diferencia_maiusculas(client):
+    cadastrar(client, "Ana.Souza@Imob.com.br")
+    login = client.post("/api/auth/login", json={"email": " ana.souza@imob.com.br", "senha": "senha-forte-123"})
+    assert login.status_code == 200
+    repetido = client.post("/api/auth/cadastro", json={
+        "nome_imobiliaria": "Outra", "nome": "Ana", "email": "ANA.SOUZA@imob.com.br", "senha": "senha-forte-123",
+        "aceitou_termos": True,
+    })
+    assert repetido.status_code == 409
+
+
+def _stripe_falso(monkeypatch, erro=None):
+    from types import SimpleNamespace
+
+    from app.services import cobranca
+
+    canceladas = []
+
+    def cancelar(assinatura_id):
+        if erro is not None:
+            raise erro
+        canceladas.append(assinatura_id)
+
+    cliente = SimpleNamespace(v1=SimpleNamespace(subscriptions=SimpleNamespace(cancel=cancelar)))
+    monkeypatch.setattr(cobranca, "_cliente", lambda: cliente)
+    return canceladas
+
+
+def _com_assinatura(db, assinatura_id="sub_123"):
+    from app.models import Usuario
+
+    dono = db.query(Usuario).filter(Usuario.email == "dono@imob.com").one()
+    dono.imobiliaria.stripe_subscription_id = assinatura_id
+    db.commit()
+
+
+def test_excluir_conta_cancela_a_assinatura(client, db, monkeypatch):
+    import stripe
+
+    headers = cadastrar(client)
+    _com_assinatura(db)
+    _stripe_falso(monkeypatch, stripe.APIConnectionError("sem rede"))
+    falhou = client.delete("/api/auth/minha-conta", headers=headers)
+    assert falhou.status_code == 502  # sem cancelar a cobrança, a conta não some
+    assert client.get("/api/auth/sessao", headers=headers).status_code == 200
+
+    canceladas = _stripe_falso(monkeypatch)
+    assert client.delete("/api/auth/minha-conta", headers=headers).status_code == 204
+    assert canceladas == ["sub_123"]
+
+
+def test_excluir_conta_com_assinatura_ja_cancelada(client, db, monkeypatch):
+    import stripe
+
+    headers = cadastrar(client)
+    _com_assinatura(db)
+    _stripe_falso(monkeypatch, stripe.InvalidRequestError("No such subscription: 'sub_123'", "id"))
+    assert client.delete("/api/auth/minha-conta", headers=headers).status_code == 204
