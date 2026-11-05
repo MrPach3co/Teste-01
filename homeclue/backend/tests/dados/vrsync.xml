@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListingDataFeed xmlns="http://www.vivareal.com/schemas/1.0/VRSync" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Header><Provider>Imobiliária Teste</Provider><Email>contato@teste.com.br</Email></Header>
+  <Listings>
+    <Listing>
+      <ListingID>AP-100</ListingID>
+      <Title><![CDATA[Apartamento 2 quartos no Centro]]></Title>
+      <TransactionType>For Sale</TransactionType>
+      <DetailViewUrl>https://www.imobteste.com.br/imovel/AP-100</DetailViewUrl>
+      <Media>
+        <Item medium="image" caption="Sala">https://fotos.imobteste.com.br/ap100-2.jpg</Item>
+        <Item medium="image" caption="Fachada" primary="true">https://fotos.imobteste.com.br/ap100-1.jpg</Item>
+        <Item medium="video">https://www.youtube.com/watch?v=abc123</Item>
+      </Media>
+      <Details>
+        <UsageType>Residential</UsageType>
+        <PropertyType>Residential / Apartment</PropertyType>
+        <Description><![CDATA[Apartamento claro, com sol da manhã. Prédio com elevador. Não aceita animais.]]></Description>
+        <ListPrice currency="BRL">420000</ListPrice>
+        <PropertyAdministrationFee currency="BRL">550</PropertyAdministrationFee>
+        <YearlyTax currency="BRL">1200</YearlyTax>
+        <LivingArea unit="square metres">68</LivingArea>
+        <Bedrooms>2</Bedrooms>
+        <Bathrooms>1</Bathrooms>
+        <Suites>0</Suites>
+        <Garage type="Parking Space">1</Garage>
+        <Features>
+          <Feature>Elevator</Feature>
+          <Feature>Gym</Feature>
+          <Feature>Fogão a lenha</Feature>
+        </Features>
+      </Details>
+      <Location displayAddress="Neighborhood">
+        <Country abbreviation="BR">Brasil</Country>
+        <State abbreviation="RJ">Rio de Janeiro</State>
+        <City>Nova Friburgo</City>
+        <Neighborhood>Centro</Neighborhood>
+        <Address>Rua Exemplo</Address>
+        <StreetNumber>10</StreetNumber>
+        <Latitude>-22.2819</Latitude>
+        <Longitude>-42.5311</Longitude>
+      </Location>
+    </Listing>
+    <Listing>
+      <ListingID>CA-200</ListingID>
+      <Title>Casa com piscina em Olaria</Title>
+      <TransactionType>Sale/Rent</TransactionType>
+      <Details>
+        <PropertyType>Residential / Home</PropertyType>
+        <Description>Casa com quintal e piscina.</Description>
+        <ListPrice currency="BRL">750.000,00</ListPrice>
+        <RentalPrice currency="BRL" period="Monthly">3500</RentalPrice>
+        <LivingArea unit="square metres">180</LivingArea>
+        <Bedrooms>3</Bedrooms>
+        <Features><Feature>Pool</Feature><Feature>Backyard</Feature><Feature>Fireplace</Feature></Features>
+      </Details>
+      <Location><City>Nova Friburgo</City><Neighborhood>Olaria</Neighborhood></Location>
+    </Listing>
+    <Listing>
+      <ListingID>SEM-PRECO</ListingID>
+      <Title>Consulte</Title>
+      <TransactionType>For Sale</TransactionType>
+      <Details><PropertyType>Residential / Home</PropertyType></Details>
+      <Location><City>Nova Friburgo</City><Neighborhood>Centro</Neighborhood></Location>
+    </Listing>
+  </Listings>
+</ListingDataFeed>

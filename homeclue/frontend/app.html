@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel — Homeclue</title>
+<link rel="icon" href="marca.svg" type="image/svg+xml">
+<link rel="icon" href="marca/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="marca/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div class="painel" id="painel" hidden>
+  <aside class="lateral">
+    <a href="/" class="logo"><img src="marca/logo.svg" alt="Homeclue" height="28"></a>
+    <div class="lateral-imob" id="nome-imob"></div>
+    <nav class="menu" aria-label="Seções do painel">
+      <a href="#inicio" data-secao="inicio">Visão geral</a>
+      <a href="#imoveis" data-secao="imoveis">Imóveis</a>
+      <a href="#integracao" data-secao="integracao">Integração XML</a>
+      <a href="#leads" data-secao="leads">Leads <span class="contador" id="contador-leads" hidden></span></a>
+      <a href="#demanda" data-secao="demanda">Demanda</a>
+      <a href="#lancamentos" data-secao="lancamentos">Lançamentos</a>
+      <a href="#bairros" data-secao="bairros">Bairros</a>
+      <a href="#widget" data-secao="widget">Widget no site</a>
+      <a href="#equipe" data-secao="equipe">Equipe</a>
+      <a href="#plano" data-secao="plano">Plano</a>
+      <a href="#conta" data-secao="conta">Minha conta</a>
+      <a href="admin.html" id="link-admin" hidden>Admin Homeclue</a>
+    </nav>
+    <div class="lateral-rodape">
+      <div id="nome-usuario"></div>
+      <button class="btn btn-ghost btn-sm" id="sair" type="button">Sair</button>
+    </div>
+  </aside>
+  <main class="conteudo">
+    <div class="aviso" id="aviso-global" role="status" hidden></div>
+    <div id="pagina"></div>
+  </main>
+</div>
+<dialog id="modal" class="modal"></dialog>
+<div class="dica" id="dica" role="tooltip" hidden></div>
+<script type="module" src="js/painel/main.js"></script>
+</body>
+</html>

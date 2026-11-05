@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Busca de imóveis</title>
+<link rel="icon" href="marca.svg" type="image/svg+xml">
+<link rel="icon" href="marca/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="marca/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="embed.css">
+</head>
+<body>
+<div class="busca" id="busca">
+  <header class="topo">
+    <img class="topo-logo" id="logo" alt="" hidden>
+    <div class="topo-texto">
+      <div class="topo-nome" id="nome-imobiliaria">Carregando…</div>
+      <div class="topo-sub">Busca inteligente de imóveis</div>
+    </div>
+    <div class="topo-acoes">
+      <button type="button" class="btn btn-sm" id="btn-lancamentos" hidden>Lançamentos</button>
+      <button type="button" class="btn btn-ghost btn-sm" id="btn-nova" aria-label="Nova busca" hidden><span class="rotulo-longo">Nova busca</span><span class="rotulo-curto" aria-hidden="true">↺</span></button>
+      <button type="button" class="btn btn-ghost btn-sm" id="fechar" aria-label="Fechar" hidden>✕</button>
+    </div>
+  </header>
+
+  <main class="conversa" id="conversa" aria-live="polite">
+    <div class="balao balao-ia">
+      Olá! Me conte com suas palavras o imóvel que você procura — bairro, quartos, orçamento, se quer comprar ou alugar,
+      e o que não pode faltar. Eu mostro os que mais combinam e explico o porquê de cada um.
+    </div>
+    <div class="chips" id="exemplos"></div>
+  </main>
+
+  <div class="barra-comparar" id="barra-comparar" hidden>
+    <span id="texto-comparar"></span>
+    <button type="button" class="btn btn-ghost btn-sm" id="limpar-comparar">Limpar</button>
+    <button type="button" class="btn btn-solid btn-sm" id="abrir-comparar">Comparar</button>
+  </div>
+
+  <form class="entrada" id="form-busca" autocomplete="off">
+    <button type="button" class="btn-icone" id="btn-foto" aria-label="Buscar por foto" title="Buscar por foto" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+    </button>
+    <input type="file" id="arquivo-foto" accept="image/*" hidden>
+    <input id="texto" type="text" maxlength="400" placeholder="Ex.: casa com quintal pra cachorro, até 700 mil" aria-label="Descreva o imóvel que você procura">
+    <button type="button" class="btn-icone" id="btn-voz" aria-label="Falar em vez de digitar" title="Falar" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <button type="submit" class="btn btn-solid" id="enviar">Buscar</button>
+  </form>
+  <div class="marca" id="marca" hidden>Busca inteligente por <a href="/" target="_blank" rel="noopener">Homeclue</a></div>
+</div>
+
+<!-- Camadas (detalhe, comparação, lançamentos, contato) -->
+<section class="camada" id="camada-detalhe" role="dialog" aria-modal="true" aria-label="Detalhes do imóvel" hidden></section>
+<section class="camada" id="camada-comparar" role="dialog" aria-modal="true" aria-label="Comparar imóveis" hidden></section>
+<section class="camada" id="camada-lancamentos" role="dialog" aria-modal="true" aria-label="Lançamentos" hidden></section>
+
+<div class="sobreposicao" id="modal-lead" hidden>
+  <form class="cartao modal" id="form-lead">
+    <h3>Quero saber mais</h3>
+    <p class="modal-sub" id="lead-sobre"></p>
+    <label class="campo"><span>Seu nome</span><input name="nome" required minlength="2" maxlength="200" autocomplete="name"></label>
+    <label class="campo"><span>WhatsApp / telefone</span><input name="telefone" type="tel" placeholder="(22) 99999-0000" maxlength="30" autocomplete="tel"></label>
+    <label class="campo"><span>E-mail</span><input name="email" type="email" maxlength="255" autocomplete="email"></label>
+    <label class="campo"><span>Mensagem (opcional)</span><textarea name="mensagem" maxlength="2000" rows="2"></textarea></label>
+    <label class="check"><input type="checkbox" name="aceitou_contato" required>
+      <span>Autorizo a imobiliária a entrar em contato comigo sobre este e outros imóveis. Posso pedir a exclusão dos meus dados quando quiser.</span></label>
+    <div class="aviso aviso-erro" id="lead-erro" hidden></div>
+    <div class="modal-acoes">
+      <button type="button" class="btn btn-ghost" id="lead-cancelar">Cancelar</button>
+      <button type="submit" class="btn btn-solid">Enviar contato</button>
+    </div>
+  </form>
+</div>
+
+<script type="module" src="js/widget/app.js"></script>
+</body>
+</html>

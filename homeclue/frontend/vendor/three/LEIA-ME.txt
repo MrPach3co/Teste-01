@@ -1,0 +1,9 @@
+three.js 0.160.0 (licença MIT, ver LICENSE), copiado de npm:three@0.160.0.
+- three.module.min.js: build/three.module.min.js, sem alterações.
+- Os demais arquivos vêm de examples/jsm (controls, postprocessing, shaders,
+  utils, environments), achatados nesta pasta, com o import 'three' trocado por
+  './three.module.min.js' e os caminhos relativos ajustados — funciona sem importmap:
+  OrbitControls, EffectComposer, RenderPass, ShaderPass, MaskPass, Pass,
+  UnrealBloomPass, OutputPass, CopyShader, LuminosityHighPassShader,
+  OutputShader, BufferGeometryUtils, RoomEnvironment, RoundedBoxGeometry.
+Fica dentro do projeto para o widget não depender de CDN de terceiros.

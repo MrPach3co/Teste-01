@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Política de Privacidade — Homeclue</title>
+<link rel="icon" href="marca.svg" type="image/svg+xml">
+<link rel="icon" href="marca/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="marca/apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="legal.css">
+</head>
+<body>
+<main class="legal">
+  <a href="/" class="logo"><img src="marca/logo.svg" alt="Homeclue" height="28"></a>
+  <div class="eyebrow">Legal</div>
+  <h1>Política de Privacidade</h1>
+  <div class="aviso aviso-info"><strong>Rascunho técnico.</strong> Este texto descreve com honestidade o que o software faz com os dados. Antes de vender para clientes, ele precisa ser revisado por um advogado especializado em LGPD e completado com razão social, CNPJ, endereço e canal do encarregado (DPO).</div>
+
+  <h2>1. Papéis: quem é controlador e quem é operador</h2>
+  <ul>
+    <li><strong>Usuários do painel</strong> (donos e corretores das imobiliárias): a Homeclue é a <strong>controladora</strong> desses dados.</li>
+    <li><strong>Visitantes dos sites das imobiliárias</strong> que usam a busca e deixam contato (leads): a <strong>imobiliária é a controladora</strong> e a Homeclue é a <strong>operadora</strong>, tratando os dados só para prestar o serviço contratado por ela.</li>
+  </ul>
+
+  <h2>2. Quais dados tratamos</h2>
+  <div class="tabela-rolagem"><table>
+    <tr><th>Dado</th><th>De quem</th><th>Por quê</th></tr>
+    <tr><td>Nome, e-mail, WhatsApp, senha (só o hash bcrypt)</td><td>Usuários do painel</td><td>Criar e autenticar a conta; encaminhar leads ao corretor</td></tr>
+    <tr><td>Data e texto do aceite</td><td>Usuários e leads do formulário</td><td>Provar o consentimento e com qual texto exato</td></tr>
+    <tr><td>Nome, telefone e/ou e-mail, mensagem</td><td>Leads do formulário</td><td>Permitir que a imobiliária retorne o contato pedido</td></tr>
+    <tr><td>Clique no WhatsApp: imóvel, resumo da busca e um código</td><td>Visitantes</td><td>Registrar o lead sem nenhum dado pessoal; a conversa acontece no WhatsApp, fora da Homeclue</td></tr>
+    <tr><td>Texto digitado na busca e um identificador aleatório da sessão</td><td>Visitantes</td><td>Mostrar resultados, manter a conversa, métricas e relatório de demanda da imobiliária</td></tr>
+    <tr><td>Foto enviada na busca por foto</td><td>Visitantes</td><td>Usada apenas naquela busca e não é guardada</td></tr>
+    <tr><td>Dados de cobrança</td><td>Imobiliárias pagantes</td><td>Processados pelo Stripe; não guardamos número de cartão</td></tr>
+  </table></div>
+  <p>Não usamos cookies de rastreamento nem analytics de terceiros. O painel guarda o token de sessão no armazenamento local do navegador; o widget guarda um identificador de sessão que expira ao fechar a aba.</p>
+
+  <h2>3. Base legal (LGPD, art. 7º)</h2>
+  <p>Execução de contrato para os usuários do painel; consentimento explícito para os leads do formulário (o envio é bloqueado sem a caixa marcada, no navegador e no servidor). O clique no WhatsApp não coleta dado pessoal.</p>
+
+  <h2>4. Terceiros que recebem dados</h2>
+  <ul>
+    <li><strong>Anthropic (API Claude)</strong> — quando a IA está ativa: o texto da busca, a foto da busca por foto, os dados e as fotos dos anúncios (para conferir o match e escrever descrições). Nome, telefone e e-mail de leads nunca são enviados.</li>
+    <li><strong>OpenStreetMap (Nominatim e Overpass)</strong> — bairro, cidade e coordenadas dos imóveis, para calcular o que há por perto. Nenhum dado de pessoa.</li>
+    <li><strong>Reconhecimento de voz</strong> — a busca por voz usa o recurso do próprio navegador do visitante (no Chrome, por exemplo, o áudio é processado pelo Google). A Homeclue recebe só o texto.</li>
+    <li><strong>Stripe</strong> — pagamentos de assinatura. <strong>Provedor de hospedagem</strong> — servidor e banco de dados.</li>
+  </ul>
+
+  <h2>5. Direitos do titular</h2>
+  <ul>
+    <li><strong>Usuários do painel</strong> baixam seus dados e excluem a conta em “Minha conta”.</li>
+    <li><strong>Leads</strong> pedem acesso ou exclusão à imobiliária com quem falaram; ela exclui o lead no painel com um clique.</li>
+  </ul>
+
+  <h2>6. Retenção e segurança</h2>
+  <p>Dados ficam armazenados enquanto a conta da imobiliária existir; excluir a conta do dono apaga todos os dados da imobiliária. Fotos enviadas são reprocessadas e têm os metadados (inclusive localização GPS) removidos. Os dados de cada imobiliária são isolados das demais.</p>
+</main>
+</body>
+</html>

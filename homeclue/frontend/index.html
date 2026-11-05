@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homeclue — Busca com IA para o site da sua imobiliária</title>
+<meta name="description" content="O comprador descreve o imóvel do jeito dele e a IA mostra os imóveis da sua carteira com a taxa de compatibilidade e o porquê de cada ponto. Leads prontos no WhatsApp do corretor.">
+<link rel="icon" href="marca.svg" type="image/svg+xml">
+<link rel="icon" href="marca/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="marca/apple-touch-icon.png">
+<meta property="og:title" content="Homeclue — busca com IA no site da imobiliária">
+<meta property="og:description" content="Cada imóvel com o porquê, ponto a ponto. Leads direto no WhatsApp do corretor.">
+<meta property="og:image" content="marca/og-image.png">
+<meta name="theme-color" content="#0E1B3D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="landing.css">
+</head>
+<body>
+
+<nav class="topo">
+  <a href="/" class="logo"><img src="marca/logo.svg" alt="Homeclue" height="28"></a>
+  <div class="topo-links">
+    <a href="#como-funciona">Como funciona</a>
+    <a href="#diferencial">Match explicado</a>
+    <a href="#recursos">Recursos</a>
+    <a href="#precos">Planos</a>
+  </div>
+  <div class="topo-acoes">
+    <a href="entrar.html" class="btn btn-ghost">Entrar</a>
+    <a href="entrar.html#cadastro" class="btn btn-solid">Começar grátis</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-texto">
+    <div class="eyebrow">Para imobiliárias · começando por Nova Friburgo e região</div>
+    <h1>A busca do seu site, agora <em>entende</em> o que o cliente quer.</h1>
+    <p>O comprador escreve — ou fala — “casa com quintal pra cachorro, sala com luz da manhã, perto de escola”. A Homeclue mostra os imóveis <strong>da sua carteira</strong> com a taxa de compatibilidade e o porquê de cada ponto. Quem gostou chama o corretor no WhatsApp, já com o resumo do que procura.</p>
+    <div class="hero-ctas">
+      <a href="entrar.html#cadastro" class="btn btn-solid">Criar conta grátis</a>
+      <a href="#demo" class="btn">Testar a demonstração</a>
+    </div>
+    <ul class="hero-provas">
+      <li>Lê o mesmo feed XML que vai para os portais</li>
+      <li>Uma linha de código no site</li>
+      <li>A marca continua sendo a sua</li>
+    </ul>
+  </div>
+  <div class="hero-demo" id="demo">
+    <div class="demo-rotulo">Demonstração ao vivo · imóveis fictícios em bairros reais da Serra e dos Lagos</div>
+    <div id="demo-widget"></div>
+  </div>
+</header>
+
+<section class="nao-e">
+  <p><strong>A Homeclue não é imobiliária, não é portal e não fica com a transação.</strong> Ela vende para a imobiliária uma busca melhor, que gera clientes mais qualificados e vende mais rápido.</p>
+</section>
+
+<section class="secao" id="problema">
+  <div class="secao-cab">
+    <div class="eyebrow">O problema</div>
+    <h2>O filtro tradicional não entende o que a pessoa quer.</h2>
+  </div>
+  <div class="duas">
+    <div class="cartao bloco-problema">
+      <h3>Para quem compra</h3>
+      <ul>
+        <li>Abre dezenas de sites e compara tudo na mão, com medo de perder um bom imóvel.</li>
+        <li>O filtro só aceita preço, bairro e quartos. “Quintal pra cachorro”, “sala com luz da manhã” ou “perto de escola” não cabem nele.</li>
+        <li>Recebe uma lista sem explicação e não sabe por que um imóvel serve mais que outro.</li>
+      </ul>
+    </div>
+    <div class="cartao bloco-problema">
+      <h3>Para a imobiliária</h3>
+      <ul>
+        <li>O site recebe visitas, mas pouca gente vira contato: a pessoa não acha o que quer e sai.</li>
+        <li>O corretor perde tempo com visitas que o cliente descarta em minutos.</li>
+        <li>Ninguém sabe o que os clientes procuram e não encontram no estoque.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="secao secao-alt" id="como-funciona">
+  <div class="secao-cab">
+    <div class="eyebrow">Como funciona</div>
+    <h2>A imobiliária instala uma vez. Cada busca pode virar um lead.</h2>
+  </div>
+  <div class="fluxo" aria-label="Fluxo da Homeclue">
+    <div class="fluxo-linha">
+      <span class="fluxo-rotulo">Imobiliária</span>
+      <div class="fluxo-passo">Instala o widget no site</div><i aria-hidden="true">→</i>
+      <div class="fluxo-passo">Homeclue lê o feed XML <small>estoque sempre atualizado</small></div><i aria-hidden="true" class="fluxo-espaco"></i>
+      <div class="fluxo-passo">Recebe o lead e vê o painel <small>lead com o resumo da busca</small></div>
+    </div>
+    <div class="fluxo-linha">
+      <span class="fluxo-rotulo">Comprador, a cada busca</span>
+      <div class="fluxo-passo">Descreve o imóvel do jeito dele</div><i aria-hidden="true">→</i>
+      <div class="fluxo-passo">IA cruza o pedido com o estoque</div><i aria-hidden="true">→</i>
+      <div class="fluxo-passo destaque">Vê imóveis com match explicado</div><i aria-hidden="true">→</i>
+      <div class="fluxo-passo">Chama o corretor no WhatsApp</div>
+    </div>
+  </div>
+</section>
+
+<section class="secao" id="diferencial">
+  <div class="secao-cab">
+    <div class="eyebrow">O diferencial</div>
+    <h2>Match explicado — e uma trava contra invenção.</h2>
+    <p class="secao-sub">Cada ponto do pedido mostra a prova: o dado do anúncio, o trecho exato da descrição, o cômodo da planta ou o que há por perto no mapa. O que o anúncio não diz aparece como “não informado”. A IA nunca afirma uma característica que o anúncio não tem — e isso é conferido por código, não por confiança.</p>
+  </div>
+  <div class="exemplo-match cartao">
+    <div class="exemplo-cab"><strong>Casa térrea com quintal e lareira em Olaria</strong><span class="selo-match">92% compatível</span></div>
+    <ul class="exemplo-pontos">
+      <li class="ok"><b>✓ Quintal pra cachorro</b><span>“…com quintal gramado e cercado, ótimo para quem tem cachorro.”</span></li>
+      <li class="ok"><b>✓ Sala com luz da manhã</b><span>“Sala de estar com lareira e janelas voltadas para o nascente, com sol da manhã.”</span></li>
+      <li class="ok"><b>✓ Até R$ 700 mil</b><span>R$ 690.000 (dado do anúncio)</span></li>
+      <li class="ok"><b>✓ Perto de escola</b><span>Escola a 350 m (OpenStreetMap)</span></li>
+      <li class="nao-info"><b>? Aquecimento</b><span>O anúncio não informa — vale perguntar ao corretor.</span></li>
+    </ul>
+    <p class="exemplo-nota">Exemplo ilustrativo. Teste a demonstração acima para ver com dados de verdade.</p>
+  </div>
+</section>
+
+<section class="secao secao-alt" id="recursos">
+  <div class="secao-cab">
+    <div class="eyebrow">O que a Homeclue tem</div>
+    <h2>O núcleo vem antes de qualquer premium.</h2>
+  </div>
+  <div class="fases">
+    <div class="fase">
+      <h3>Núcleo</h3>
+      <ul>
+        <li><b>Busca conversacional</b> por texto, voz ou foto, que entende pedidos refinados na conversa</li>
+        <li><b>Match explicado</b> ponto a ponto, com a prova de cada item</li>
+        <li><b>Trava contra invenção</b> conferida por código</li>
+        <li><b>Integração por feed XML</b> (ZAP, VivaReal, OLX e formatos dos sistemas imobiliários)</li>
+        <li><b>Lead no WhatsApp</b> do corretor com o resumo da busca e um código para acompanhar</li>
+        <li><b>Widget</b> com o logo e as cores da imobiliária, feito para celular</li>
+      </ul>
+    </div>
+    <div class="fase">
+      <h3>Para vender mais e provar valor</h3>
+      <ul>
+        <li><b>Painel</b> com buscas, leads, imóveis mais vistos e negócios fechados</li>
+        <li><b>Relatório de demanda:</b> o que procuram e não encontram no seu estoque</li>
+        <li><b>Qualidade dos anúncios:</b> quais precisam de mais fotos ou informação</li>
+        <li><b>Comparador</b> de até 3 imóveis e <b>rankings</b> (custo-benefício, família, investimento, valorização)</li>
+        <li><b>Contexto do bairro:</b> escolas, saúde, comércio, transporte, natureza e segurança por perto</li>
+      </ul>
+    </div>
+    <div class="fase premium">
+      <h3>Premium</h3>
+      <ul>
+        <li><b>Planta interativa</b> que destaca os cômodos que bateram com o pedido — <a href="embed.html?k=pk_demo&q=Casa%20com%20quintal%20pra%20cachorro%20e%20sala%20com%20luz%20da%20manh%C3%A3%20em%20Olaria" target="_blank" rel="noopener">ver</a></li>
+        <li><b>Maquete 3D</b> gerada a partir da planta, com as fotos de cada cômodo</li>
+        <li><b>Espelho 3D de lançamentos</b> com unidades por status — <a href="embed.html?k=pk_demo&abrir=lancamentos" target="_blank" rel="noopener">ver</a></li>
+        <li><b>Busca por foto</b> e análise das fotos dos anúncios</li>
+        <li><b>Vídeo e drone</b> na página do imóvel</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="secao" id="precos">
+  <div class="secao-cab">
+    <div class="eyebrow">Planos</div>
+    <h2>Assinatura mensal por imobiliária. O comprador usa de graça.</h2>
+  </div>
+  <div class="precos" id="precos-lista"></div>
+  <p class="precos-nota">Valores mensais em reais. Cancele quando quiser — seus dados continuam no plano de teste.</p>
+</section>
+
+<section class="secao secao-alt" id="faq">
+  <div class="secao-cab">
+    <div class="eyebrow">Perguntas frequentes</div>
+    <h2>Dúvidas comuns</h2>
+  </div>
+  <div class="faq">
+    <details><summary>Preciso cadastrar meus imóveis de novo?</summary><p>Não. A Homeclue lê o mesmo feed XML que o seu sistema já manda para ZAP, VivaReal e OLX, e sincroniza sozinha a cada 6 horas. Imóvel que sai do feed sai da busca. Se preferir, dá para cadastrar no painel ou importar uma planilha.</p></details>
+    <details><summary>A IA pode inventar alguma coisa sobre o imóvel?</summary><p>Não deveria — e nós não confiamos nisso: toda afirmação precisa de uma prova do próprio anúncio (o dado, o trecho exato, o cômodo da planta). A IA cita o trecho e o código confere se ele existe de verdade; se não existir, o ponto vira “não informado”. Antes de cada demonstração, rodamos uma bateria de buscas que confere isso afirmação por afirmação.</p></details>
+    <details><summary>Como o lead chega ao corretor?</summary><p>O cliente toca em “WhatsApp” e a conversa abre com a mensagem pronta: o imóvel, o que ele procura e um código. O mesmo lead aparece no painel; com o código, o corretor acompanha até o fechamento. Também há formulário para quem prefere deixar o contato.</p></details>
+    <details><summary>Funciona no meu site?</summary><p>Sim: WordPress, Wix, site próprio ou o site que o seu sistema imobiliário gera. É uma linha de código. Sem site, dá para usar o link direto na bio do Instagram ou no Google.</p></details>
+    <details><summary>E a LGPD?</summary><p>A imobiliária é a controladora dos dados dos seus clientes e a Homeclue é a operadora. O formulário pede consentimento e guarda o texto aceito; o clique no WhatsApp não coleta dado pessoal nenhum. Leads podem ser excluídos a pedido do titular.</p></details>
+  </div>
+</section>
+
+<section class="cta-final">
+  <h2>Transforme o site da sua imobiliária numa máquina de clientes qualificados.</h2>
+  <a href="entrar.html#cadastro" class="btn btn-solid">Criar conta grátis</a>
+</section>
+
+<footer class="rodape">
+  <a href="/" class="logo"><img src="marca/logo.svg" alt="Homeclue" height="24"></a>
+  <div>
+    <a href="privacidade.html">Privacidade</a>
+    <a href="termos.html">Termos de uso</a>
+    <a href="entrar.html">Entrar</a>
+  </div>
+</footer>
+
+<script src="widget.js" data-chave="pk_demo" data-modo="inline" data-alvo="#demo-widget" data-altura="640px"></script>
+<script src="landing.js"></script>
+</body>
+</html>

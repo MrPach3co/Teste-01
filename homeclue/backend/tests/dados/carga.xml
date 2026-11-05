@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Carga xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Imoveis>
+    <Imovel>
+      <CodigoImovel>777</CodigoImovel>
+      <TipoImovel>Sítio</TipoImovel>
+      <Cidade>Nova Friburgo</Cidade>
+      <Bairro>Lumiar</Bairro>
+      <PrecoVenda>850000</PrecoVenda>
+      <AreaUtil>150</AreaUtil>
+      <AreaTotal>20000</AreaTotal>
+      <QtdDormitorios>3</QtdDormitorios>
+      <Observacao>Sítio com nascente e lareira.</Observacao>
+      <Lareira>1</Lareira>
+      <Piscina>0</Piscina>
+      <Fotos>
+        <Foto><URLArquivo>https://fotos.exemplo.com/777-1.jpg</URLArquivo><Principal>1</Principal></Foto>
+      </Fotos>
+    </Imovel>
+    <Imovel>
+      <CodigoImovel>778</CodigoImovel>
+      <TipoImovel>Apartamento</TipoImovel>
+      <Cidade>Nova Friburgo</Cidade>
+      <Bairro>Braunes</Bairro>
+      <PrecoLocacao>1800</PrecoLocacao>
+      <QtdDormitorios>2</QtdDormitorios>
+    </Imovel>
+  </Imoveis>
+</Carga>

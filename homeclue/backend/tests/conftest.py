@@ -1,0 +1,95 @@
+import os
+
+os.environ.setdefault("DATABASE_URL", "sqlite:///./teste.db")
+os.environ.setdefault("JWT_SECRET_KEY", "chave-de-teste-nao-usar-em-producao")
+os.environ["ANTHROPIC_API_KEY"] = ""  # testes nunca chamam a IA de verdade
+os.environ["STRIPE_SECRET_KEY"] = ""
+os.environ["TAREFAS_EM_SEGUNDO_PLANO"] = "0"
+os.environ["ADMIN_EMAILS"] = "dono@homeclue.com.br"
+
+import pytest
+from fastapi.testclient import TestClient
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
+
+from app.core.limiter import limiter
+from app.db.base import Base
+from app.db.session import obter_db
+from app.main import app
+from app.services.seed import semear
+
+# Padrão: SQLite em memória (StaticPool mantém uma única conexão viva).
+# Para rodar contra o Postgres de produção: TESTE_DATABASE_URL=postgresql+psycopg2://...
+_url_teste = os.environ.get("TESTE_DATABASE_URL")
+_engine_teste = (
+    create_engine(_url_teste) if _url_teste
+    else create_engine("sqlite:///:memory:", connect_args={"check_same_thread": False}, poolclass=StaticPool)
+)
+SessionTeste = sessionmaker(autocommit=False, autoflush=False, bind=_engine_teste)
+
+
+def _obter_db_teste():
+    db = SessionTeste()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+app.dependency_overrides[obter_db] = _obter_db_teste
+limiter.enabled = False
+
+
+@pytest.fixture(autouse=True)
+def banco_limpo():
+    Base.metadata.create_all(bind=_engine_teste)
+    with SessionTeste() as db:
+        semear(db)
+    yield
+    Base.metadata.drop_all(bind=_engine_teste)
+
+
+@pytest.fixture
+def db():
+    with SessionTeste() as sessao:
+        yield sessao
+
+
+@pytest.fixture
+def client():
+    return TestClient(app)
+
+
+def cadastrar(client, email="dono@imob.com", nome_imobiliaria="Imob Teste") -> dict:
+    resposta = client.post("/api/auth/cadastro", json={
+        "nome_imobiliaria": nome_imobiliaria, "nome": "Fulano", "email": email, "senha": "senha-forte-123",
+        "aceitou_termos": True,
+    })
+    assert resposta.status_code == 201, resposta.text
+    return {"Authorization": f"Bearer {resposta.json()['access_token']}"}
+
+
+def mudar_plano(email: str, plano: str) -> None:
+    from app.models import Usuario
+
+    with SessionTeste() as db:
+        usuario = db.query(Usuario).filter(Usuario.email == email).one()
+        usuario.imobiliaria.plano = plano
+        db.commit()
+
+
+IMOVEL_EXEMPLO = {
+    "titulo": "Apartamento com piscina",
+    "tipo": "apartamento",
+    "finalidade": "venda",
+    "bairro": "Centro",
+    "cidade": "Nova Friburgo",
+    "preco": 400000,
+    "quartos": 3,
+    "banheiros": 2,
+    "vagas": 1,
+    "area_m2": 90,
+    "descricao": "Apartamento claro, com sol da manhã na sala. Não aceita animais.",
+    "caracteristicas": ["piscina", "academia", "nao-existe"],
+}

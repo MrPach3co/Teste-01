@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Homeclue</title>
+<link rel="icon" href="marca.svg" type="image/svg+xml">
+<link rel="icon" href="marca/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="marca/apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="app.css">
+<style>
+  body{ padding: 24px clamp(14px, 3vw, 36px); }
+  main{ max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+  .topo-admin{ display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .topo-admin label{ display: flex; gap: 8px; align-items: center; font-size: 14px; }
+  .topo-admin input{ width: 90px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="topo-admin">
+    <a href="app.html" class="logo"><img src="marca/logo.svg" alt="Homeclue" height="26"><span class="logo-sufixo">Admin</span></a>
+    <label>Cotação do dólar <input id="cotacao" type="number" step="0.01" min="1" value="5.60"></label>
+  </div>
+  <div class="aviso" id="aviso" hidden></div>
+  <section class="kpis" id="totais"></section>
+  <section class="cartao bloco">
+    <h2>Custo de IA por busca (mês atual, medido de verdade)</h2>
+    <p class="ajuda">É o número que decide o preço da assinatura: custo por busca × buscas do plano tem que caber com folga na mensalidade. Mude o modelo com ANTHROPIC_MODELO e compare aqui.</p>
+    <div class="rolagem-x"><table class="tabela" id="modelos"></table></div>
+  </section>
+  <section class="cartao bloco">
+    <h2>Clientes</h2>
+    <div class="rolagem-x"><table class="tabela" id="clientes"></table></div>
+  </section>
+</main>
+<script type="module" src="js/admin.js"></script>
+</body>
+</html>

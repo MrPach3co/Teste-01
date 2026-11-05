@@ -1,0 +1,59 @@
+# Roda os testes da Homeclue a cada push e pull request que mexe em homeclue/.
+name: Homeclue — testes
+
+on:
+  push:
+    paths: ["homeclue/**", ".github/workflows/homeclue.yml"]
+  pull_request:
+    paths: ["homeclue/**", ".github/workflows/homeclue.yml"]
+
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: homeclue_teste
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    defaults:
+      run:
+        working-directory: homeclue/backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: homeclue/backend/requirements.txt
+      - run: pip install -r requirements.txt
+
+      - name: Testes (SQLite)
+        run: python -m pytest -q
+
+      - name: Testes (Postgres, o banco de produção)
+        run: python -m pytest -q
+        env:
+          TESTE_DATABASE_URL: postgresql+psycopg2://postgres:postgres@localhost:5432/homeclue_teste
+
+      - name: Migrações no Postgres (e conferência de que batem com os modelos)
+        run: alembic upgrade head && alembic check
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/homeclue_teste
+
+      - name: Trava contra invenção — 30 buscas na demonstração
+        run: python -m app.avaliacao --saida avaliacao.html
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/homeclue_teste
+
+      - name: Relatório da avaliação
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: avaliacao-30-buscas
+          path: homeclue/backend/avaliacao.html
+          if-no-files-found: ignore
