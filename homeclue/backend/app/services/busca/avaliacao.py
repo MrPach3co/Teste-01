@@ -142,6 +142,15 @@ def _ponto_caracteristica(slug: str, imovel: ImovelBusca, textos) -> Ponto:
     if achado:
         return Ponto(chave, rotulo, "atende", f"“{achado.trecho}”", achado.fonte, peso)
 
+    if slug == "perto-da-praia":
+        # Sem menção no anúncio, a distância até a praia no mapa (OpenStreetMap) também prova.
+        praias = (((imovel.contexto or {}).get("categorias") or {}).get("praia") or {}).get("mais_proximos") or []
+        if praias:
+            distancia = praias[0]["distancia_m"]
+            status = "atende" if distancia <= 1000 else "parcial" if distancia <= 1600 else "nao_atende"
+            return Ponto(chave, rotulo, status, f"{praias[0]['nome']} a {_fmt_distancia(distancia)} (OpenStreetMap)",
+                         "contexto", peso)
+
     tipos_comodo = COMODOS_DA_CARACTERISTICA.get(slug, set())
     for comodo in imovel.comodos:
         if comodo.get("tipo") in tipos_comodo:

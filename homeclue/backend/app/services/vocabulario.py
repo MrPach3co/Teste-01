@@ -41,6 +41,7 @@ CARACTERISTICAS: dict[str, str] = {
     "ar-condicionado": "Ar-condicionado",
     "vista-montanha": "Vista para a serra",
     "vista-mar": "Vista para o mar",
+    "perto-da-praia": "Perto da praia",
     "jardim": "Jardim / quintal",
     "pet-friendly": "Aceita pets",
     "suite": "Suíte",
@@ -75,7 +76,10 @@ SINONIMOS_CARACTERISTICA: dict[str, str] = {
     "vista para a serra": "vista-montanha", "vista da serra": "vista-montanha", "vista para as montanhas": "vista-montanha",
     "vista para a montanha": "vista-montanha", "vista montanha": "vista-montanha", "vista serra": "vista-montanha",
     "vista para o verde": "vista-montanha", "vista panoramica": "vista-montanha",
-    "vista para o mar": "vista-mar", "vista mar": "vista-mar",
+    "vista para o mar": "vista-mar", "vista mar": "vista-mar", "vista pro mar": "vista-mar",
+    "praia": "perto-da-praia", "perto do mar": "perto-da-praia", "beira mar": "perto-da-praia",
+    "beira-mar": "perto-da-praia", "pe na areia": "perto-da-praia", "orla": "perto-da-praia",
+    "frente para o mar": "perto-da-praia", "frente ao mar": "perto-da-praia",
     "jardim": "jardim", "quintal": "jardim", "area externa": "jardim", "gramado": "jardim",
     "pet": "pet-friendly", "pets": "pet-friendly", "cachorro": "pet-friendly", "cachorros": "pet-friendly",
     "cao": "pet-friendly", "gato": "pet-friendly", "gatos": "pet-friendly", "animais": "pet-friendly",
@@ -111,7 +115,8 @@ TERMOS_EVIDENCIA: dict[str, list[str]] = {
     "ar-condicionado": ["ar condicionado", "ar-condicionado", "split"],
     "vista-montanha": ["vista para a serra", "vista da serra", "vista para as montanhas", "vista para a montanha",
                        "vista panoramica", "vista para o verde", "vista para a mata"],
-    "vista-mar": ["vista para o mar", "vista mar", "frente para o mar"],
+    "vista-mar": ["vista para o mar", "vista mar", "vista pro mar"],
+    "perto-da-praia": ["praia", "beira-mar", "beira mar", "orla", "pe na areia", "frente para o mar", "frente ao mar"],
     "jardim": ["jardim", "quintal", "gramado", "area externa"],
     "pet-friendly": ["aceita pet", "aceita pets", "aceita animais", "aceita animal", "permite animais",
                      "pet friendly", "aceitam animais", "aceitam pets"],
@@ -146,6 +151,8 @@ ITENS_FEED: dict[str, str] = {
     "air conditioning": "ar-condicionado", "ar condicionado": "ar-condicionado",
     "mountain view": "vista-montanha", "vista para montanha": "vista-montanha", "vista montanha": "vista-montanha",
     "ocean view": "vista-mar", "sea view": "vista-mar", "vista mar": "vista-mar",
+    "beach": "perto-da-praia", "close to the beach": "perto-da-praia", "beachfront": "perto-da-praia",
+    "frente para o mar": "perto-da-praia", "perto da praia": "perto-da-praia", "beira mar": "perto-da-praia",
     "garden": "jardim", "garden area": "jardim", "backyard": "jardim", "lawn": "jardim", "jardim": "jardim",
     "quintal": "jardim",
     "pets allowed": "pet-friendly", "pet friendly": "pet-friendly", "aceita animais": "pet-friendly",
@@ -190,11 +197,13 @@ CATEGORIAS_CONTEXTO: dict[str, tuple[str, int]] = {
     "transporte": ("Transporte", 500),
     "natureza": ("Natureza", 1500),
     "seguranca": ("Segurança", 1500),
+    "praia": ("Praia", 1000),
 }
 
 NOMES_PERTO_DE: dict[str, str] = {
     "escola": "escola", "saude": "hospital ou posto de saúde", "comercio": "comércio",
     "transporte": "ponto de ônibus", "natureza": "natureza", "seguranca": "polícia ou bombeiros",
+    "praia": "praia",
 }
 
 # Frases do comprador que pedem proximidade.
@@ -253,12 +262,15 @@ def caracteristicas_validas(slugs: list[str]) -> list[str]:
     return vistos
 
 
+_PRIORIDADE_TIPO = ["cobertura", "studio", "rural", "terreno", "comercial", "casa", "apartamento"]
+
+
 def tipo_do_texto(texto: str) -> str | None:
+    """Tipo de um anúncio a partir do texto do sistema. O mais específico
+    vence: "Apartamento Duplex/Cobertura" é cobertura, "Casa comercial" é comercial."""
     t = f" {normalizar(texto)} "
-    for chave in sorted(SINONIMOS_TIPO, key=len, reverse=True):
-        if re.search(rf"\b{re.escape(chave)}\b", t):
-            return SINONIMOS_TIPO[chave]
-    return None
+    achados = {tipo for chave, tipo in SINONIMOS_TIPO.items() if re.search(rf"\b{re.escape(chave)}\b", t)}
+    return next((tipo for tipo in _PRIORIDADE_TIPO if tipo in achados), None)
 
 
 def caracteristica_de_item_feed(item: str) -> str | None:

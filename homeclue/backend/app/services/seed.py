@@ -1,7 +1,8 @@
 """Imobiliária de demonstração (usada na landing page e nos testes).
 
 Imóveis FICTÍCIOS em bairros reais de Nova Friburgo, Teresópolis e
-Cachoeiras de Macacu — a região onde a Homeclue começa. O entorno (escolas,
+Cachoeiras de Macacu (onde a Homeclue começa) e de Rio das Ostras (Região dos
+Lagos, onde a Correta também atua). O entorno (escolas,
 comércio etc.) vem de dados reais do OpenStreetMap, guardados em
 services/dados/osm_demo.json quando disponíveis.
 
@@ -27,7 +28,7 @@ from app.services import contexto
 logger = logging.getLogger(__name__)
 
 CHAVE_DEMO = "pk_demo"
-NOME_DEMO = "Imobiliária Demonstração · Serra Fluminense"
+NOME_DEMO = "Imobiliária Demonstração · Serra e Lagos"
 _ARQUIVO_OSM = Path(__file__).parent / "dados" / "osm_demo.json"
 
 # (código, bairro, cidade, dados)
@@ -123,6 +124,24 @@ _IMOVEIS = [
         caracteristicas=["jardim", "churrasqueira", "aceita-financiamento", "suite"],
         descricao="Casa para venda ou aluguel em Braunes, com churrasqueira e quintal. Bem iluminada, com sol da "
                   "tarde na varanda.")),
+    ("DEMO-17", "Costazul", "Rio das Ostras", dict(
+        titulo="Casa a 300 metros da praia em Costazul", tipo="casa", finalidade="venda", preco=720_000,
+        quartos=3, suites=1, banheiros=2, vagas=2, area_m2=140, area_terreno=300,
+        caracteristicas=["churrasqueira", "jardim", "suite", "aceita-financiamento"],
+        descricao="Casa em Costazul a 300 metros da praia, com quintal e churrasqueira. Três quartos, sendo uma "
+                  "suíte. Rua tranquila, perto do comércio do bairro.")),
+    ("DEMO-18", "Centro", "Rio das Ostras", dict(
+        titulo="Apartamento com vista para o mar no Centro de Rio das Ostras", tipo="apartamento",
+        finalidade="aluguel", preco=2_200, condominio=480, quartos=2, suites=0, banheiros=1, vagas=1, area_m2=70,
+        caracteristicas=["vista-mar", "elevador", "area-de-servico"],
+        descricao="Apartamento com vista para o mar no Centro de Rio das Ostras, a uma quadra da orla. Prédio com "
+                  "elevador. Aceita pets de pequeno porte.")),
+    ("DEMO-19", "Enseada das Gaivotas", "Rio das Ostras", dict(
+        titulo="Cobertura de frente para o mar na Enseada das Gaivotas", tipo="cobertura", finalidade="venda",
+        preco=1_350_000, condominio=1_100, quartos=3, suites=2, banheiros=3, vagas=2, area_m2=190,
+        caracteristicas=["vista-mar", "piscina", "varanda-gourmet", "elevador", "suite"],
+        descricao="Cobertura de frente para o mar na Enseada das Gaivotas, com varanda gourmet e piscina privativa. "
+                  "Três quartos, dois deles suítes.")),
 ]
 
 # Planta da casa de vitrine (DEMO-01). As coordenadas batem com o desenho em frontend/demo/planta-demo.svg.

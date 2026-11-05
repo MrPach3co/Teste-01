@@ -78,3 +78,10 @@ def test_frase_livre_com_palavras_na_mesma_frase():
     textos = [("descricao", "No quintal há um pé de jabuticaba carregado.")]
     achado = evidencia.procurar_frase_livre("pé de jabuticaba no quintal", textos)
     assert achado and achado.status == "atende"
+
+
+def test_praia_pela_distancia_no_mapa():
+    perto = _imovel(contexto={"categorias": {"praia": {"mais_proximos": [{"nome": "Praia do Centro", "distancia_m": 350}]}}})
+    longe = _imovel(contexto={"categorias": {"praia": {"mais_proximos": [{"nome": "Praia X", "distancia_m": 4200}]}}})
+    assert avaliar(perto, Criterios(caracteristicas=["perto-da-praia"]))[0].status == "atende"
+    assert avaliar(longe, Criterios(caracteristicas=["perto-da-praia"]))[0].status == "nao_atende"

@@ -52,6 +52,14 @@ def test_avisa_quando_ninguem_informa(client):
     assert any("pedra sabão" in aviso for aviso in corpo["avisos"])
 
 
+def test_praia_pelo_texto_do_anuncio(client):
+    corpo = _buscar(client, "casa perto da praia em Rio das Ostras")
+    melhor = corpo["resultados"][0]
+    assert melhor["titulo"] == "Casa a 300 metros da praia em Costazul"
+    praia = next(p for p in melhor["pontos"] if p["chave"] == "car:perto-da-praia")
+    assert praia["status"] == "atende" and "300 metros da praia" in praia["evidencia"]
+
+
 def test_sugestoes_de_continuacao(client):
     assert _buscar(client, "uma casa em Olaria")["sugestoes"] == ["Quero comprar", "Quero alugar"]
 

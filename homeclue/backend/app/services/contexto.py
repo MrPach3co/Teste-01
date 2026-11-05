@@ -44,6 +44,7 @@ CONSULTAS: dict[str, tuple[list[str], int]] = {
                   'nwr["waterway"="waterfall"]', 'nwr["natural"="peak"]["name"]', 'nwr["boundary"="protected_area"]["name"]'],
                  4000),
     "seguranca": (['nwr["amenity"~"^(police|fire_station)$"]'], 3000),
+    "praia": (['nwr["natural"="beach"]'], 3000),
 }
 
 _ROTULOS = {
@@ -54,7 +55,7 @@ _ROTULOS = {
     "pharmacy": "Farmácia", "bank": "Banco", "marketplace": "Feira", "bus_stop": "Ponto de ônibus",
     "bus_station": "Rodoviária", "park": "Parque", "nature_reserve": "Reserva natural", "viewpoint": "Mirante",
     "waterfall": "Cachoeira", "peak": "Pico", "protected_area": "Área de proteção", "police": "Polícia",
-    "fire_station": "Bombeiros",
+    "fire_station": "Bombeiros", "beach": "Praia",
 }
 
 _trava_nominatim = threading.Lock()
@@ -140,11 +141,13 @@ def _categoria(tags: dict) -> tuple[str, str] | None:
         return "natureza", "protected_area"
     if amenity in ("police", "fire_station"):
         return "seguranca", amenity
+    if tags.get("natural") == "beach":
+        return "praia", "beach"
     return None
 
 
 _TAGS_UTEIS = ("name", "amenity", "shop", "highway", "leisure", "tourism", "waterway", "natural", "boundary",
-               "healthcare")
+               "healthcare")  # "natural" cobre picos e praias
 
 
 def _elementos_overpass(lat: float, lon: float) -> list[dict]:
@@ -169,7 +172,7 @@ def _elementos_overpass(lat: float, lon: float) -> list[dict]:
 # Nominatim (mais leve, porque o Nominatim limita requisições com rigor).
 _BUSCAS_NOMINATIM: dict[str, str] = {
     "escola": "school", "saude": "hospital", "comercio": "supermarket", "transporte": "bus station",
-    "natureza": "park", "seguranca": "police",
+    "natureza": "park", "seguranca": "police", "praia": "beach",
 }
 
 

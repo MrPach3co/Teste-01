@@ -114,7 +114,7 @@ def conferir_ponto(ponto: Ponto, imovel: ImovelBusca, criterios: Criterios) -> s
             ok = True
         return None if ok else f"dado do anúncio não confere ({ponto.criterio}: {ponto.evidencia})"
     if ponto.fonte == "contexto":
-        categoria = ponto.chave.split(":", 1)[1]
+        categoria = "praia" if ponto.chave == "car:perto-da-praia" else ponto.chave.split(":", 1)[1]
         proximos = (((imovel.contexto or {}).get("categorias") or {}).get(categoria) or {}).get("mais_proximos") or []
         if not proximos or proximos[0]["nome"] not in ponto.evidencia:
             return f"ponto de interesse que não está no contexto: {ponto.evidencia}"
