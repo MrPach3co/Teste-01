@@ -72,7 +72,7 @@ a Claude interpreta a conversa e confere os pedidos livres nos anúncios.
 
 ```bash
 cd homeclue/backend && source .venv/bin/activate
-python -m pytest -q                       # 89 testes, sem rede e sem IA de verdade
+python -m pytest -q                       # todos os testes, sem rede e sem IA de verdade
 TESTE_DATABASE_URL=postgresql+psycopg2://usuario@localhost/banco_vazio python -m pytest -q  # os mesmos, no Postgres
 python -m app.avaliacao --saida avaliacao.html          # 30 buscas na demonstração
 python -m app.avaliacao --chave pk_DA_IMOBILIARIA       # 30 buscas no estoque real
