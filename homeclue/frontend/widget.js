@@ -56,7 +56,7 @@
   var estilo = document.createElement('style');
   estilo.textContent =
     '.hc-botao{position:fixed;right:20px;bottom:20px;display:flex;align-items:center;gap:8px;' +
-    'font:600 15px/1 system-ui,-apple-system,sans-serif;color:#fff;background:var(--hc-cor,#1F3B2C);' +
+    'font:600 15px/1 system-ui,-apple-system,sans-serif;color:#fff;background:var(--hc-cor,#1A2E6B);' +
     'border:0;border-radius:999px;padding:15px 20px;cursor:pointer;box-shadow:0 8px 28px rgba(0,0,0,.22);}' +
     '.hc-botao:hover{filter:brightness(1.08);}' +
     '.hc-painel{position:fixed;right:20px;bottom:86px;width:440px;height:min(720px,calc(100vh - 110px));' +

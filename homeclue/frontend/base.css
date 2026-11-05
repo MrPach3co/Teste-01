@@ -1,25 +1,32 @@
-/* Tokens e componentes compartilhados por todas as páginas da Homeclue. */
+/* Tokens e componentes compartilhados por todas as páginas da Homeclue.
+   Paleta da marca: marinho (confiança), azul Homeclue (destaque) e laranja
+   (chamadas pontuais). Os nomes antigos das variáveis ficaram para não
+   mexer em todas as telas: "mata" é a cor principal, "telha" o destaque quente. */
 :root{
-  --concreto: #F1EEE7;
-  --concreto-alt: #E8E3D8;
-  --grafite: #1B1A17;
-  --grafite-soft: #5A564C;
-  --mata: #1F3B2C;
-  --mata-light: #2E5741;
-  --mata-bg: #E3EBE4;
-  --telha: #9C4A26;
-  --telha-bg: #F5E6DE;
-  --areia-line: #D9D2C2;
-  --branco: #FFFDF9;
-  --erro: #A1271B;
-  --ok: #2F8253;
+  --concreto: #F4F6FA;
+  --concreto-alt: #E9EDF5;
+  --grafite: #0F1A33;
+  --grafite-soft: #5B6680;
+  --mata: #1A2E6B;
+  --mata-light: #3366FF;
+  --mata-bg: #E8EEFF;
+  --telha: #C2410C;
+  --telha-bg: #FFF1E8;
+  --areia-line: #DCE2EE;
+  --branco: #FFFFFF;
+  --erro: #B42318;
+  --ok: #1F8A4C;
 
-  --display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --azul: #3366FF;
+  --marinho: #0E1B3D;
+  --noite: #0A1430;
+
+  --display: 'Manrope', system-ui, sans-serif;
   --texto: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --mono: 'IBM Plex Mono', ui-monospace, monospace;
 
   --raio: 14px;
-  --sombra: 0 1px 2px rgba(27,26,23,.05), 0 8px 24px rgba(27,26,23,.06);
+  --sombra: 0 1px 2px rgba(15,26,51,.05), 0 8px 24px rgba(15,26,51,.07);
 }
 
 *{ box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,13 +45,14 @@ button{ font: inherit; color: inherit; }
 ::selection{ background: var(--mata); color: var(--branco); }
 :focus-visible{ outline: 2px solid var(--mata); outline-offset: 2px; }
 
-h1,h2,h3,h4{ font-family: var(--display); letter-spacing: -0.02em; line-height: 1.15; }
+h1,h2,h3,h4{ font-family: var(--display); font-weight: 800; letter-spacing: -0.025em; line-height: 1.15; }
 
 .logo{
-  font-family: var(--display); font-weight: 700; font-size: 20px; letter-spacing: -0.02em;
-  display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--grafite);
+  display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--grafite);
+  font: 700 13px var(--texto);
 }
-.logo svg{ width: 26px; height: 26px; flex: none; }
+.logo img{ height: 28px; width: auto; display: block; flex: none; }
+.logo-sufixo{ padding: 3px 8px; border-radius: 6px; background: var(--mata-bg); color: var(--mata); }
 
 /* Botões — alvo de toque de pelo menos 40px */
 .btn{
@@ -127,8 +135,8 @@ input[type="color"]{ padding: 4px; height: 44px; }
 }
 .espelho-unidade strong{ font: 700 13px/1.1 var(--texto); }
 .espelho-unidade small{ font-size: 10.5px; line-height: 1.15; opacity: .95; }
-.espelho-unidade.status-disponivel{ background: #2F8253; }
-.espelho-unidade.status-reservada{ background: #A9741A; }
-.espelho-unidade.status-vendida{ background: #9E978A; }
+.espelho-unidade.status-disponivel{ background: #1E8E4F; }
+.espelho-unidade.status-reservada{ background: #B26B00; }
+.espelho-unidade.status-vendida{ background: #C2412E; }
 .espelho-unidade.apagada{ opacity: .22; }
 .espelho-dica{ position: absolute; pointer-events: none; background: var(--grafite); color: #fff; font-size: 12.5px; padding: 6px 9px; border-radius: 7px; white-space: nowrap; }

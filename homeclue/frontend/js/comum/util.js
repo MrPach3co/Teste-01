@@ -41,8 +41,8 @@ export function normalizar(t) {
 }
 
 export function gradiente(id) {
-  const pares = [['#2E5741', '#9DB8A4'], ['#9C4A26', '#E2B59A'], ['#3B4A5E', '#A9B8C9'], ['#6B5B3E', '#D9C9A3'],
-    ['#1F3B2C', '#C9D6C2'], ['#5E3B4A', '#D4AFC0']];
+  const pares = [['#1A2E6B', '#8FA8F0'], ['#C2410C', '#F8B98F'], ['#334155', '#A9B8C9'], ['#0F766E', '#8FD3C7'],
+    ['#6B5B3E', '#D9C9A3'], ['#5B3E7A', '#C9B3E6']];
   const [a, b] = pares[id % pares.length];
   return `linear-gradient(135deg, ${a}, ${b})`;
 }

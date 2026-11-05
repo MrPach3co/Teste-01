@@ -98,7 +98,7 @@
   padding: 26px clamp(16px, 4vw, 40px); font-size: 14px; color: var(--grafite-soft);
 }
 .rodape div{ display: flex; gap: 20px; }
-.logo img{ width: 26px; height: 26px; }
+.logo img{ height: 28px; width: auto; }
 
 @media (max-width: 1080px){ .precos{ grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 960px){

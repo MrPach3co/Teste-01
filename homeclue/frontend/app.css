@@ -1,11 +1,11 @@
-:root{ --serie-buscas: #2F8253; --serie-leads: #B4572D; }
+:root{ --serie-buscas: #3366FF; --serie-leads: #F08A24; }
 
 .painel{ display: grid; grid-template-columns: 236px 1fr; min-height: 100vh; }
 .lateral{
   position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; gap: 16px;
   padding: 20px 14px; background: var(--branco); border-right: 1px solid var(--areia-line); overflow-y: auto;
 }
-.lateral .logo img{ width: 26px; height: 26px; }
+.lateral .logo img{ height: 26px; width: auto; }
 .lateral-imob{ font-size: 13px; color: var(--grafite-soft); padding: 0 10px; margin-top: -6px; }
 .menu{ display: flex; flex-direction: column; gap: 2px; }
 .menu a{
@@ -120,7 +120,7 @@ legend{ font-size: 13px; font-weight: 600; color: var(--grafite-soft); padding: 
 .codigo{ font: 600 12px/1 var(--mono); background: var(--grafite); color: #fff; padding: 4px 7px; border-radius: 6px; letter-spacing: .05em; }
 
 /* Widget */
-.codigo-bloco{ font: 12.5px/1.5 var(--mono); background: var(--grafite); color: #EDE8DC; padding: 12px 14px; border-radius: 10px; white-space: pre-wrap; word-break: break-all; }
+.codigo-bloco{ font: 12.5px/1.5 var(--mono); background: var(--grafite); color: #E6ECFA; padding: 12px 14px; border-radius: 10px; white-space: pre-wrap; word-break: break-all; }
 .previa{ position: sticky; top: 20px; display: flex; flex-direction: column; gap: 8px; }
 .previa-rotulo{ font: 500 12px/1 var(--mono); color: var(--grafite-soft); }
 .previa iframe{ width: 100%; height: 660px; border: 1px solid var(--areia-line); border-radius: 16px; background: var(--branco); box-shadow: var(--sombra); }
