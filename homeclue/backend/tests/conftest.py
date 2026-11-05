@@ -4,6 +4,8 @@ os.environ.setdefault("DATABASE_URL", "sqlite:///./teste.db")
 os.environ.setdefault("JWT_SECRET_KEY", "chave-de-teste-nao-usar-em-producao")
 os.environ["ANTHROPIC_API_KEY"] = ""  # testes nunca chamam a IA de verdade
 os.environ["STRIPE_SECRET_KEY"] = ""
+os.environ["TAREFAS_EM_SEGUNDO_PLANO"] = "0"
+os.environ["ADMIN_EMAILS"] = "dono@homeclue.com.br"
 
 import pytest
 from fastapi.testclient import TestClient
@@ -18,11 +20,7 @@ from app.main import app
 from app.services.seed import semear
 
 # StaticPool mantém uma única conexão viva para o banco em memória.
-_engine_teste = create_engine(
-    "sqlite:///:memory:",
-    connect_args={"check_same_thread": False},
-    poolclass=StaticPool,
-)
+_engine_teste = create_engine("sqlite:///:memory:", connect_args={"check_same_thread": False}, poolclass=StaticPool)
 SessionTeste = sessionmaker(autocommit=False, autoflush=False, bind=_engine_teste)
 
 
@@ -48,20 +46,32 @@ def banco_limpo():
 
 
 @pytest.fixture
+def db():
+    with SessionTeste() as sessao:
+        yield sessao
+
+
+@pytest.fixture
 def client():
     return TestClient(app)
 
 
 def cadastrar(client, email="dono@imob.com", nome_imobiliaria="Imob Teste") -> dict:
     resposta = client.post("/api/auth/cadastro", json={
-        "nome_imobiliaria": nome_imobiliaria,
-        "nome": "Fulano",
-        "email": email,
-        "senha": "senha-forte-123",
+        "nome_imobiliaria": nome_imobiliaria, "nome": "Fulano", "email": email, "senha": "senha-forte-123",
         "aceitou_termos": True,
     })
     assert resposta.status_code == 201, resposta.text
     return {"Authorization": f"Bearer {resposta.json()['access_token']}"}
+
+
+def mudar_plano(email: str, plano: str) -> None:
+    from app.models import Usuario
+
+    with SessionTeste() as db:
+        usuario = db.query(Usuario).filter(Usuario.email == email).one()
+        usuario.imobiliaria.plano = plano
+        db.commit()
 
 
 IMOVEL_EXEMPLO = {
@@ -69,11 +79,12 @@ IMOVEL_EXEMPLO = {
     "tipo": "apartamento",
     "finalidade": "venda",
     "bairro": "Centro",
-    "cidade": "Florianópolis",
-    "preco": 800000,
+    "cidade": "Nova Friburgo",
+    "preco": 400000,
     "quartos": 3,
     "banheiros": 2,
     "vagas": 1,
     "area_m2": 90,
+    "descricao": "Apartamento claro, com sol da manhã na sala. Não aceita animais.",
     "caracteristicas": ["piscina", "academia", "nao-existe"],
 }

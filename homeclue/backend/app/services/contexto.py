@@ -209,14 +209,24 @@ def pontos_de_interesse(db: Session, lat: float, lon: float) -> dict:
                 validade = timedelta(days=1)  # tenta de novo amanhã
         cache.guardar(db, chave, {"elementos": elementos}, validade)
 
+    return resumir(elementos, lat, lon)
+
+
+def resumir(elementos: list[dict], lat: float, lon: float) -> dict:
+    """Resume pontos de interesse por categoria: quantos há no raio e os mais próximos."""
     categorias: dict[str, dict] = {
         c: {"rotulo": CATEGORIAS_CONTEXTO[c][0], "raio_m": CONSULTAS[c][1], "total": 0, "mais_proximos": []}
         for c in CONSULTAS
     }
     candidatos: dict[str, list[dict]] = {c: [] for c in CONSULTAS}
+    vistos_elementos = set()
     for elemento in elementos:
         if elemento.get("lat") is None or elemento.get("lon") is None:
             continue
+        identidade = (round(elemento["lat"], 5), round(elemento["lon"], 5), elemento["tags"].get("name"))
+        if identidade in vistos_elementos:
+            continue  # o mesmo lugar achado por duas buscas
+        vistos_elementos.add(identidade)
         classe = _categoria(elemento["tags"])
         if classe is None:
             continue

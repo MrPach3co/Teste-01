@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" width="1000" height="700" font-family="Inter, Arial, sans-serif">
+  <title>Planta ilustrativa — Casa térrea em Olaria (demonstração)</title>
+  <rect width="1000" height="700" fill="#FBF9F4"/>
+  <g fill="#FFFFFF" stroke="#2B2A26" stroke-width="6" stroke-linejoin="round">
+    <rect x="50" y="56" width="380" height="294"/>
+    <rect x="430" y="56" width="250" height="210"/>
+    <rect x="680" y="56" width="140" height="210"/>
+    <rect x="820" y="56" width="130" height="308" fill="#F3F0E8"/>
+    <rect x="50" y="364" width="280" height="280"/>
+    <rect x="330" y="364" width="100" height="140"/>
+    <rect x="330" y="504" width="100" height="140"/>
+    <rect x="430" y="364" width="210" height="280"/>
+    <rect x="640" y="364" width="180" height="280"/>
+    <rect x="820" y="364" width="130" height="280" fill="#EEF4EC"/>
+    <rect x="430" y="266" width="390" height="98" fill="#FBF9F4" stroke-width="3" stroke-dasharray="10 8"/>
+  </g>
+  <g stroke="#FBF9F4" stroke-width="10">
+    <line x1="250" y1="350" x2="300" y2="350"/>
+    <line x1="430" y1="150" x2="430" y2="200"/>
+    <line x1="520" y1="364" x2="570" y2="364"/>
+    <line x1="700" y1="364" x2="750" y2="364"/>
+    <line x1="180" y1="364" x2="230" y2="364"/>
+    <line x1="680" y1="140" x2="680" y2="190"/>
+    <line x1="820" y1="300" x2="820" y2="340"/>
+    <line x1="950" y1="450" x2="950" y2="520"/>
+  </g>
+  <g fill="#5A564C" font-size="22" text-anchor="middle" font-weight="600">
+    <text x="240" y="200">Sala de estar</text>
+    <text x="555" y="160">Cozinha</text>
+    <text x="750" y="160" font-size="18">Serviço</text>
+    <text x="885" y="200" font-size="18">Churras-</text><text x="885" y="224" font-size="18">queira</text>
+    <text x="190" y="505">Suíte</text>
+    <text x="380" y="440" font-size="16">Banho</text>
+    <text x="380" y="580" font-size="16">Banho</text>
+    <text x="535" y="505">Quarto 2</text>
+    <text x="730" y="505">Quarto 3</text>
+    <text x="885" y="505" font-size="18">Quintal</text>
+    <text x="625" y="322" font-size="16" font-weight="500">Circulação</text>
+  </g>
+  <g fill="#9C4A26" font-size="14" text-anchor="middle">
+    <text x="240" y="228">lareira · sol da manhã</text>
+  </g>
+  <g transform="translate(70 640)" fill="#2B2A26" font-size="14">
+    <text x="0" y="0">Planta ilustrativa (demonstração) — fora de escala</text>
+  </g>
+  <g transform="translate(960 640)" fill="#2B2A26" font-size="16" text-anchor="middle">
+    <path d="M0 -40 L8 -18 L0 -24 L-8 -18 Z" fill="#2B2A26"/>
+    <text x="0" y="0">N</text>
+  </g>
+</svg>

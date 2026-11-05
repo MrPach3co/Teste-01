@@ -2,6 +2,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
+from app.core.config import obter_settings
 from app.core.security import decodificar_token_acesso
 from app.db.session import obter_db
 from app.models import Imobiliaria, Usuario
@@ -21,15 +22,12 @@ def obter_usuario_atual(
 ) -> Usuario:
     if token is None:
         raise _erro_credenciais
-
     payload = decodificar_token_acesso(token)
     if payload is None or payload.get("sub") is None:
         raise _erro_credenciais
-
     usuario = db.get(Usuario, int(payload["sub"]))
     if usuario is None:
         raise _erro_credenciais
-
     return usuario
 
 
@@ -41,8 +39,16 @@ def obter_imobiliaria_atual(usuario: Usuario = Depends(obter_usuario_atual)) -> 
 
 def exigir_dono(usuario: Usuario = Depends(obter_usuario_atual)) -> Usuario:
     if usuario.papel != "dono":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Apenas o dono da conta pode fazer isso.",
-        )
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Apenas o dono da conta pode fazer isso.")
+    return usuario
+
+
+def eh_admin(usuario: Usuario) -> bool:
+    return usuario.email.lower() in obter_settings().lista_admin_emails
+
+
+def exigir_admin(usuario: Usuario = Depends(obter_usuario_atual)) -> Usuario:
+    """Dono do SaaS (Homeclue), definido por ADMIN_EMAILS."""
+    if not eh_admin(usuario):
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Acesso restrito.")
     return usuario

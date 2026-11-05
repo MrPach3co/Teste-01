@@ -85,11 +85,18 @@ def _filho(el, *nomes):
     return None
 
 
+def _filhos(el, *nomes) -> list:
+    """Filhos do elemento com um desses nomes (lista vazia se não existir)."""
+    alvo = _filho(el, *nomes)
+    return list(alvo) if alvo is not None else []
+
+
 def _texto_filho(el, *nomes) -> str:
     return _texto(_filho(el, *nomes))
 
 
-def _numero(valor: str | None) -> float | None:
+def numero_br(valor: str | None) -> float | None:
+    """Lê números como os sistemas brasileiros escrevem: 1.250.000,00 / 95,5 / 95.5."""
     if not valor:
         return None
     limpo = re.sub(r"[^\d,.-]", "", valor)
@@ -108,19 +115,19 @@ def _numero(valor: str | None) -> float | None:
 
 
 def _inteiro(valor: str | None) -> int | None:
-    numero = _numero(valor)
+    numero = numero_br(valor)
     if numero is None or numero < 0 or numero > 100:
         return None
     return int(numero)
 
 
 def _area(valor: str | None) -> float | None:
-    numero = _numero(valor)
+    numero = numero_br(valor)
     return numero if numero and 0 < numero < 10_000_000 else None
 
 
 def _coordenada(valor: str | None, limite: float) -> float | None:
-    numero = _numero(valor)
+    numero = numero_br(valor)
     if numero is None or numero == 0 or abs(numero) > limite:
         return None
     return numero
@@ -180,8 +187,8 @@ def _ler_vrsync(raiz) -> tuple[list[ImovelFeed], list[str]]:
             detalhes = _filho(listing, "Details")
             local = _filho(listing, "Location")
             transacao = normalizar(_texto_filho(listing, "TransactionType"))
-            venda = _numero(_texto_filho(detalhes, "ListPrice"))
-            aluguel = _numero(_texto_filho(detalhes, "RentalPrice"))
+            venda = numero_br(_texto_filho(detalhes, "ListPrice"))
+            aluguel = numero_br(_texto_filho(detalhes, "RentalPrice"))
             if "sale" in transacao and "rent" in transacao:
                 finalidade = "venda_aluguel"
             elif "rent" in transacao:
@@ -201,11 +208,11 @@ def _ler_vrsync(raiz) -> tuple[list[ImovelFeed], list[str]]:
             if not bairro or not cidade:
                 raise ValueError("sem bairro ou cidade")
 
-            itens = [_texto(f) for f in (_filho(detalhes, "Features") or [])]
+            itens = [_texto(f) for f in _filhos(detalhes, "Features")]
             slugs, outros = _separar_caracteristicas(itens)
 
             fotos, video, planta = [], None, None
-            for item in (_filho(listing, "Media") or []):
+            for item in _filhos(listing, "Media"):
                 url = _url(_texto(item))
                 meio = normalizar(item.get("medium", "image"))
                 if not url:
@@ -233,8 +240,8 @@ def _ler_vrsync(raiz) -> tuple[list[ImovelFeed], list[str]]:
                 finalidade=finalidade,
                 preco=preco,
                 preco_aluguel=aluguel if finalidade == "venda_aluguel" else None,
-                condominio=_numero(_texto_filho(detalhes, "PropertyAdministrationFee")),
-                iptu=_numero(_texto_filho(detalhes, "YearlyTax")),
+                condominio=numero_br(_texto_filho(detalhes, "PropertyAdministrationFee")),
+                iptu=numero_br(_texto_filho(detalhes, "YearlyTax")),
                 bairro=bairro[:120],
                 cidade=cidade[:120],
                 uf=uf[:2].upper() if uf else None,
@@ -277,9 +284,9 @@ def _ler_carga(raiz) -> tuple[list[ImovelFeed], list[str]]:
         try:
             if not codigo:
                 raise ValueError("sem código")
-            venda = _numero(campo("PrecoVenda", "ValorVenda", "PrecoDeVenda"))
-            aluguel = _numero(campo("PrecoLocacao", "ValorLocacao", "ValorAluguel", "PrecoAluguel", "PrecoLocacaoMensal"))
-            generico = _numero(campo("Preco", "Valor"))
+            venda = numero_br(campo("PrecoVenda", "ValorVenda", "PrecoDeVenda"))
+            aluguel = numero_br(campo("PrecoLocacao", "ValorLocacao", "ValorAluguel", "PrecoAluguel", "PrecoLocacaoMensal"))
+            generico = numero_br(campo("Preco", "Valor"))
             finalidade_txt = normalizar(campo("Finalidade", "Transacao", "TipoNegocio", "TipoOferta"))
             if venda and aluguel:
                 finalidade = "venda_aluguel"
@@ -304,7 +311,7 @@ def _ler_carga(raiz) -> tuple[list[ImovelFeed], list[str]]:
                 nome = _nome(filho)
                 if len(filho) == 0 and normalizar(_texto(filho)) in _SIM and caracteristica_de_item_feed(nome):
                     itens.append(nome)
-            for container in (_filho(el, "Caracteristicas", "Features", "Itens", "Infraestrutura") or []):
+            for container in _filhos(el, "Caracteristicas", "Features", "Itens", "Infraestrutura"):
                 itens.append(_texto(container))
             slugs, outros = _separar_caracteristicas(itens)
 
@@ -330,8 +337,8 @@ def _ler_carga(raiz) -> tuple[list[ImovelFeed], list[str]]:
                 finalidade=finalidade,
                 preco=preco,
                 preco_aluguel=aluguel if finalidade == "venda_aluguel" else None,
-                condominio=_numero(campo("PrecoCondominio", "ValorCondominio", "Condominio")),
-                iptu=_numero(campo("ValorIPTU", "IPTU")),
+                condominio=numero_br(campo("PrecoCondominio", "ValorCondominio", "Condominio")),
+                iptu=numero_br(campo("ValorIPTU", "IPTU")),
                 bairro=bairro[:120],
                 cidade=cidade[:120],
                 uf=(campo("UF", "Estado")[:2].upper() or None),

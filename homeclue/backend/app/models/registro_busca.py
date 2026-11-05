@@ -26,6 +26,8 @@ class RegistroBusca(Base):
     melhor_match: Mapped[int | None] = mapped_column(Integer, nullable=True)
     bons_resultados: Mapped[int] = mapped_column(Integer, default=0, nullable=False)  # match >= 70%
     resultados_ids: Mapped[list[int]] = mapped_column(JSON, default=list, nullable=False)
+    # {imovel_id: ["Lareira", "Sol da manhã"]}: o que a pessoa pediu e o anúncio não informa.
+    lacunas: Mapped[dict] = mapped_column(JSON, default=dict, nullable=False)
 
     modelo: Mapped[str | None] = mapped_column(String(60), nullable=True)
     tokens_entrada: Mapped[int] = mapped_column(Integer, default=0, nullable=False)

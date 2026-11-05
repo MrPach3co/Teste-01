@@ -1,3 +1,5 @@
+import logging
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -9,10 +11,26 @@ from slowapi.middleware import SlowAPIMiddleware
 
 from app.core.config import obter_settings
 from app.core.limiter import limiter
-from app.routers import assinatura, auth, conta, imoveis, leads, painel, publico
-from app.services import cobranca, ia
+from app.db.session import SessionLocal
+from app.routers import (
+    admin,
+    arquivos,
+    assinatura,
+    auth,
+    bairros,
+    conta,
+    feed,
+    imoveis,
+    lancamentos,
+    leads,
+    painel,
+    publico,
+)
+from app.services import cobranca, tarefas
+from app.services.ia import cliente as ia_cliente
 
 settings = obter_settings()
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
 _CHAVE_JWT_PADRAO_INSEGURA = "troque-esta-chave-antes-de-ir-para-producao"
 if settings.ambiente == "producao" and settings.jwt_secret_key == _CHAVE_JWT_PADRAO_INSEGURA:
@@ -22,10 +40,23 @@ if settings.ambiente == "producao" and settings.jwt_secret_key == _CHAVE_JWT_PAD
         '(gere uma com: python -c "import secrets; print(secrets.token_hex(32))").'
     )
 
+
+@asynccontextmanager
+async def ciclo_de_vida(_app: FastAPI):
+    executor = None
+    if settings.tarefas_em_segundo_plano:
+        executor = tarefas.Executor(SessionLocal)
+        executor.iniciar()
+    yield
+    if executor is not None:
+        executor.parar()
+
+
 app = FastAPI(
-    title="Kaza Pro — API",
-    description="Busca de imóveis com IA para o site da sua imobiliária, com captura e gestão de leads.",
-    version="1.0.0",
+    title="Homeclue — API",
+    description="Busca com IA no site da imobiliária: match explicado, leads no WhatsApp e dados de demanda.",
+    version="2.0.0",
+    lifespan=ciclo_de_vida,
 )
 
 app.state.limiter = limiter
@@ -44,18 +75,18 @@ app.add_middleware(
     allow_headers=["Authorization", "Content-Type"],
 )
 
-app.include_router(auth.router)
-app.include_router(conta.router)
-app.include_router(imoveis.router)
-app.include_router(leads.router)
-app.include_router(painel.router)
-app.include_router(assinatura.router)
-app.include_router(publico.router)
+for modulo in (auth, conta, imoveis, feed, leads, painel, bairros, lancamentos, assinatura, publico, arquivos, admin):
+    app.include_router(modulo.router)
 
 
 @app.get("/api/saude")
 def saude() -> dict:
-    return {"status": "ok", "ia": ia.ia_disponivel(), "pagamentos": cobranca.cobranca_ativa()}
+    return {
+        "status": "ok",
+        "ia": ia_cliente.disponivel(),
+        "modelo": ia_cliente.modelo() if ia_cliente.disponivel() else None,
+        "pagamentos": cobranca.cobranca_ativa(),
+    }
 
 
 _DIR_FRONTEND = Path(__file__).resolve().parent.parent.parent / "frontend"
