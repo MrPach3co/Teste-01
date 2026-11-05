@@ -14,6 +14,7 @@ A Homeclue não é imobiliária, não é portal e não é dona da transação.
 homeclue/
   backend/     API (FastAPI): busca, match explicado, feed XML, leads, painel, lançamentos, IA
   frontend/    site, widget, painel da imobiliária e /admin.html (HTML/CSS/JS, sem build)
+  frontend/marca/  logo (claro, escuro, uma cor), ícone de app, favicons e imagem de compartilhamento
   Dockerfile   imagem única (o backend serve o frontend)
   DEPLOY.md    como pôr no ar (Railway + Postgres + Stripe)
   PENDENCIAS.md  o que do documento de produto depende de algo fora do código
@@ -37,8 +38,8 @@ homeclue/
 | Contexto do bairro | Escolas, saúde, comércio, transporte, natureza, segurança e praia, a partir do OpenStreetMap |
 | Cobrança, termos e LGPD | Stripe (assinatura, valor por lead, maquete avulsa), termos e privacidade, consentimento versionado, exportar/excluir dados |
 | Planta interativa | Editor no painel (desenha cômodos sobre a planta); no widget, destaca os cômodos que bateram com o pedido |
-| Maquete 3D | Gerada a partir da planta (three.js), com as fotos de cada cômodo |
-| Espelho 3D de lançamentos | Torres × andares × unidades por status, em grade e em 3D |
+| Maquete 3D | Planta humanizada gerada a partir da planta (three.js): pisos por cômodo, portas, janelas e móveis ilustrativos, com as fotos de cada cômodo |
+| Espelho 3D de lançamentos | Tela imersiva: prédio noturno com cada unidade acesa na cor do status (`comum/predio3d.js`), filtros, foco por andar, cartão da unidade e a grade |
 | Busca por foto | O comprador manda uma foto; a IA descreve e a busca usa como critério (a foto não é guardada) |
 | Visita de drone | Campo de vídeo de drone no imóvel, exibido no widget (a filmagem em si é serviço físico — ver PENDENCIAS.md) |
 | Custo de IA por busca | Medido em toda busca (tokens e US$) e mostrado em `/admin.html` |

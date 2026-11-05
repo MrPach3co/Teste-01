@@ -81,7 +81,7 @@ function blocoPlanta(d, s) {
     const aspecto = img.naturalWidth && img.naturalHeight ? img.naturalWidth / img.naturalHeight : 1.4;
     maquete = await montarMaquete(palco, { comodos: d.planta.comodos, aspecto, area_m2: d.area_para_maquete },
       { destaques, tipos, aoClicar: mostrarComodo });
-    legenda.textContent = 'Maquete gerada a partir da planta (esquemática, fora de escala exata). Arraste para girar; toque num cômodo para ver as fotos.';
+    legenda.textContent = 'Planta humanizada gerada a partir da planta do anúncio. Os móveis são ilustrativos, para dar noção de espaço; medidas aproximadas. Arraste para girar e toque num cômodo para ver as fotos.';
     registrarEvento('maquete', d.id);
   };
   b2d.addEventListener('click', () => { b2d.setAttribute('aria-pressed', 'true'); b3d.setAttribute('aria-pressed', 'false'); desenhar2D(); });

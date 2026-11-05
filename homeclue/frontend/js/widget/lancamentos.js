@@ -186,7 +186,8 @@ async function mostrarEspelho(id) {
     barra.appendChild(parte);
   }
   const ocupadas = emp.resumo.vendida + emp.resumo.reservada;
-  numeros.append(grupoNumeros, barra, el('p', 'lanc-vendido', `${Math.round((ocupadas / total) * 100)}% das unidades já vendidas ou reservadas`));
+  numeros.append(grupoNumeros, barra, el('p', 'lanc-vendido', `${Math.round((ocupadas / total) * 100)}% das unidades já vendidas ou reservadas`),
+    el('p', 'lanc-nota-3d', 'Prédio ilustrativo, montado a partir do espelho de vendas: a fachada real do empreendimento pode ser diferente. Status e preços são os informados pela imobiliária.'));
 
   const unidade = el('section', 'lanc-unidade');
   const vazio = el('div', 'unidade-vazia');

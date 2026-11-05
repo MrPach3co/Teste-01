@@ -32,8 +32,8 @@ Legenda: ✅ pronto e testado · ⚠️ pronto, mas depende de algo externo ·
 | Item | Situação | O que falta |
 |---|---|---|
 | Planta interativa | ✅ | A imobiliária envia a imagem da planta e desenha os cômodos (uns 10 minutos por imóvel). A detecção automática dos cômodos pela IA não foi feita: errar um cômodo é o tipo de invenção que a trava existe para evitar. |
-| Maquete 3D | ✅ esquemática ⚠️ | A maquete é gerada a partir dos cômodos desenhados (pisos, paredes baixas, nomes e fotos de cada cômodo). Uma maquete **fotorrealista** (paredes exatas, portas, móveis, texturas) exige um arquiteto 3D ou serviço especializado — é esse o "custo por planta processada" do documento. |
-| Espelho 3D de lançamentos | ✅ | — |
+| Maquete 3D | ✅ planta humanizada ⚠️ | Gerada na hora a partir dos cômodos desenhados: piso de cada tipo de cômodo, paredes com portas e janelas, móveis ilustrativos e o que as notas da imobiliária citam (ex.: lareira). A tela avisa que os móveis são ilustrativos. Uma maquete **fiel ao projeto** (medidas exatas, acabamentos e móveis reais) continua exigindo um arquiteto 3D ou o arquivo do projeto — é esse o "custo por planta processada" do documento. |
+| Espelho 3D de lançamentos | ✅ ⚠️ | Prédio noturno com cada unidade acesa na cor do status, etiqueta ao passar o mouse, câmera que vai até a unidade, foco por andar, filtros e cartão com preço. O prédio é **ilustrativo**: montado a partir de torres, andares e unidades do espelho de vendas (a tela avisa). Para mostrar a fachada real do empreendimento, é preciso o modelo 3D da incorporadora ou do arquiteto. |
 | Busca por foto | ✅ ⚠️ | Precisa da chave da Anthropic (e plano Premium). A análise das fotos dos anúncios é opcional por imobiliária e tem custo por anúncio. |
 | Visita de drone | ⚠️ parte de software pronta · ❌ filmagem | O widget mostra o vídeo de drone de cada imóvel. A filmagem é um serviço físico: drone, piloto, registro do equipamento na ANAC, autorização de voo no DECEA e seguro para uso profissional. Pode ser terceirizada e vendida no plano Premium. |
 
