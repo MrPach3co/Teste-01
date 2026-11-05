@@ -27,7 +27,7 @@ def test_busca_do_documento_com_match_explicado(client):
     assert pontos["car:pet-friendly"]["status"] == "atende"
     assert pontos["desejo:0"]["status"] == "atende" and "sol da manhã" in pontos["desejo:0"]["evidencia"]
     assert melhor["tem_planta"] and melhor["tem_maquete"]
-    assert corpo["resumo"].startswith("Casa em Olaria")
+    assert corpo["resumo"].startswith("Comprar casa em Olaria")
     assert any(r["id"] == "melhor" for r in corpo["rankings"])
 
 
@@ -64,7 +64,7 @@ def test_whatsapp_da_demo_mostra_previa_e_cria_lead(client, db):
     assert resposta.status_code == 200 and "Código Homeclue" in resposta.text
     lead = db.query(Lead).one()
     assert lead.origem == "whatsapp" and lead.nome is None and lead.codigo in resposta.text
-    assert lead.resumo_busca.startswith("Casa em Olaria") and lead.match is not None
+    assert lead.resumo_busca.startswith("Comprar casa em Olaria") and lead.match is not None
     # Clicar de novo na mesma sessão não cria outro lead.
     client.get(f"/api/publico/pk_demo/whatsapp?imovel={imovel['id']}&busca={corpo['busca_id']}&sessao=s1",
                follow_redirects=False)

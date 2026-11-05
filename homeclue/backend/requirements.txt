@@ -11,8 +11,10 @@ bcrypt==5.0.0
 python-multipart==0.0.32
 anthropic==2.3.0
 stripe==16.0.0
+defusedxml==0.7.1  # leitura segura dos feeds XML
+pillow==13.0.0  # reprocessa imagens enviadas (tira metadados, limita tamanho)
+httpx==0.28.1  # download do feed e OpenStreetMap
 slowapi==0.1.10
 
 # testes
 pytest==9.1.1
-httpx==0.28.1

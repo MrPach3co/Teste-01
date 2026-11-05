@@ -1,0 +1,5 @@
+three.js 0.160.0 (licença MIT, ver LICENSE), copiado de npm:three@0.160.0.
+- three.module.min.js: build/three.module.min.js, sem alterações.
+- OrbitControls.js: examples/jsm/controls/OrbitControls.js, com o import
+  'three' trocado por './three.module.min.js' para funcionar sem importmap.
+Fica dentro do projeto para o widget não depender de CDN de terceiros.

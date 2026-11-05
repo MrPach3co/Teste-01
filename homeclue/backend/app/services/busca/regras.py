@@ -133,15 +133,30 @@ def extrair_finalidade(t: str) -> str | None:
     return None
 
 
+# Nomes de bairro que também são palavras comuns ("pé-direito alto", "perto do
+# centro comercial"): só contam como bairro depois de "no", "em", "bairro"…
+_BAIRROS_PALAVRA_COMUM = {
+    "alto", "centro", "prado", "jardim", "vila", "parque", "lagoa", "fazenda", "bosque", "granja", "morro", "rio",
+    "serra", "ponte", "campo", "vale", "estrada", "alameda", "varzea", "cascata", "paraiso", "esperanca",
+}
+_PREPOSICOES_DE_LUGAR = {"no", "na", "em", "bairro", "do", "da", "pro", "pra", "ao"}
+
+
 def _nomes_presentes(t: str, conhecidos: list[str]) -> list[str]:
     presentes = []
     for nome in sorted(conhecidos, key=len, reverse=True):
         n = normalizar(nome)
-        if n and re.search(rf"\b{re.escape(n)}\b", t) and nome not in presentes:
-            # "Centro" dentro de "centro comercial" não é o bairro
-            if n == "centro" and re.search(r"centro comercial|centro da cidade de", t):
-                continue
+        if not n or nome in presentes:
+            continue
+        for m in re.finditer(rf"\b{re.escape(n)}\b", t):
+            if n in _BAIRROS_PALAVRA_COMUM:
+                anterior = (t[:m.start()].split() or [""])[-1]
+                if anterior not in _PREPOSICOES_DE_LUGAR:
+                    continue
+                if n == "centro" and re.match(r"\s*(comercial|esportivo|cultural|de saude|medico)", t[m.end():]):
+                    continue
             presentes.append(nome)
+            break
     return presentes
 
 
@@ -202,26 +217,34 @@ def extrair_desejos(original: str, t: str) -> list[str]:
         if re.search(padrao, t):
             desejos.append(canonico)
 
-    # Frases livres depois de "com"/"que tenha": "com fogão de pedra", "que tenha pé de jabuticaba".
+    # Frases livres depois de "com"/"que tenha": "com fogão de pedra", "com pé de jabuticaba e terraço".
+    # Antes, tudo que já virou característica, tipo ou desejo conhecido é apagado do texto,
+    # para "com vista para a serra" não sobrar um desejo "vista".
     sem_acento = _sem_acento_mesmo_tamanho(original)
-    fim = r"(?=$|[,.;!?]| e | ou | perto| proxim| ate | em | no | na | para | pra | que | com | mas )"
-    for m in re.finditer(rf"\b(?:com|que tenha|que tenham|tenha|precisa ter)\s+([a-z][a-z\s-]{{2,45}}?){fim}", sem_acento):
-        frase_n = re.sub(r"^(que tenham?|tenham?|que)\s+", "", " ".join(m.group(1).split()))
-        palavras = [p for p in frase_n.split() if p not in _PALAVRAS_VAZIAS]
-        if not palavras or len(palavras) > 5:
-            continue
-        ja_entendida = (
-            any(re.search(rf"\b{re.escape(k)}\b", frase_n) for k in SINONIMOS_CARACTERISTICA)
-            or (len(palavras) == 1 and any(re.search(rf"\b{re.escape(k)}\b", frase_n) for k in SINONIMOS_TIPO))
-            or any(re.search(p, frase_n) for p, _ in DESEJOS_CONHECIDOS.values())
-            or re.search(r"quarto|dorm|suite|banheiro|vaga|garagem|metro|reais|mil\b|orcamento", frase_n)
-        )
-        if ja_entendida:
-            continue
-        trecho = " ".join(original[m.start(1):m.end(1)].lower().split())
-        trecho = re.sub(r"^(que tenham?|tenham?|que)\s+", "", trecho)
-        if trecho and trecho not in desejos:
-            desejos.append(trecho)
+    mascarado = sem_acento
+    padroes_entendidos = [rf"\b{re.escape(k)}\b" for k in SINONIMOS_CARACTERISTICA]
+    padroes_entendidos += [p for p, _ in DESEJOS_CONHECIDOS.values()]
+    for padrao in padroes_entendidos:
+        mascarado = re.sub(padrao, lambda m: "#" * len(m.group(0)), mascarado)
+
+    fim = r"(?=$|[.;!?]| perto| proxim| ate | em | no | na | para | pra | que | com | mas | por )"
+    for m in re.finditer(rf"\b(?:com|que tenha|que tenham|tenha|precisa ter)\s+([a-z#][a-z#\s,-]{{2,80}}?){fim}", mascarado):
+        inicio_trecho = m.start(1)
+        for item in re.finditer(r"[^,]+", m.group(1)):
+            for parte in re.finditer(r"(?:(?<= e )|^)[^#]*?(?= e |$)", item.group(0)):
+                frase_m = parte.group(0)
+                frase_n = re.sub(r"^\s*(e |que tenham? |tenham? |que )", "", " ".join(frase_m.split()))
+                frase_n = frase_n.strip(" -")
+                palavras = [p for p in frase_n.split() if p not in _PALAVRAS_VAZIAS]
+                if not palavras or len(palavras) > 5 or "#" in frase_n or frase_n in SINONIMOS_TIPO:
+                    continue
+                if re.search(r"quarto|dorm|suite|banheiro|vaga|garagem|metro|reais|mil\b|orcamento|\d", frase_n):
+                    continue
+                a = inicio_trecho + item.start() + parte.start()
+                trecho = " ".join(original[a:a + len(frase_m)].lower().split())
+                trecho = re.sub(r"^(e |que tenham? |tenham? |que )", "", trecho).strip(" -,")
+                if trecho and trecho not in desejos:
+                    desejos.append(trecho)
     return desejos
 
 
@@ -233,8 +256,13 @@ def interpretar(texto: str, bairros_conhecidos: list[str], cidades_conhecidas: l
     preco_min, preco_max = extrair_orcamento(t)
     pedidas, recusadas = extrair_caracteristicas(t)
     finalidade = extrair_finalidade(t)
-    if finalidade is None and preco_max and preco_max <= 30_000:
-        finalidade = "aluguel"  # ninguém compra imóvel por 3 mil
+    referencia = preco_max or preco_min
+    if finalidade is None and referencia:
+        # Ninguém compra imóvel por 3 mil, nem aluga por 700 mil.
+        if referencia <= 30_000:
+            finalidade = "aluguel"
+        elif referencia >= 100_000:
+            finalidade = "venda"
 
     vagas = _quantidade(t, r"vagas?")
     if vagas is None and re.search(r"\b(garagem|vaga|estacionamento)\b", t) and not _negado(t, t.find("garagem")):
