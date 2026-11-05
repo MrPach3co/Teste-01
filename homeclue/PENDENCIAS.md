@@ -77,7 +77,13 @@ admin assim que houver buscas com a IA ligada.
 
 ## Outros itens fora do documento, mas necessários para operar
 
-- **Domínio, Railway e chave da Anthropic** (ver DEPLOY.md).
-- **E-mail transacional** (Resend, SES…): hoje não há "esqueci minha senha" nem aviso de lead por e-mail — o lead chega no WhatsApp do corretor e no painel.
-- **Armazenamento de imagens em escala**: plantas e fotos enviadas ficam no banco. Para centenas de imobiliárias, mover para um storage (S3/R2).
-- **Fotos reais na vitrine**: a casa de demonstração com planta e 3D é fictícia e não tem fotos. Para a reunião, faça a planta de um imóvel real da Correta com as fotos dele.
+| Item | Situação | O que falta |
+|---|---|---|
+| Recuperar senha e aviso de lead por e-mail | ✅ "esqueci minha senha" com link de uso único; lead do formulário avisa o corretor e o dono | Uma conta num provedor de e-mail (Resend, Brevo…) e o **domínio verificado** (SPF/DKIM no DNS). Sem isso, os e-mails só aparecem no log (DEPLOY.md, passo 6). |
+| Segurança | ✅ trocar a senha derruba as outras sessões; o painel não pode ser embutido em outro site; scripts só do próprio domínio; HTTPS forçado em produção; excluir a conta cancela a assinatura | — |
+| Estoque grande | ✅ testado com 1.200 imóveis (tamanho da Correta): o feed importa em ~3 s e a busca responde em ~0,3 s | Na primeira importação, o contexto do bairro de 1.000+ imóveis leva cerca de uma hora para ficar pronto (em segundo plano). |
+| Cota de buscas com IA | ✅ quando acaba, a busca do site continua no ar no modo básico (sem IA) e o painel avisa | — |
+| Testes automáticos | ✅ a cada push no GitHub: testes em SQLite e Postgres, migrações e as 30 buscas | — |
+| Domínio, Railway e chave da Anthropic | ⚠️ | Contas suas (DEPLOY.md). |
+| Armazenamento de imagens em escala | ⚠️ plantas e fotos enviadas pelo painel ficam no banco (as fotos do feed não: são links) | Para centenas de imobiliárias, mover para um storage (S3/R2). Para as primeiras, o banco dá conta. |
+| Fotos reais na vitrine | ❌ a casa de demonstração com planta e 3D é fictícia e não tem fotos | Para a reunião, desenhe a planta de um imóvel real da Correta, com as fotos dele. |

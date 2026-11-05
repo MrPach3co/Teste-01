@@ -1,4 +1,4 @@
-import { el, svgEl } from '../../comum/util.js';
+import { contagem, el, svgEl } from '../../comum/util.js';
 import { api, aviso_bloqueado, cabecalho } from '../nucleo.js';
 
 const numero = (v) => (v === null || v === undefined ? '∞' : v.toLocaleString('pt-BR'));
@@ -77,7 +77,7 @@ export async function render(pagina) {
 
   const kpis = el('div', 'kpis');
   kpis.append(
-    kpi('Conversas no mês', numero(m.conversas_mes), `${numero(m.buscas_mes)} buscas${p.limite_buscas_mes ? ` de ${numero(p.limite_buscas_mes)}` : ''}`,
+    kpi('Conversas no mês', numero(m.conversas_mes), p.limite_buscas_mes ? `${numero(m.buscas_mes)} de ${numero(p.limite_buscas_mes)} buscas com IA` : contagem(m.buscas_mes, 'busca'),
       p.limite_buscas_mes ? m.buscas_mes / p.limite_buscas_mes : undefined),
     kpi('Leads no mês', numero(m.leads_mes), `${m.leads_whatsapp_mes} pelo WhatsApp · ${m.leads_formulario_mes} pelo formulário`),
     kpi('Conversão', `${m.conversao_mes.toLocaleString('pt-BR')}%`, 'conversas que viraram lead'),
@@ -97,7 +97,7 @@ export async function render(pagina) {
   const lista = el('ul', 'lista-simples');
   for (const v of m.mais_vistos) {
     const li = el('li');
-    li.append(el('span', '', v.titulo), el('small', '', `${v.visualizacoes} aberturas · ${v.aparicoes} buscas · ${v.leads} leads`));
+    li.append(el('span', '', v.titulo), el('small', '', `${contagem(v.visualizacoes, 'abertura')} · ${contagem(v.aparicoes, 'busca')} · ${contagem(v.leads, 'lead')}`));
     lista.appendChild(li);
   }
   vistos.appendChild(lista);

@@ -1,5 +1,7 @@
 # Homeclue — busca com IA no site da imobiliária
 
+[![Testes](https://github.com/MrPach3co/Teste-01/actions/workflows/homeclue.yml/badge.svg)](https://github.com/MrPach3co/Teste-01/actions/workflows/homeclue.yml)
+
 A Homeclue é um motor de busca com IA instalado no site de cada imobiliária.
 O comprador descreve em linguagem normal o imóvel que quer (escrevendo,
 falando ou mandando uma foto), e a IA mostra os imóveis **daquela
@@ -41,6 +43,11 @@ homeclue/
 | Visita de drone | Campo de vídeo de drone no imóvel, exibido no widget (a filmagem em si é serviço físico — ver PENDENCIAS.md) |
 | Custo de IA por busca | Medido em toda busca (tokens e US$) e mostrado em `/admin.html` |
 
+Além do documento, para operar de verdade: "esqueci minha senha" e aviso de
+lead por e-mail (`services/email.py`, `services/avisos.py`), cabeçalhos de
+segurança e gzip (`main.py`), busca testada com 1.200 imóveis (~0,3 s) e
+testes automáticos no GitHub (`.github/workflows/homeclue.yml`).
+
 ## Rodando localmente
 
 ```bash
@@ -65,7 +72,7 @@ a Claude interpreta a conversa e confere os pedidos livres nos anúncios.
 
 ```bash
 cd homeclue/backend && source .venv/bin/activate
-python -m pytest -q                       # 76 testes, sem rede e sem IA de verdade
+python -m pytest -q                       # 89 testes, sem rede e sem IA de verdade
 TESTE_DATABASE_URL=postgresql+psycopg2://usuario@localhost/banco_vazio python -m pytest -q  # os mesmos, no Postgres
 python -m app.avaliacao --saida avaliacao.html          # 30 buscas na demonstração
 python -m app.avaliacao --chave pk_DA_IMOBILIARIA       # 30 buscas no estoque real

@@ -1,4 +1,4 @@
-import { el } from '../../comum/util.js';
+import { contagem, el } from '../../comum/util.js';
 import { api, aviso_bloqueado, cabecalho, selecao, temRecurso } from '../nucleo.js';
 
 let dias = 30;
@@ -10,7 +10,7 @@ function ranking(titulo, itens, vazioTexto) {
   const lista = el('ul', 'lista-simples');
   for (const i of itens) {
     const li = el('li');
-    li.append(el('span', '', i.nome), el('small', '', `${i.buscas} conversa${i.buscas > 1 ? 's' : ''}`));
+    li.append(el('span', '', i.nome), el('small', '', contagem(i.buscas, 'conversa')));
     lista.appendChild(li);
   }
   c.appendChild(lista);
@@ -29,7 +29,7 @@ export async function render(pagina) {
     const r = await api(`/api/painel/demanda?dias=${dias}`);
     const resumo = el('div', 'kpis');
     for (const [rotulo, valor, detalhe] of [
-      ['Conversas', r.conversas, `${r.turnos} mensagens`],
+      ['Conversas', r.conversas, contagem(r.turnos, 'mensagem', 'mensagens')],
       ['Acharam bom resultado', r.acharam_bom_resultado, 'algum imóvel com 70%+'],
       ['Não acharam', r.conversas - r.acharam_bom_resultado, 'oportunidade de captação'],
       ['Pedidos sem oferta', r.pedidos_sem_oferta.length, 'itens que nenhum anúncio comprova'],

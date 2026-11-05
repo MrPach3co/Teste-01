@@ -1,4 +1,4 @@
-import { el, fundoFoto, reais } from '../../comum/util.js';
+import { contagem, el, fundoFoto, reais } from '../../comum/util.js';
 import {
   api, avisar, abrirModal, baixar, botao, cabecalho, campo, ehDono, entrada, enviarArquivo, estado,
   garantirVocabulario, selecao, temRecurso, vazio,
@@ -29,7 +29,7 @@ function linha(imovel, recarregar) {
   if (imovel.tem_planta) titulo.appendChild(el('span', 'etiqueta', 'planta/3D'));
   const tipo = estado.vocabulario.tipos[imovel.tipo] || imovel.tipo;
   const partes = [tipo, `${imovel.bairro}, ${imovel.cidade}`, imovel.quartos !== null ? `${imovel.quartos} qts` : null,
-    imovel.area_m2 ? `${imovel.area_m2} m²` : null, `${imovel.visualizacoes} aberturas (30 dias)`, `${imovel.total_leads} leads`];
+    imovel.area_m2 ? `${imovel.area_m2} m²` : null, `${contagem(imovel.visualizacoes, 'abertura')} (30 dias)`, contagem(imovel.total_leads, 'lead')];
   info.append(titulo, el('div', 'meta', partes.filter(Boolean).join(' · ')));
   const preco = el('div', 'preco', reais(imovel.preco));
   preco.appendChild(el('small', '', { aluguel: 'aluguel/mês', venda_aluguel: 'venda e aluguel', venda: 'venda' }[imovel.finalidade]));

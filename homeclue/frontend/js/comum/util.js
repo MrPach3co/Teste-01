@@ -70,3 +70,8 @@ export const ROTULO_FONTE = {
   anuncio: 'dado do anúncio', titulo: 'título do anúncio', descricao: 'descrição do anúncio',
   comodidades: 'itens do anúncio', planta: 'planta', foto: 'foto (análise automática)', contexto: 'OpenStreetMap',
 };
+
+/** "1 busca", "2 buscas" (com o número formatado em pt-BR). */
+export function contagem(n, singular, plural = `${singular}s`) {
+  return `${Number(n || 0).toLocaleString('pt-BR')} ${Number(n) === 1 ? singular : plural}`;
+}
