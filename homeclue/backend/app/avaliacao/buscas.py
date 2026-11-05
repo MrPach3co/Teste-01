@@ -132,7 +132,7 @@ def avaliar(db: Session, imobiliaria: Imobiliaria, buscas: list[str] | None = No
             resultados_por_busca: int = 3) -> ResultadoAvaliacao:
     saida = ResultadoAvaliacao()
     for texto in buscas or BUSCAS_PADRAO:
-        resultado = motor.executar(db, imobiliaria, texto)
+        resultado = motor.executar(db, imobiliaria, texto, usar_cache_ia=False)  # custo real, sem cache
         saida.custo_usd += resultado.uso.custo_usd
         saida.fonte.add(resultado.fonte)
         itens = []

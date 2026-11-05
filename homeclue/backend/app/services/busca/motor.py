@@ -63,17 +63,18 @@ def _nomes_unicos(valores: list[str]) -> list[str]:
 
 
 def interpretar(db: Session, texto: str, anteriores: Criterios, historico: list[str], bairros: list[str],
-                cidades: list[str], uso: ia_cliente.UsoIA) -> tuple[Criterios, str]:
+                cidades: list[str], uso: ia_cliente.UsoIA, usar_cache: bool = True) -> tuple[Criterios, str]:
     """Retorna (critérios atualizados, fonte "ia" | "regras")."""
     if ia_cliente.disponivel():
         chave = cache.chave_de("interpretacao", _VERSAO_CACHE, ia_cliente.modelo(), anteriores.para_dict(),
                                historico[-6:], normalizar(texto), bairros, cidades)
-        em_cache = cache.obter(db, chave)
+        em_cache = cache.obter(db, chave) if usar_cache else None
         if em_cache is not None:
             return Criterios.de_dict(em_cache), "ia"
         criterios = interpretacao.interpretar(texto, anteriores, historico, bairros, cidades, uso)
         if criterios is not None:
-            cache.guardar(db, chave, criterios.para_dict(), timedelta(days=7))
+            if usar_cache:
+                cache.guardar(db, chave, criterios.para_dict(), timedelta(days=7))
             return criterios, "ia"
     return regras.aplicar_turno(anteriores, texto, bairros, cidades), "regras"
 
@@ -86,7 +87,10 @@ def _ordenar(item: ItemResultado):
 
 
 def executar(db: Session, imobiliaria: Imobiliaria, texto: str, anteriores: Criterios | None = None,
-             historico: list[str] | None = None, criterios_extra: Criterios | None = None) -> ResultadoBusca:
+             historico: list[str] | None = None, criterios_extra: Criterios | None = None,
+             usar_cache_ia: bool = True) -> ResultadoBusca:
+    """`usar_cache_ia=False` paga todas as chamadas de novo — é o que a
+    avaliação usa para medir o custo real de cada busca."""
     anteriores = anteriores or Criterios()
     historico = historico or []
     uso = ia_cliente.UsoIA()
@@ -96,7 +100,7 @@ def executar(db: Session, imobiliaria: Imobiliaria, texto: str, anteriores: Crit
     cidades = _nomes_unicos([i.cidade for i in imoveis])
 
     if texto.strip():
-        criterios, fonte = interpretar(db, texto, anteriores, historico, bairros, cidades, uso)
+        criterios, fonte = interpretar(db, texto, anteriores, historico, bairros, cidades, uso, usar_cache_ia)
     else:
         criterios, fonte = anteriores, "regras"
     if criterios_extra is not None:
@@ -117,7 +121,8 @@ def executar(db: Session, imobiliaria: Imobiliaria, texto: str, anteriores: Crit
     # confere a prova que ela citar (trava contra invenção).
     if criterios.desejos and ia_cliente.disponivel():
         topo = itens[:MAX_VERIFICADOS_PELA_IA]
-        conferidas = verificacao.verificar_desejos(criterios.desejos, [i.dados for i in topo], uso)
+        conferidas = verificacao.verificar_desejos(criterios.desejos, [i.dados for i in topo], uso,
+                                                   db if usar_cache_ia else None)
         for item in topo:
             for indice, _desejo in enumerate(criterios.desejos):
                 veredito = conferidas.get((item.dados.id, indice))

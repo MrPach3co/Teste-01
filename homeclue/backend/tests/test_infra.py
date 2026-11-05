@@ -134,3 +134,30 @@ def test_baixar_feed_respeita_limite_e_redirecionamento(monkeypatch):
     monkeypatch.setattr(baixar, "TAMANHO_MAXIMO", 3)
     with pytest.raises(baixar.FeedInvalido):
         baixar.baixar("https://exemplo.com/feed")
+
+
+def test_cache_atualiza_a_mesma_chave_e_limpa_os_vencidos(db):
+    from datetime import timedelta
+
+    from app.models import Cache
+    from app.services import cache
+
+    cache.guardar(db, "k", {"a": 1}, timedelta(days=1))
+    cache.guardar(db, "k", {"a": 2}, timedelta(days=1))  # upsert: sem erro de chave duplicada
+    assert cache.obter(db, "k") == {"a": 2}
+    cache.guardar_varios(db, {"velho": {"a": 3}, "outro": {"a": 4}}, timedelta(seconds=-1))
+    assert cache.obter(db, "velho") is None and cache.obter_varios(db, ["k", "velho", "outro"]) == {"k": {"a": 2}}
+    cache.limpar_expirados(db)
+    assert db.get(Cache, "velho") is None and db.get(Cache, "k") is not None
+
+
+@pytest.mark.parametrize("url, esperada", [
+    ("postgres://u:s@h:5432/db", "postgresql+psycopg2://u:s@h:5432/db"),
+    ("postgresql://u:s@h:5432/db", "postgresql+psycopg2://u:s@h:5432/db"),  # formato do Railway
+    ("postgresql+psycopg2://u:s@h/db", "postgresql+psycopg2://u:s@h/db"),
+    ("sqlite:///./homeclue.db", "sqlite:///./homeclue.db"),
+])
+def test_url_do_banco_usa_o_driver_instalado(url, esperada):
+    from app.core.config import Settings
+
+    assert Settings(database_url=url).database_url_normalizada == esperada

@@ -62,9 +62,12 @@ class Settings(BaseSettings):
 
     @property
     def database_url_normalizada(self) -> str:
-        # Railway/Heroku entregam "postgres://", que o SQLAlchemy 2 não aceita.
-        if self.database_url.startswith("postgres://"):
-            return self.database_url.replace("postgres://", "postgresql+psycopg2://", 1)
+        # Railway/Heroku entregam "postgres://" (o SQLAlchemy 2 não aceita) ou
+        # "postgresql://" (o SQLAlchemy 2.1 tentaria o driver psycopg 3, que não
+        # instalamos). Os dois viram psycopg2; driver explícito fica como está.
+        for prefixo in ("postgres://", "postgresql://"):
+            if self.database_url.startswith(prefixo):
+                return "postgresql+psycopg2://" + self.database_url[len(prefixo):]
         return self.database_url
 
     @property

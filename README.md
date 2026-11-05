@@ -1,18 +1,25 @@
-# Kaza IA
+# Homeclue
 
-Protótipo de busca de imóveis por linguagem natural.
+**O produto está em [`homeclue/`](homeclue/README.md):** busca com IA instalada
+no site de cada imobiliária, com match explicado, trava contra invenção, leads
+no WhatsApp do corretor, feed XML, painel, demanda, planta interativa,
+maquete 3D e espelho de lançamentos. Veja também
+[`homeclue/DEPLOY.md`](homeclue/DEPLOY.md), [`homeclue/PENDENCIAS.md`](homeclue/PENDENCIAS.md)
+e [`homeclue/COMERCIAL.md`](homeclue/COMERCIAL.md).
+
+---
+
+## Protótipo antigo (Kaza IA)
+
+O que está na raiz (`frontend/`, `backend/`, `docs/`) é o primeiro protótipo,
+ainda com o nome Kaza IA, pensado como portal. A Homeclue não é portal; este
+código fica só como referência.
 
 ```
-frontend/   landing page estática (HTML/CSS/JS puro)
-backend/    API em FastAPI — busca (com IA opcional), contas, lista de espera
-docs/       documentação, incluindo rascunho de política de privacidade
-saas/       Kaza Pro — versão SaaS para imobiliárias (app independente)
+frontend/   landing page estática do protótipo (HTML/CSS/JS puro)
+backend/    API em FastAPI do protótipo — busca, contas, lista de espera
+docs/       documentação do protótipo
 ```
 
-**Kaza Pro** (`saas/`) é o produto B2B: a imobiliária assina e coloca a busca
-com IA no próprio site, com os próprios imóveis, e recebe os leads num painel.
-Veja [`saas/README.md`](saas/README.md) e [`saas/DEPLOY.md`](saas/DEPLOY.md).
-
-Para rodar tudo localmente, veja `backend/README.md` — o backend também
-serve o frontend, então um único comando (`uvicorn app.main:app --reload`)
-sobe o site inteiro em `http://localhost:8000`.
+Para rodar o protótipo, veja `backend/README.md`. Para rodar a Homeclue, veja
+[`homeclue/README.md`](homeclue/README.md).

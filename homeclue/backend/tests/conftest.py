@@ -19,8 +19,13 @@ from app.db.session import obter_db
 from app.main import app
 from app.services.seed import semear
 
-# StaticPool mantém uma única conexão viva para o banco em memória.
-_engine_teste = create_engine("sqlite:///:memory:", connect_args={"check_same_thread": False}, poolclass=StaticPool)
+# Padrão: SQLite em memória (StaticPool mantém uma única conexão viva).
+# Para rodar contra o Postgres de produção: TESTE_DATABASE_URL=postgresql+psycopg2://...
+_url_teste = os.environ.get("TESTE_DATABASE_URL")
+_engine_teste = (
+    create_engine(_url_teste) if _url_teste
+    else create_engine("sqlite:///:memory:", connect_args={"check_same_thread": False}, poolclass=StaticPool)
+)
 SessionTeste = sessionmaker(autocommit=False, autoflush=False, bind=_engine_teste)
 
 

@@ -2,7 +2,8 @@
 
 Roda as 30 buscas (ou as do arquivo, uma por linha) contra o estoque da
 imobiliária e gera um relatório para conferência humana. Com
-ANTHROPIC_API_KEY configurada, usa a IA de verdade (e mostra o custo).
+ANTHROPIC_API_KEY configurada, usa a IA de verdade e mostra o custo — sem cache,
+para medir o que cada busca custa de fato.
 Termina com código de saída 1 se houver qualquer violação da trava.
 """
 

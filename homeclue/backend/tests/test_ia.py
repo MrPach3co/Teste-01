@@ -21,6 +21,8 @@ class _ClienteFalso:
     def _create(self, **kwargs):
         self.chamadas.append(kwargs)
         texto = self._respostas.pop(0)
+        if callable(texto):
+            texto = texto(kwargs)
         return SimpleNamespace(stop_reason=self._stop, content=[SimpleNamespace(type="text", text=texto)],
                                usage=SimpleNamespace(input_tokens=1000, output_tokens=200))
 
@@ -90,3 +92,54 @@ def test_busca_com_ia_registra_custo_e_usa_cache(falso, client, db):
     from app.models import RegistroBusca
     custos = [r.custo_usd for r in db.query(RegistroBusca).order_by(RegistroBusca.id)]
     assert custos[0] > 0 and custos[1] == 0
+
+
+def _tudo_nao_informado(chamada: dict) -> str:
+    """Resposta falsa da conferência: responde todos os pares que recebeu."""
+    entrada = json.loads(chamada["messages"][0]["content"])
+    return json.dumps({"avaliacoes": [
+        {"imovel_id": a["id"], "pedido": p["indice"], "status": "nao_informado", "trecho": ""}
+        for a in entrada["anuncios"] for p in entrada["pedidos"]
+    ]})
+
+
+def test_conferencia_ja_feita_nao_e_paga_de_novo(falso, db):
+    c = falso(_tudo_nao_informado, _tudo_nao_informado)
+    imoveis = [ImovelBusca(id=n, titulo=f"Casa {n}", tipo="casa", finalidade="venda", preco=1, preco_aluguel=None,
+                           bairro="X", cidade="Y", descricao=f"Casa número {n}, sala ampla.") for n in (1, 2, 3)]
+    verificacao.verificar_desejos(["sala com luz da manhã"], imoveis[:2], cliente.UsoIA(), db)
+    verificacao.verificar_desejos(["sala com luz da manhã"], imoveis, cliente.UsoIA(), db)
+    assert len(c.chamadas) == 2
+    assert [a["id"] for a in json.loads(c.chamadas[1]["messages"][0]["content"])["anuncios"]] == [3]
+    verificacao.verificar_desejos(["Sala com luz da manhã"], imoveis, cliente.UsoIA(), db)
+    assert len(c.chamadas) == 2  # tudo já conferido: custo zero
+
+    imoveis[0].descricao = "Casa número 1, sala com janelas para o nascente."  # anúncio editado: confere de novo
+    c = falso(json.dumps({"avaliacoes": [
+        {"imovel_id": 1, "pedido": 0, "status": "atende", "trecho": "sala com janelas para o nascente"}]}))
+    conferidas = verificacao.verificar_desejos(["sala com luz da manhã"], imoveis, cliente.UsoIA(), db)
+    assert conferidas == {(1, 0): ("atende", "sala com janelas para o nascente", "descricao")}
+    assert [a["id"] for a in json.loads(c.chamadas[0]["messages"][0]["content"])["anuncios"]] == [1]
+
+
+def test_falha_da_ia_nao_entra_no_cache(falso, db):
+    imoveis = [ImovelBusca(id=1, titulo="Casa", tipo="casa", finalidade="venda", preco=1, preco_aluguel=None,
+                           bairro="X", cidade="Y", descricao="Casa com sala ampla.")]
+    falso("isto não é json")
+    assert verificacao.verificar_desejos(["rua tranquila"], imoveis, cliente.UsoIA(), db) == {}
+    c = falso(_tudo_nao_informado)
+    verificacao.verificar_desejos(["rua tranquila"], imoveis, cliente.UsoIA(), db)
+    assert len(c.chamadas) == 1  # perguntou de novo: a falha anterior não foi guardada
+
+
+def test_busca_repetida_com_pedido_livre_sai_do_cache(falso, client):
+    resposta_ia = json.dumps({
+        "finalidade": None, "tipos": ["casa"], "cidades": [], "bairros": [], "preco_max": None, "preco_min": None,
+        "quartos_min": None, "suites_min": None, "banheiros_min": None, "vagas_min": None, "area_min": None,
+        "caracteristicas": [], "perto_de": [], "desejos": ["sala com luz da manhã"],
+    })
+    c = falso(resposta_ia, _tudo_nao_informado)
+    client.post("/api/publico/pk_demo/buscar", json={"texto": "casa com sala com luz da manhã"})
+    assert len(c.chamadas) == 2  # interpretação + conferência dos pedidos livres
+    client.post("/api/publico/pk_demo/buscar", json={"texto": "Casa com sala com luz da manhã"})
+    assert len(c.chamadas) == 2  # as duas vieram do cache

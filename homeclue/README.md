@@ -1,123 +1,92 @@
-# Kaza Pro — SaaS de busca com IA para imobiliárias
+# Homeclue — busca com IA no site da imobiliária
 
-Versão B2B do Kaza IA. Em vez de ser um portal de imóveis, o Kaza Pro é um
-**software que a imobiliária assina** para colocar a busca por linguagem
-natural **no site dela**, com os **imóveis dela**, e receber os leads num
-painel.
+A Homeclue é um motor de busca com IA instalado no site de cada imobiliária.
+O comprador descreve em linguagem normal o imóvel que quer (escrevendo,
+falando ou mandando uma foto), e a IA mostra os imóveis **daquela
+imobiliária** com a taxa de compatibilidade e a explicação de cada ponto.
+Quem gostou chama o corretor no WhatsApp, já com o resumo do que procura.
+
+A Homeclue não é imobiliária, não é portal e não é dona da transação.
 
 ```
-saas/
-  backend/    API FastAPI (multi-tenant, IA, Stripe, LGPD) + testes
-  frontend/   landing, login, painel e o widget (HTML/CSS/JS puro, sem build)
-  Dockerfile  imagem única (backend serve o frontend)
-  DEPLOY.md   passo a passo para pôr no ar (Railway + Stripe)
+homeclue/
+  backend/     API (FastAPI): busca, match explicado, feed XML, leads, painel, lançamentos, IA
+  frontend/    site, widget, painel da imobiliária e /admin.html (HTML/CSS/JS, sem build)
+  Dockerfile   imagem única (o backend serve o frontend)
+  DEPLOY.md    como pôr no ar (Railway + Postgres + Stripe)
+  PENDENCIAS.md  o que do documento de produto depende de algo fora do código
+  COMERCIAL.md   Correta, imobiliárias da região e roteiro da demonstração
 ```
 
-## O que o produto faz
+## Como o documento de produto virou software
 
-| Para quem | O quê |
+| Documento | Onde está |
 |---|---|
-| **Visitante do site da imobiliária** | Escreve "apê de 2 quartos perto do metrô até 900 mil", vê os imóveis que mais combinam com % de match e o motivo, e clica em "Tenho interesse" ou "WhatsApp". |
-| **Imobiliária (painel)** | Cadastra imóveis (um a um ou por planilha CSV), gera descrição de anúncio com IA, copia o código do widget, acompanha métricas, gerencia leads num funil (Novo → Em contato → Visita → Proposta → Fechado/Perdido), exporta para Excel, cadastra corretores e assina um plano. |
-| **Você (dono do SaaS)** | Recebe as assinaturas pelo Stripe. Os limites de cada plano são aplicados automaticamente. |
-
-### Planos (em `backend/app/core/planos.py`)
-
-| Plano | Preço | Imóveis | Buscas/mês | Usuários | Selo "Kaza Pro" no widget |
-|---|---|---|---|---|---|
-| Grátis | R$ 0 | 15 | 300 | 1 | sim |
-| Pro | R$ 197 | 300 | 5.000 | 5 | não |
-| Escala | R$ 497 | ilimitados | 30.000 | 25 | não |
-
-Para mudar preço ou limite, edite esse arquivo **e** o preço correspondente no Stripe.
-
-### Integrações opcionais
-
-O produto funciona **sem nenhuma chave externa**: dá para rodar, demonstrar e
-até vender no manual.
-
-- **`ANTHROPIC_API_KEY`**: com ela, a busca usa a Claude para interpretar o
-  pedido (saída estruturada em JSON Schema) e o botão "Gerar com IA" escreve
-  descrições de anúncio. Sem ela, a busca usa um motor de regras em português
-  (orçamento, quartos por extenso, tipo, compra/aluguel, bairro, ~20
-  características) e a descrição usa um modelo pronto. Se a IA falhar ou
-  recusar, o sistema cai sozinho no plano B, sem erro para o visitante.
-- **Stripe** (`STRIPE_*`): com as chaves, o painel abre o checkout de
-  assinatura e o portal de faturas. O plano só muda quando chega o webhook
-  assinado do Stripe, nunca porque o navegador voltou da página de sucesso.
+| Busca conversacional (escreve ou fala) | Widget (`frontend/js/widget/`), conversa em turnos que refina, troca e tira critérios; voz pelo reconhecimento de fala do navegador |
+| Match explicado | `backend/app/services/busca/avaliacao.py`: cada pedido vira um ponto com status (atende, quase, parece ter, não informado, não atende) e a **prova** |
+| Trava contra invenção | Prova obrigatória para cada afirmação; a IA cita trechos e `busca/evidencia.py` confere no texto real; negações ("não aceita animais") viram "não atende"; o que falta vira "não informado". `python -m app.avaliacao` confere 30 buscas afirmação por afirmação |
+| Integração por feed XML | `services/feed/`: VRSync (ZAP/VivaReal/OLX) e "Carga/Imóvel"; download seguro; sincroniza a cada 6 h; feed vazio nunca apaga estoque |
+| Botão de lead | WhatsApp do corretor responsável (ou da imobiliária) com o imóvel, o resumo da busca e um **código**; o lead cai no painel sem dado pessoal; formulário com consentimento para quem prefere |
+| Widget instalável | `frontend/widget.js`: uma linha de código, botão flutuante ou embutido, logo e cores da imobiliária |
+| Funciona bem no celular | Widget pensado primeiro para tela pequena (testado em 390 px) |
+| Painel da imobiliária | Buscas, conversas, leads por origem, conversão, imóveis mais vistos, negócios fechados |
+| Relatório de demanda | O que procuram, o que acham, o que não acham, itens sem oferta e **anúncios que precisam melhorar** |
+| Comparador e rankings | Até 3 imóveis lado a lado; melhor escolha, custo-benefício, família, investimento e valorização, todos com o motivo |
+| Contexto do bairro | Escolas, saúde, comércio, transporte, natureza, segurança e praia, a partir do OpenStreetMap |
+| Cobrança, termos e LGPD | Stripe (assinatura, valor por lead, maquete avulsa), termos e privacidade, consentimento versionado, exportar/excluir dados |
+| Planta interativa | Editor no painel (desenha cômodos sobre a planta); no widget, destaca os cômodos que bateram com o pedido |
+| Maquete 3D | Gerada a partir da planta (three.js), com as fotos de cada cômodo |
+| Espelho 3D de lançamentos | Torres × andares × unidades por status, em grade e em 3D |
+| Busca por foto | O comprador manda uma foto; a IA descreve e a busca usa como critério (a foto não é guardada) |
+| Visita de drone | Campo de vídeo de drone no imóvel, exibido no widget (a filmagem em si é serviço físico — ver PENDENCIAS.md) |
+| Custo de IA por busca | Medido em toda busca (tokens e US$) e mostrado em `/admin.html` |
 
 ## Rodando localmente
 
 ```bash
-cd saas/backend
-python3 -m venv .venv
-source .venv/bin/activate            # Windows: .venv\Scripts\activate
+cd homeclue/backend
+python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-
-cp .env.example .env                 # edite se quiser IA/Stripe
-alembic upgrade head                 # cria as tabelas
-python -m app.services.seed          # imobiliária de demonstração (widget da landing)
-
+cp .env.example .env               # opcional: chaves de IA e Stripe
+alembic upgrade head
+python -m app.services.seed        # imobiliária de demonstração (Serra e Lagos)
 uvicorn app.main:app --reload --port 8000
 ```
 
-- Landing: http://localhost:8000
-- Criar conta / entrar: http://localhost:8000/entrar.html
-- Painel: http://localhost:8000/app.html
-- Busca da imobiliária demo: http://localhost:8000/embed.html?k=pk_demo
-- Documentação da API (Swagger): http://localhost:8000/docs
+- Site: http://localhost:8000 · Painel: http://localhost:8000/entrar.html
+- Busca da demonstração: http://localhost:8000/embed.html?k=pk_demo
+- Admin (custo de IA): http://localhost:8000/admin.html (e-mail em `ADMIN_EMAILS`)
+- API: http://localhost:8000/docs
 
-## Testes
+Sem `ANTHROPIC_API_KEY`, tudo funciona com o motor de regras; com a chave,
+a Claude interpreta a conversa e confere os pedidos livres nos anúncios.
+
+## Testes e avaliação
 
 ```bash
-cd saas/backend && source .venv/bin/activate
-python -m pytest -q
+cd homeclue/backend && source .venv/bin/activate
+python -m pytest -q                       # 76 testes, sem rede e sem IA de verdade
+TESTE_DATABASE_URL=postgresql+psycopg2://usuario@localhost/banco_vazio python -m pytest -q  # os mesmos, no Postgres
+python -m app.avaliacao --saida avaliacao.html          # 30 buscas na demonstração
+python -m app.avaliacao --chave pk_DA_IMOBILIARIA       # 30 buscas no estoque real
+python -m app.avaliacao --buscas minhas-buscas.txt      # suas buscas, uma por linha
 ```
 
-São 33 testes, rodando em SQLite em memória e sem rede (a IA é simulada).
-Cobrem cadastro/login, isolamento entre imobiliárias, papéis (dono e
-corretor), limites de plano, CRUD e importação CSV, busca, leads com
-consentimento, métricas, exportação e a integração com a IA (saída
-estruturada, recusa e JSON inválido).
+A avaliação termina com erro se qualquer afirmação não tiver prova no
+anúncio. Com a IA ligada, ela também mostra o custo das 30 buscas — sem
+cache, para medir o que cada busca custa de fato (cada rodada paga as chamadas).
 
-## Como o widget funciona
+## Arquitetura (resumo)
 
-A imobiliária cola isto no site:
-
-```html
-<script src="https://SEU-DOMINIO/widget.js" data-chave="pk_..." async></script>
-```
-
-O `widget.js` cria um botão flutuante (dentro de Shadow DOM) que abre um
-iframe com `embed.html`. Assim, o CSS do site do cliente não interfere na
-busca e vice-versa. Também existe o modo embutido (`data-modo="inline"`) e o
-link direto (`/embed.html?k=pk_...`) para quem não tem site.
-
-A chave `pk_...` é pública por natureza (fica no HTML do cliente). Por isso
-ela só permite buscar imóveis ativos e enviar leads, com limite de
-requisições por IP. Se alguém copiar a chave, o dono gera outra no painel.
-
-## Segurança e LGPD já implementadas
-
-- Senhas com bcrypt, sessão por JWT (header Bearer, sem cookie). Por isso o
-  CORS aberto do widget não expõe o painel.
-- Todo dado é filtrado pela imobiliária do usuário logado, e há testes de
-  isolamento entre clientes.
-- Rate limit em login, cadastro, busca e envio de leads.
-- O lead só é aceito com a caixa de consentimento marcada. Guardamos a data e
-  o texto exato aceito.
-- O dono exporta os próprios dados e exclui a conta (o que apaga a imobiliária
-  inteira). Leads podem ser excluídos a pedido do titular.
-- Em produção, o servidor se recusa a subir com a `JWT_SECRET_KEY` padrão.
-
-## O que falta antes de vender (fora do código)
-
-1. **Revisão jurídica** de `frontend/termos.html` e `frontend/privacidade.html`,
-   com razão social, CNPJ e contato do encarregado (DPO).
-2. **Recuperação de senha por e-mail.** Exige um provedor de e-mail (Resend,
-   SES etc.). Hoje o dono pode recriar o acesso de um corretor pelo painel.
-3. **Upload de fotos.** Hoje o imóvel aceita a URL de uma foto já hospedada
-   (no próprio site da imobiliária, por exemplo). Upload próprio exige um
-   storage (S3/R2).
-4. **Nota fiscal de serviço (NFS-e)** das assinaturas, que depende do seu
-   CNPJ e município.
+- **Busca** (`services/busca/motor.py`): interpreta (IA com cache, ou regras) →
+  filtra por finalidade → avalia cada imóvel ponto a ponto → a IA confere os
+  pedidos livres dos 8 melhores (com verificação dos trechos; cada par pedido ×
+  anúncio já conferido sai do cache, então a conversa não paga de novo) → ordena →
+  rankings → mensagem, avisos ("nenhum anúncio informa…") e sugestões.
+- **Tarefas em segundo plano** (`services/tarefas.py`): fila no próprio banco,
+  sem Redis; sincroniza feeds, calcula contexto do bairro, analisa fotos e
+  registra leads no Stripe.
+- **Multi-imobiliária**: todo dado é filtrado pela imobiliária do usuário;
+  há testes de isolamento.
+- **Imagens**: reprocessadas pelo Pillow (sem metadados, tamanho limitado) e
+  guardadas no banco (ver PENDENCIAS.md sobre storage em escala).

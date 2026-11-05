@@ -1,70 +1,74 @@
-# Pondo o Kaza Pro no ar (Railway + Stripe)
+# Pondo a Homeclue no ar (Railway + Postgres + Stripe)
 
-O Kaza Pro é um serviço separado da plataforma Kaza IA (que fica na raiz do
-repositório). No Railway, ele vira um serviço próprio apontando para a pasta
-`saas/`.
+O repositório tem dois produtos: na raiz, o protótipo antigo (Kaza IA, um
+portal); em `homeclue/`, a Homeclue. No Railway, a Homeclue é um serviço
+próprio apontando para a pasta `homeclue`.
 
-## 1. Serviço no Railway
+## 1. Serviço
 
-1. Em [railway.app](https://railway.app), clique em **New Project** →
-   **Deploy from GitHub repo** e escolha `MrPach3co/Teste-01`. Se já existe um
-   projeto com o Kaza IA, use **+ New** → **GitHub Repo** dentro dele.
-2. No serviço criado, vá em **Settings** → **Source** → **Root Directory** e
-   coloque `saas`. O Railway passa a usar o `saas/Dockerfile` e o
-   `saas/railway.toml`.
-3. Em **Settings** → **Source** → **Branch**, escolha a branch que deve ir ao ar.
+1. [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub repo** → `MrPach3co/Teste-01`.
+2. No serviço: **Settings → Source → Root Directory** = `homeclue`. O Railway usa
+   `homeclue/Dockerfile` e `homeclue/railway.toml`.
+3. **Settings → Source → Branch**: a branch que deve ir ao ar.
 
-## 2. Banco Postgres
+## 2. Banco
 
-**+ New** → **Database** → **Add PostgreSQL**. Depois, no serviço do Kaza Pro,
-crie a variável `DATABASE_URL` com **Add Reference** → Postgres →
-`DATABASE_URL`. O app aceita tanto `postgres://` quanto `postgresql://`.
+**+ New → Database → Add PostgreSQL**. No serviço da Homeclue, crie
+`DATABASE_URL` com **Add Reference** → Postgres → `DATABASE_URL`.
+
+A cada deploy o container aplica as migrações, garante a imobiliária de
+demonstração e sobe o servidor (com a fila de tarefas dentro dele).
 
 ## 3. Variáveis de ambiente
 
 | Variável | Valor |
 |---|---|
-| `DATABASE_URL` | referência ao Postgres (passo 2) |
-| `JWT_SECRET_KEY` | gere com `python3 -c "import secrets; print(secrets.token_hex(32))"` |
+| `DATABASE_URL` | referência ao Postgres |
+| `JWT_SECRET_KEY` | `python3 -c "import secrets; print(secrets.token_hex(32))"` |
 | `AMBIENTE` | `producao` |
-| `URL_PUBLICA` | o domínio final, ex. `https://kazapro.up.railway.app` (sem `/` no fim) |
-| `ANTHROPIC_API_KEY` | opcional: ativa a IA na busca e nas descrições |
-| `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRECO_PRO`, `STRIPE_PRECO_ESCALA` | opcionais: veja o passo 5 |
+| `URL_PUBLICA` | domínio final, ex. `https://homeclue.com.br` (sem `/` no fim) |
+| `ADMIN_EMAILS` | seu e-mail (acesso ao `/admin.html`) |
+| `ANTHROPIC_API_KEY` | chave da Anthropic (console.anthropic.com) — liga a IA |
+| `ANTHROPIC_MODELO` | `claude-opus-5-5` (padrão). Compare o custo com `claude-haiku-5-5` (ver PENDENCIAS.md) |
+| `PRECO_PLANO_ESSENCIAL`, `PRECO_PLANO_PROFISSIONAL`, `PRECO_PLANO_PREMIUM` | preços exibidos (R$/mês) |
+| `STRIPE_*` | passo 5 (opcional) |
 
 ## 4. Domínio
 
-**Settings** → **Networking** → **Generate Domain** (ou conecte um domínio
-próprio). Atualize `URL_PUBLICA` com ele.
+**Settings → Networking → Generate Domain** (ou domínio próprio). Atualize
+`URL_PUBLICA`. Teste: `https://SEU-DOMINIO/api/saude` deve responder
+`{"status":"ok","ia":true,...}`.
 
-Teste: `curl https://SEU-DOMINIO/api/saude` deve responder
-`{"status":"ok","ia":...,"pagamentos":...}`. Os dois últimos campos mostram
-se a IA e os pagamentos foram reconhecidos.
+## 5. Stripe
 
-A cada deploy, o container roda as migrações (`alembic upgrade head`),
-garante a imobiliária de demonstração e sobe o servidor.
+1. Conta em [stripe.com](https://stripe.com).
+2. **Produtos**: três preços recorrentes mensais (Essencial, Profissional,
+   Premium) → `STRIPE_PRECO_ESSENCIAL`, `STRIPE_PRECO_PROFISSIONAL`,
+   `STRIPE_PRECO_PREMIUM`.
+3. **Valor por lead (opcional)**: em **Billing → Meters**, crie um medidor com
+   o nome de evento `homeclue_lead` (soma). Crie um preço **por uso** ligado a
+   ele → `STRIPE_PRECO_POR_LEAD`. Cada lead vira um evento, sem duplicar.
+4. **Maquete avulsa (opcional)**: preço de **pagamento único** →
+   `STRIPE_PRECO_MAQUETE`.
+5. **Webhook**: `https://SEU-DOMINIO/api/assinatura/webhook`, eventos
+   `checkout.session.completed`, `customer.subscription.updated`,
+   `customer.subscription.deleted` → segredo em `STRIPE_WEBHOOK_SECRET`.
+6. **Portal do cliente**: ative em **Configurações → Billing**.
+7. Chave secreta → `STRIPE_SECRET_KEY` (teste com `sk_test_…` e o cartão
+   `4242 4242 4242 4242`).
 
-## 5. Stripe (cobrança das assinaturas)
+## 6. OpenStreetMap (contexto do bairro)
 
-1. Crie a conta em [stripe.com](https://stripe.com) (aceita CNPJ e CPF no Brasil).
-2. **Produtos** → crie "Kaza Pro — Pro" com preço **recorrente mensal de
-   R$ 197** e "Kaza Pro — Escala" com **R$ 497**. Copie os IDs de preço
-   (`price_...`) para `STRIPE_PRECO_PRO` e `STRIPE_PRECO_ESCALA`.
-3. **Desenvolvedores** → **Chaves de API**: copie a chave secreta
-   (`sk_live_...` ou `sk_test_...` para testar) para `STRIPE_SECRET_KEY`.
-4. **Desenvolvedores** → **Webhooks** → **Adicionar endpoint**:
-   - URL: `https://SEU-DOMINIO/api/assinatura/webhook`
-   - Eventos: `checkout.session.completed`, `customer.subscription.updated`,
-     `customer.subscription.deleted`
-   - Copie o "segredo de assinatura" (`whsec_...`) para `STRIPE_WEBHOOK_SECRET`.
-5. **Configurações** → **Billing** → **Portal do cliente**: ative o portal
-   para os clientes poderem cancelar e baixar faturas sozinhos.
+Funciona sem configuração: usa o Overpass público (com uma segunda instância
+de reserva) e, se ele cair, o Nominatim. Os resultados ficam em cache por 30
+dias. Com muitos clientes, contrate um provedor de Overpass ou hospede um
+(ver PENDENCIAS.md).
 
-Para testar sem cobrar ninguém, use as chaves `sk_test_...` e o cartão
-`4242 4242 4242 4242` com qualquer data futura e qualquer CVC.
+## Checklist antes da primeira demonstração
 
-## Checklist antes de anunciar
-
-- [ ] `/api/saude` mostra `"ia": true` e `"pagamentos": true` (se configurou)
-- [ ] Criou uma conta real, cadastrou um imóvel e buscou pelo link direto
-- [ ] Assinou o plano Pro em modo teste e viu o plano mudar no painel
+- [ ] `/api/saude` mostra `"ia": true`
+- [ ] `python -m app.avaliacao --chave pk_…` com o estoque real: 0 violações, e você leu o relatório
+- [ ] Feed XML da imobiliária conectado em **Integração XML**
+- [ ] WhatsApp da imobiliária e dos corretores preenchidos
+- [ ] Um imóvel com planta desenhada (vitrine da maquete 3D)
 - [ ] Termos e Política de Privacidade revisados por advogado

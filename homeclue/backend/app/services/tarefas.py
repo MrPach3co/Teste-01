@@ -18,6 +18,7 @@ from sqlalchemy.orm import Session
 from app.core.config import obter_settings
 from app.core.tempo import agora_utc
 from app.models import Imobiliaria, Tarefa
+from app.services import cache
 
 logger = logging.getLogger(__name__)
 
@@ -133,6 +134,7 @@ def agendar_feeds(db: Session) -> None:
 def limpar_antigas(db: Session) -> None:
     db.execute(delete(Tarefa).where(Tarefa.status == "concluida", Tarefa.concluido_em < agora_utc() - timedelta(days=7)))
     db.commit()
+    cache.limpar_expirados(db)
 
 
 class Executor:
